@@ -1,0 +1,37 @@
+<resources>
+    <!-- Default screen margins, per the Android Design guidelines. -->
+    <dimen name="activity_horizontal_margin">16dp</dimen>
+    <dimen name="activity_vertical_margin">16dp</dimen>
+
+    <!--
+                    Card contents
+    -->
+
+    <!-- padding for inner content -->
+    <dimen name="cardcontent_padding_left">14dp</dimen>
+    <dimen name="cardcontent_padding_right">14dp</dimen>
+    <dimen name="cardcontent_padding_top">6dp</dimen>
+    <dimen name="cardcontent_padding_bottom">6dp</dimen>
+
+    <!-- margins -->
+    <dimen name="cardcontent_margin_left">0dp</dimen>
+    <dimen name="cardcontent_margin_right">0dp</dimen>
+    <dimen name="cardcontent_margin_top">2dp</dimen>
+    <dimen name="cardcontent_margin_bottom">2dp</dimen>
+
+    <!-- font size -->
+    <dimen name="cardcontent_title_size">20sp</dimen>
+    <dimen name="cardcontent_note_size">16sp</dimen>
+
+    <!--
+                    Note Activity
+    -->
+
+    <!-- margins -->
+
+    <dimen name="note_view_horizontal_margin">16dp</dimen>
+    <dimen name="note_view_vertical_margin">16dp</dimen>
+
+    <dimen name="note_view_edited_font_size">12sp</dimen>
+
+</resources>

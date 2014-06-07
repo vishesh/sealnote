@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Sealnote</string>
+    <string name="title_activity_note">" "</string>
+    <string name="action_settings">Settings</string>
+    <string name="note_title">Title</string>
+    <string name="note_note">Note</string>
+    <string name="action_search">Search</string>
+    <string name="action_new_note">Create New Note</string>
+    <string name="action_save_note">Save</string>
+    <string name="action_color">Color</string>
+
+    <!-- color dialog -->
+    <string name="msg_pick_color">Pick a color</string>
+
+</resources>
