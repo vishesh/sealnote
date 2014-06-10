@@ -7,4 +7,8 @@ public class SealnoteApplication extends Application {
     public void onCreate() {
         super.onCreate();
     }
+
+    public static String getPassword() {
+        return "test123";
+    }
 }

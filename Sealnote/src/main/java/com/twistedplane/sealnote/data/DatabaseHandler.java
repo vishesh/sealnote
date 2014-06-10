@@ -3,9 +3,10 @@ package com.twistedplane.sealnote.data;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteOpenHelper;
+import com.twistedplane.sealnote.SealnoteApplication;
 import com.twistedplane.sealnote.utils.EasyDate;
+import net.sqlcipher.database.SQLiteDatabase;
+import net.sqlcipher.database.SQLiteOpenHelper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -63,7 +64,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     }
 
     public void addNote(Note note) {
-        SQLiteDatabase db = this.getWritableDatabase();
+        SQLiteDatabase db = this.getWritableDatabase(SealnoteApplication.getPassword());
         ContentValues values = new ContentValues();
         EasyDate date = EasyDate.now();
 
@@ -78,7 +79,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     }
 
     public void updateNote(Note note) {
-        SQLiteDatabase db = this.getWritableDatabase();
+        SQLiteDatabase db = this.getWritableDatabase(SealnoteApplication.getPassword());
         ContentValues values = new ContentValues();
 
         values.put(COL_ID, note.getId());
@@ -92,7 +93,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     }
 
     public Note getNote(int id) {
-        SQLiteDatabase db = this.getReadableDatabase();
+        SQLiteDatabase db = this.getReadableDatabase(SealnoteApplication.getPassword());
         Cursor cursor = db.query(TABLE_NAME, null, COL_ID + " = ?", new String[]{Integer.toString(id)},
                 null, null, null, null);
         if (cursor.moveToFirst()) {
@@ -102,14 +103,14 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     }
 
     public void deleteNote(int id) {
-        SQLiteDatabase db = this.getWritableDatabase();
+        SQLiteDatabase db = this.getWritableDatabase(SealnoteApplication.getPassword());
         db.delete(TABLE_NAME, COL_ID + " = ?", new String[] {Integer.toString(id)});
         db.close();
     }
 
     public List<Note> getAllNotes() {
         List<Note> list = new ArrayList<Note>();
-        SQLiteDatabase db = getReadableDatabase();
+        SQLiteDatabase db = getReadableDatabase(SealnoteApplication.getPassword());
         Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_NAME, null);
 
         if (cursor.moveToFirst()) {
@@ -123,7 +124,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     }
 
     public Cursor getAllNotesCursor() {
-        return getReadableDatabase().rawQuery("SELECT * FROM " + TABLE_NAME, null);
+        return getReadableDatabase(SealnoteApplication.getPassword()).rawQuery("SELECT * FROM " + TABLE_NAME, null);
     }
 
 }
