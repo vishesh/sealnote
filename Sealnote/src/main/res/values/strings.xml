@@ -14,4 +14,15 @@
     <!-- color dialog -->
     <string name="msg_pick_color">Pick a color</string>
 
+    <!-- password dialog -->
+    <string name="password">Password</string>
+    <string name="create_password">Enter a new password</string>
+    <string name="show_notes">Show Notes</string>
+    <string name="get_started">Get Started</string>
+    <string name="go">Go</string>
+    <string name="cancel">Cancel</string>
+
+    <string name="welcome">Welcome to Sealnote!</string>
+    <string name="welcome_submessage">Password encrypted notes application</string>
+
 </resources>

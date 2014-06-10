@@ -10,13 +10,12 @@
             android:icon="@drawable/ic_launcher"
             android:label="@string/app_name"
             android:theme="@android:style/Theme.Holo.Light"
-            android:name="SealnoteApplication">
+            android:name=".SealnoteApplication">
         <activity
                 android:name="com.twistedplane.sealnote.SealnoteActivity"
                 android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
-
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
@@ -27,6 +26,11 @@
             <meta-data
                     android:name="android.support.PARENT_ACTIVITY"
                     android:value="SealnoteActivity"/>
+        </activity>
+        <activity
+                android:name="com.twistedplane.sealnote.PasswordActivity"
+                android:label="@string/title_activity_note"
+                android:theme="@android:style/Theme.Holo.Light.NoActionBar">
         </activity>
     </application>
 

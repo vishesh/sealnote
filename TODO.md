@@ -8,7 +8,7 @@ Sealnote TODO
 * [DONE] Date created/edited in Note Activity
 * [DONE] Date edited show on Note Activity
 * [DONE] Colors in note
-* Database encryption
+* [DONE] Database encryption
 * Password login screen
 * Color Picket widget for note
 * Select pre-defined colors for note

@@ -1,6 +1,7 @@
 package com.twistedplane.sealnote;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.view.Menu;
@@ -10,7 +11,6 @@ import com.twistedplane.sealnote.data.DatabaseHandler;
 import com.twistedplane.sealnote.data.SealnoteAdapter;
 import it.gmariotti.cardslib.library.extra.staggeredgrid.view.CardGridStaggeredView;
 import it.gmariotti.cardslib.library.internal.CardGridCursorAdapter;
-import net.sqlcipher.database.SQLiteDatabase;
 
 public class SealnoteActivity extends Activity {
     /**
@@ -21,7 +21,13 @@ public class SealnoteActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
 
-        SQLiteDatabase.loadLibs(this);
+        // setup database and password
+        if (DatabaseHandler.getPassword() == null) {
+            Intent intent = new Intent(this, PasswordActivity.class);
+            this.startActivity(intent);
+            this.finish();
+            return;
+        }
 
         final CardGridStaggeredView noteListView = (CardGridStaggeredView) findViewById(R.id.main_note_grid);
 
