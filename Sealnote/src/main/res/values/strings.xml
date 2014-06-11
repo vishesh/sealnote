@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">Sealnote</string>
+    <string name="app_name">SealNote</string>
     <string name="title_activity_note">" "</string>
     <string name="action_settings">Settings</string>
     <string name="note_title">Title</string>
@@ -22,7 +22,7 @@
     <string name="go">Go</string>
     <string name="cancel">Cancel</string>
 
-    <string name="welcome">Welcome to Sealnote!</string>
-    <string name="welcome_submessage">Password encrypted notes application</string>
+    <string name="welcome">Welcome to SealNote!</string>
+    <string name="welcome_submessage">Keep notes safe and secure</string>
 
 </resources>

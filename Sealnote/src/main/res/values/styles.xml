@@ -1,8 +1,29 @@
 <resources>
 
-    <!-- Base application theme. -->
-    <style name="AppTheme" parent="android:Theme.Holo.Light">
-        <!-- Customize your theme here. -->
+    <!-- Base activity theme. -->
+    <style name="Sealnote.Theme.Main" parent="android:Theme.Holo.Light">
+        <item name="android:actionBarStyle">@style/Sealnote.Theme.Main.ActionBar</item>
+    </style>
+
+    <style name="Sealnote.Theme.Main.ActionBar" parent="@android:style/Widget.Holo.Light.ActionBar">
+        <item name="android:background">@android:color/holo_blue_dark</item>
+        <item name="android:titleTextStyle">@style/Sealnote.Theme.Main.ActionBar.Title</item>
+    </style>
+
+    <style name="Sealnote.Theme.Main.ActionBar.Title" parent="@android:style/Widget.Holo.Light.ActionBar">
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:textSize">22sp</item>
+        <item name="android:fontFamily">sans-serif-condensed</item>
+        <item name="android:textStyle">normal</item>
+    </style>
+
+    <!-- Note activity theme. -->
+    <style name="Sealnote.Theme.Note" parent="android:Theme.Holo.Light.DarkActionBar">
+        <item name="android:actionBarStyle">@style/Sealnote.Theme.Note.ActionBar</item>
+    </style>
+
+    <style name="Sealnote.Theme.Note.ActionBar" parent="@android:style/Widget.Holo.Light.ActionBar">
+        <item name="android:background">#44000000</item>
     </style>
 
 </resources>
