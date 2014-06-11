@@ -8,8 +8,8 @@
     -->
 
     <!-- padding for inner content -->
-    <dimen name="cardcontent_padding_left">14dp</dimen>
-    <dimen name="cardcontent_padding_right">14dp</dimen>
+    <dimen name="cardcontent_padding_left">8dp</dimen>
+    <dimen name="cardcontent_padding_right">8dp</dimen>
     <dimen name="cardcontent_padding_top">6dp</dimen>
     <dimen name="cardcontent_padding_bottom">6dp</dimen>
 
@@ -20,8 +20,8 @@
     <dimen name="cardcontent_margin_bottom">2dp</dimen>
 
     <!-- font size -->
-    <dimen name="cardcontent_title_size">20sp</dimen>
-    <dimen name="cardcontent_note_size">16sp</dimen>
+    <dimen name="cardcontent_title_size">14sp</dimen>
+    <dimen name="cardcontent_note_size">14sp</dimen>
 
     <!--
                     Note Activity
@@ -40,5 +40,8 @@
     -->
     <dimen name="password_activity_horizontal_margin">36dp</dimen>
     <dimen name="password_activity_vertical_margin">36dp</dimen>
+
+    <dimen name="password_activity_button_horizontal_padding">28dp</dimen>
+    <dimen name="password_activity_button_vertical_padding">18dp</dimen>
 
 </resources>
