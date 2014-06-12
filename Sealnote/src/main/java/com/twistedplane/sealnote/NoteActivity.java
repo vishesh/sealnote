@@ -80,7 +80,7 @@ public class NoteActivity extends Activity implements ColorDialogFragment.ColorC
         final String title = titleView.getText().toString();
         final String text = textView.getText().toString();
 
-        if ((title == null || title.equals("")) && (text == null || title.equals(""))) {
+        if ((title == null && text == null) || (title.equals("") && title.equals(""))) {
             Toast.makeText(this, getResources().getString(R.string.empty_note), Toast.LENGTH_SHORT).show();
             return;
         }
