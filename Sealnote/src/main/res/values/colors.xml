@@ -2,6 +2,7 @@
 <resources>
 
     <item name="transparent" type="color">#00000000</item>
+    <item name="note_view_tint" type="color">#22ffffff</item>
     <item name="darkblue" type="color">#FF0099CC</item>
 
     <!-- color card -->
