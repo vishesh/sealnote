@@ -9,9 +9,11 @@ Sealnote TODO
 * [DONE] Date edited show on Note Activity
 * [DONE] Colors in note
 * [DONE] Database encryption
-* Password login screen
+* [DONE] Password login screen
+* Multiple select and delete
 * Color Picket widget for note
 * Select pre-defined colors for note
-* Multiple select and delete
 * Dynamic font size
 * Application Icon
+* Margin between cards
+* Minimum height of cards
