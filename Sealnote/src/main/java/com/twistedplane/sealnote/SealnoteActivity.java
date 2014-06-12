@@ -37,7 +37,7 @@ public class SealnoteActivity extends Activity {
         final Cursor cursor = db.getAllNotesCursor();
         final SealnoteAdapter adapter = new SealnoteAdapter(this, cursor, 0);
         noteListView.setAdapter(adapter);
-        noteListView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
+        noteListView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
     }
 
     @Override

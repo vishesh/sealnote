@@ -106,31 +106,31 @@ public class NoteActivity extends Activity implements ColorDialogFragment.ColorC
 
         switch (color) {
             case 0:
-                view.setBackgroundColor(getResources().getColor(R.color.card_background_color0));
+                view.setBackgroundColor(getResources().getColor(R.color.card_background_color0_noalpha));
                 break;
             case 1:
-                view.setBackgroundColor(getResources().getColor(R.color.card_background_color1));
+                view.setBackgroundColor(getResources().getColor(R.color.card_background_color1_noalpha));
                 break;
             case 2:
-                view.setBackgroundColor(getResources().getColor(R.color.card_background_color2));
+                view.setBackgroundColor(getResources().getColor(R.color.card_background_color2_noalpha));
                 break;
             case 3:
-                view.setBackgroundColor(getResources().getColor(R.color.card_background_color3));
+                view.setBackgroundColor(getResources().getColor(R.color.card_background_color3_noalpha));
                 break;
             case 4:
-                view.setBackgroundColor(getResources().getColor(R.color.card_background_color4));
+                view.setBackgroundColor(getResources().getColor(R.color.card_background_color4_noalpha));
                 break;
             case 5:
-                view.setBackgroundColor(getResources().getColor(R.color.card_background_color5));
+                view.setBackgroundColor(getResources().getColor(R.color.card_background_color5_noalpha));
                 break;
             case 6:
-                view.setBackgroundColor(getResources().getColor(R.color.card_background_color6));
+                view.setBackgroundColor(getResources().getColor(R.color.card_background_color6_noalpha));
                 break;
             case 7:
-                view.setBackgroundColor(getResources().getColor(R.color.card_background_color7));
+                view.setBackgroundColor(getResources().getColor(R.color.card_background_color7_noalpha));
                 break;
             case 8:
-                view.setBackgroundColor(getResources().getColor(R.color.card_background_color8));
+                view.setBackgroundColor(getResources().getColor(R.color.card_background_color8_noalpha));
                 break;
         }
     }

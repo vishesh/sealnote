@@ -1,18 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <item name="transparent" type="color">#00000000</item>
     <item name="darkblue" type="color">#FF0099CC</item>
 
     <!-- color card -->
-    <color name="card_background_color0">#FFFFFFFF</color>
-    <color name="card_background_color1">#FFFFBB33</color>
-    <color name="card_background_color2">#FFFF8800</color>
-    <color name="card_background_color3">#669900</color>
-    <color name="card_background_color4">#FF99cc00</color>
-    <color name="card_background_color5">#FF33B5E5</color>
-    <color name="card_background_color6">#FF0099cc</color>
-    <color name="card_background_color7">#FFFF4444</color>
-    <color name="card_background_color8">#FFaa66cc</color>
+    <color name="card_background_color0_noalpha">#FFFFFFFF</color>
+    <color name="card_background_color1_noalpha">#FFFFBB33</color>
+    <color name="card_background_color2_noalpha">#FFFF8800</color>
+    <color name="card_background_color3_noalpha">#FF669900</color>
+    <color name="card_background_color4_noalpha">#FF99cc00</color>
+    <color name="card_background_color5_noalpha">#FF33B5E5</color>
+    <color name="card_background_color6_noalpha">#FF0099cc</color>
+    <color name="card_background_color7_noalpha">#FFFF4444</color>
+    <color name="card_background_color8_noalpha">#FFaa66cc</color>
+
+    <!-- color card -->
+    <color name="card_background_color0">#55FFFFFF</color>
+    <color name="card_background_color1">#55FFBB33</color>
+    <color name="card_background_color2">#55FF8800</color>
+    <color name="card_background_color3">#55669900</color>
+    <color name="card_background_color4">#5599cc00</color>
+    <color name="card_background_color5">#5533B5E5</color>
+    <color name="card_background_color6">#550099cc</color>
+    <color name="card_background_color7">#55FF4444</color>
+    <color name="card_background_color8">#55aa66cc</color>
 
     <integer-array name="note_colors">
         <item>@color/card_background_color0</item>
