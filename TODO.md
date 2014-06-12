@@ -10,10 +10,17 @@ Sealnote TODO
 * [DONE] Colors in note
 * [DONE] Database encryption
 * [DONE] Password login screen
+* [DONE] [FIX] Dynamic font size
+* [DONE] Minimum height of cards
+* Card header menu
 * Multiple select and delete
-* Color Picket widget for note
+* Color Picker widget for note
 * Select pre-defined colors for note
-* Dynamic font size
+
 * Application Icon
+
+* Search notes
+* Tags
+* Archive and Trash
+* Faster encrypted storage engine
 * Margin between cards
-* Minimum height of cards
