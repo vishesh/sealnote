@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:orientation="vertical"
-              android:layout_width="match_parent"
+              android:layout_width="wrap_content"
               android:layout_height="wrap_content"
               android:paddingTop="@dimen/cardcontent_padding_top"
               android:paddingBottom="@dimen/cardcontent_padding_bottom"
@@ -9,25 +9,14 @@
               android:paddingRight="@dimen/cardcontent_padding_right"
         >
     <TextView
-            android:id="@+id/cardcontent_title"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/cardcontent_margin_left"
-            android:layout_marginTop="@dimen/cardcontent_margin_top"
-            android:layout_marginRight="@dimen/cardcontent_margin_right"
-            android:layout_marginBottom="@dimen/cardcontent_margin_bottom"
-            android:textSize="@dimen/cardcontent_title_size"
-            android:textStyle="bold"
-            android:fontFamily="sans-serif-condensed"
-            />
-    <TextView
             android:id="@+id/cardcontent_note"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/cardcontent_margin_left"
             android:layout_marginTop="@dimen/cardcontent_margin_top"
             android:layout_marginRight="@dimen/cardcontent_margin_right"
             android:layout_marginBottom="@dimen/cardcontent_margin_bottom"
             android:textSize="@dimen/cardcontent_note_size"
+            android:fontFamily="sans-serif-light"
             />
 </LinearLayout>

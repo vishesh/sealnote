@@ -10,14 +10,14 @@
     <!-- padding for inner content -->
     <dimen name="cardcontent_padding_left">8dp</dimen>
     <dimen name="cardcontent_padding_right">8dp</dimen>
-    <dimen name="cardcontent_padding_top">6dp</dimen>
+    <dimen name="cardcontent_padding_top">2dp</dimen>
     <dimen name="cardcontent_padding_bottom">6dp</dimen>
 
     <!-- margins -->
     <dimen name="cardcontent_margin_left">0dp</dimen>
     <dimen name="cardcontent_margin_right">0dp</dimen>
-    <dimen name="cardcontent_margin_top">2dp</dimen>
-    <dimen name="cardcontent_margin_bottom">2dp</dimen>
+    <dimen name="cardcontent_margin_top">0dp</dimen>
+    <dimen name="cardcontent_margin_bottom">0dp</dimen>
 
     <!-- font size -->
     <dimen name="cardcontent_title_size">14sp</dimen>

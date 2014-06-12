@@ -26,4 +26,9 @@
         <item name="android:background">#44000000</item>
     </style>
 
+    <!-- Card styles -->
+    <style name="card.content_outer_layout">
+        <item name="android:minHeight">0dp</item>
+    </style>
+
 </resources>
