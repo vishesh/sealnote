@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.widget.ListView;
 import com.twistedplane.sealnote.data.DatabaseHandler;
 import com.twistedplane.sealnote.data.SealnoteAdapter;
 import it.gmariotti.cardslib.library.extra.staggeredgrid.view.CardGridStaggeredView;
@@ -36,6 +37,7 @@ public class SealnoteActivity extends Activity {
         final Cursor cursor = db.getAllNotesCursor();
         final SealnoteAdapter adapter = new SealnoteAdapter(this, cursor, 0);
         noteListView.setAdapter(adapter);
+        noteListView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
     }
 
     @Override

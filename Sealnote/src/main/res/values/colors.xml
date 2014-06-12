@@ -3,23 +3,39 @@
 
     <item name="darkblue" type="color">#FF0099CC</item>
 
-    <item name="bg_note_orange" type="color">#FFFFBB33</item>
-    <item name="bg_note_blue" type="color">#FF0099CC</item>
-    <item name="bg_note_green" type="color">#FF669900</item>
-    <item name="bg_note_darkorange" type="color">#FFFF8800</item>
+    <!-- color card -->
+    <color name="card_background_color0">#FFFFFFFF</color>
+    <color name="card_background_color1">#FFFFBB33</color>
+    <color name="card_background_color2">#FFFF8800</color>
+    <color name="card_background_color3">#669900</color>
+    <color name="card_background_color4">#FF99cc00</color>
+    <color name="card_background_color5">#FF33B5E5</color>
+    <color name="card_background_color6">#FF0099cc</color>
+    <color name="card_background_color7">#FFFF4444</color>
+    <color name="card_background_color8">#FFaa66cc</color>
 
     <integer-array name="note_colors">
-        <item>@color/bg_note_blue</item>
-        <item>@color/bg_note_orange</item>
-        <item>@color/bg_note_green</item>
-        <item>@color/bg_note_darkorange</item>
+        <item>@color/card_background_color0</item>
+        <item>@color/card_background_color1</item>
+        <item>@color/card_background_color2</item>
+        <item>@color/card_background_color3</item>
+        <item>@color/card_background_color4</item>
+        <item>@color/card_background_color5</item>
+        <item>@color/card_background_color6</item>
+        <item>@color/card_background_color7</item>
+        <item>@color/card_background_color8</item>
     </integer-array>
 
     <string-array name="note_colors_name">
-        <item>blue</item>
-        <item>orange</item>
-        <item>green</item>
-        <item>darkorange</item>
+        <item>color0</item>
+        <item>color1</item>
+        <item>color2</item>
+        <item>color3</item>
+        <item>color4</item>
+        <item>color5</item>
+        <item>color6</item>
+        <item>color7</item>
+        <item>color8</item>
     </string-array>
 
 </resources>

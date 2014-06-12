@@ -24,6 +24,8 @@ public class NoteActivity extends Activity implements ColorDialogFragment.ColorC
         Bundle extras = getIntent().getExtras();
         int id = extras.getInt("NOTE_ID");
 
+        mBackgroundColor = -1;
+
         if (id != -1) {
             DatabaseHandler db = new DatabaseHandler(this);
             this.mNote = db.getNote(id);
@@ -31,7 +33,6 @@ public class NoteActivity extends Activity implements ColorDialogFragment.ColorC
             final EditText titleView = (EditText) findViewById(R.id.note_activity_title);
             final EditText textView = (EditText) findViewById(R.id.note_activity_note);
             final TextView editedView = (TextView) findViewById(R.id.note_activity_edited);
-            final View root = editedView.getRootView();
 
             titleView.setText(mNote.getTitle());
             textView.setText(mNote.getNote());
@@ -46,8 +47,6 @@ public class NoteActivity extends Activity implements ColorDialogFragment.ColorC
             mBackgroundColor = mNote.getColor();
             onColorChanged(mBackgroundColor);
         }
-
-        mBackgroundColor = -1;
     }
 
 
@@ -97,12 +96,42 @@ public class NoteActivity extends Activity implements ColorDialogFragment.ColorC
     }
 
     public void onColorChanged(int color) {
+        mBackgroundColor = color;
+
         if (color == -1) {
             return;
         }
 
         View view = findViewById(R.id.note_activity_title).getRootView();
-        view.setBackgroundColor(color);
-        mBackgroundColor = color;
+
+        switch (color) {
+            case 0:
+                view.setBackgroundColor(getResources().getColor(R.color.card_background_color0));
+                break;
+            case 1:
+                view.setBackgroundColor(getResources().getColor(R.color.card_background_color1));
+                break;
+            case 2:
+                view.setBackgroundColor(getResources().getColor(R.color.card_background_color2));
+                break;
+            case 3:
+                view.setBackgroundColor(getResources().getColor(R.color.card_background_color3));
+                break;
+            case 4:
+                view.setBackgroundColor(getResources().getColor(R.color.card_background_color4));
+                break;
+            case 5:
+                view.setBackgroundColor(getResources().getColor(R.color.card_background_color5));
+                break;
+            case 6:
+                view.setBackgroundColor(getResources().getColor(R.color.card_background_color6));
+                break;
+            case 7:
+                view.setBackgroundColor(getResources().getColor(R.color.card_background_color7));
+                break;
+            case 8:
+                view.setBackgroundColor(getResources().getColor(R.color.card_background_color8));
+                break;
+        }
     }
 }

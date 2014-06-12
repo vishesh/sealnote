@@ -81,10 +81,34 @@ public class SealnoteCard extends Card {
             textView.setVisibility(View.GONE);
         }
 
-        /*
-        if (mNote.getColor() != -1) {
-            parent.setBackgroundColor(mNote.getColor());
+        switch(mNote.getColor()) {
+            case 0:
+                this.setBackgroundResourceId(R.drawable.card_selector_color0);
+                break;
+            case 1:
+                this.setBackgroundResourceId(R.drawable.card_selector_color1);
+                break;
+            case 2:
+                this.setBackgroundResourceId(R.drawable.card_selector_color2);
+                break;
+            case 3:
+                this.setBackgroundResourceId(R.drawable.card_selector_color3);
+                break;
+            case 4:
+                this.setBackgroundResourceId(R.drawable.card_selector_color4);
+                break;
+            case 5:
+                this.setBackgroundResourceId(R.drawable.card_selector_color5);
+                break;
+            case 6:
+                this.setBackgroundResourceId(R.drawable.card_selector_color6);
+                break;
+            case 7:
+                this.setBackgroundResourceId(R.drawable.card_selector_color7);
+                break;
+            case 8:
+                this.setBackgroundResourceId(R.drawable.card_selector_color8);
+                break;
         }
-        */
     }
 }

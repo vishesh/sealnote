@@ -6,7 +6,6 @@ import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.util.Log;
 
 public class ColorDialogFragment extends DialogFragment {
     public interface ColorChangedListener {
@@ -22,7 +21,7 @@ public class ColorDialogFragment extends DialogFragment {
                .setItems(R.array.note_colors_name, new DialogInterface.OnClickListener() {
                    @Override
                    public void onClick(DialogInterface dialogInterface, int i) {
-                        mListener.onColorChanged(getColor(i));
+                        mListener.onColorChanged(i);
                    }
                });
         return builder.create();
@@ -37,9 +36,5 @@ public class ColorDialogFragment extends DialogFragment {
         } catch (ClassCastException e) {
             throw new ClassCastException(activity.toString() + " must implement ColorChangedListener");
         }
-    }
-
-    public int getColor(int i) {
-        return getResources().getIntArray(R.array.note_colors)[i];
     }
 }
