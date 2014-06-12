@@ -11,6 +11,9 @@
     <string name="action_save_note">Save</string>
     <string name="action_color">Color</string>
 
+    <string name="empty_note">No point saving an empty note!</string>
+    <string name="note_saved">Note Saved.</string>
+
     <!-- color dialog -->
     <string name="msg_pick_color">Pick a color</string>
 

@@ -7,6 +7,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 import com.twistedplane.sealnote.data.DatabaseHandler;
 import com.twistedplane.sealnote.data.Note;
 import com.twistedplane.sealnote.utils.EasyDate;
@@ -76,13 +77,21 @@ public class NoteActivity extends Activity implements ColorDialogFragment.ColorC
         final DatabaseHandler handler = new DatabaseHandler(this);
         final EditText titleView = (EditText) findViewById(R.id.note_activity_title);
         final EditText textView = (EditText) findViewById(R.id.note_activity_note);
+        final String title = titleView.getText().toString();
+        final String text = textView.getText().toString();
+
+        if ((title == null || title.equals("")) && (text == null || title.equals(""))) {
+            Toast.makeText(this, getResources().getString(R.string.empty_note), Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         Note note = this.mNote;
 
         if (note == null) {
             note = new Note();
         }
-        note.setTitle(titleView.getText().toString());
-        note.setNote(textView.getText().toString());
+        note.setTitle(title);
+        note.setNote(text);
         note.setColor(mBackgroundColor);
 
         if (mNote == null) {
@@ -92,6 +101,7 @@ public class NoteActivity extends Activity implements ColorDialogFragment.ColorC
             handler.updateNote(note);
         }
 
+        Toast.makeText(this, getResources().getString(R.string.note_saved), Toast.LENGTH_SHORT).show();
         this.finish();
     }
 
