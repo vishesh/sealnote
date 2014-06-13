@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -27,12 +28,15 @@ public class NoteActivity extends Activity implements ColorDialogFragment.ColorC
 
         mBackgroundColor = -1;
 
+        final EditText titleView = (EditText) findViewById(R.id.note_activity_title);
+        final EditText textView = (EditText) findViewById(R.id.note_activity_note);
+
+        textView.requestFocus();
+
         if (id != -1) {
             DatabaseHandler db = new DatabaseHandler(this);
             this.mNote = db.getNote(id);
 
-            final EditText titleView = (EditText) findViewById(R.id.note_activity_title);
-            final EditText textView = (EditText) findViewById(R.id.note_activity_note);
             final TextView editedView = (TextView) findViewById(R.id.note_activity_edited);
 
             titleView.setText(mNote.getTitle());
@@ -47,6 +51,7 @@ public class NoteActivity extends Activity implements ColorDialogFragment.ColorC
 
             mBackgroundColor = mNote.getColor();
             onColorChanged(mBackgroundColor);
+            getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
         }
     }
 

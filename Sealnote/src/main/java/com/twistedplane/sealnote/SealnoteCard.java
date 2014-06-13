@@ -18,8 +18,6 @@ public class SealnoteCard extends Card {
     }
 
     public void init() {
-        setShadow(false);
-
         if (mNote != null && !mNote.getTitle().equals("")) {
             CardHeader header = new CardHeader(getContext());
             header.setTitle(mNote.getTitle());
