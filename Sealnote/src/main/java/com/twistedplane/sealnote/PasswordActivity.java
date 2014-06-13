@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -77,8 +76,6 @@ public class PasswordActivity extends Activity {
                     PasswordActivity.this.startActivity(intent);
                     PasswordActivity.this.finish();
                 } catch (SQLiteException e) {
-                    Log.w("DEBUG", "Invalid password!" + e.toString());
-
                     AlertDialog.Builder alert  = new AlertDialog.Builder(PasswordActivity.this);
                     alert.setMessage("Invalid password!");
                     alert.setPositiveButton("OK", null);

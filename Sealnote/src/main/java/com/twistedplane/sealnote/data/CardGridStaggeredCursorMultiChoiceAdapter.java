@@ -3,39 +3,38 @@ package com.twistedplane.sealnote.data;
 import android.app.Activity;
 import android.content.Context;
 import android.database.Cursor;
+import android.util.Log;
 import android.view.ActionMode;
 import android.view.Menu;
 import android.view.View;
 import android.widget.AbsListView;
-
-import java.util.ArrayList;
-
+import com.twistedplane.sealnote.SealnoteCard;
+import it.gmariotti.cardslib.library.extra.staggeredgrid.view.CardGridStaggeredView;
 import it.gmariotti.cardslib.library.internal.Card;
-import it.gmariotti.cardslib.library.internal.CardGridCursorAdapter;
 import it.gmariotti.cardslib.library.internal.multichoice.DefaultOptionMultiChoice;
 import it.gmariotti.cardslib.library.internal.multichoice.MultiChoiceAdapter;
 import it.gmariotti.cardslib.library.internal.multichoice.MultiChoiceAdapterHelperBase;
 import it.gmariotti.cardslib.library.internal.multichoice.OptionMultiChoice;
-import it.gmariotti.cardslib.library.view.CardGridView;
 import it.gmariotti.cardslib.library.view.CardView;
 
-public abstract class CardGridCursorMultiChoiceAdapter extends CardGridCursorAdapter implements MultiChoiceAdapter, AbsListView.MultiChoiceModeListener {
+import java.util.ArrayList;
 
+public abstract class CardGridStaggeredCursorMultiChoiceAdapter extends CardGridStaggeredCursorAdapter implements MultiChoiceAdapter, AbsListView.MultiChoiceModeListener {
     private MultiChoiceAdapterHelperBase mHelper = new MultiChoiceAdapterHelperBase(this);
     protected OptionMultiChoice mOptions;
 
-    public CardGridCursorMultiChoiceAdapter(Context context, Cursor cursor) {
+    public CardGridStaggeredCursorMultiChoiceAdapter(Context context, Cursor cursor) {
         this(context, cursor, new DefaultOptionMultiChoice());
     }
 
-    public CardGridCursorMultiChoiceAdapter(Context context, Cursor cursor, OptionMultiChoice options) {
+    public CardGridStaggeredCursorMultiChoiceAdapter(Context context, Cursor cursor, OptionMultiChoice options) {
         super(context, cursor, 0);
         this.mOptions = options;
         mHelper.setMultiChoiceModeListener(this);
     }
 
     @Override
-    public void setCardGridView(CardGridView cardGridView) {
+    public void setCardGridView(CardGridStaggeredView cardGridView) {
         super.setCardGridView(cardGridView);
         mHelper.setAdapterView(cardGridView);
     }
@@ -50,6 +49,7 @@ public abstract class CardGridCursorMultiChoiceAdapter extends CardGridCursorAda
     public Card getItem(int position) {
         Card card = super.getItem(position);
         //card.mMultiChoiceEnabled = true;
+        ((SealnoteCard) card).setMultichoiceEnabled(); //FIXME
         return card;
     }
 
@@ -59,17 +59,18 @@ public abstract class CardGridCursorMultiChoiceAdapter extends CardGridCursorAda
 
     @Override
     public boolean onCreateActionMode(ActionMode mode, Menu menu) {
-       return mHelper.onCreateActionMode(mode, menu);
+        return mHelper.onCreateActionMode(mode, menu);
     }
 
     @Override
     public void onDestroyActionMode(ActionMode mode) {
-       mHelper.onDestroyActionMode(mode);
+        mHelper.onDestroyActionMode(mode);
     }
 
     @Override
     public void onItemCheckedStateChanged(ActionMode mode, int position, long id, boolean checked) {
-       mHelper.onItemCheckedStateChanged(mode, position, id, checked);
+        Log.w("DEBUG", "Item checked bitch!");
+        mHelper.onItemCheckedStateChanged(mode, position, id, checked);
     }
 
     @Override

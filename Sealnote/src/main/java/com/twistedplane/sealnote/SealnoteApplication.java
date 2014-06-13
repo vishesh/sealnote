@@ -9,5 +9,6 @@ public class SealnoteApplication extends Application {
     public void onCreate() {
         super.onCreate();
         SQLiteDatabase.loadLibs(this);
+        DatabaseHandler.setPassword("test123");
     }
 }

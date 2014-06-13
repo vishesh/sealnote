@@ -2,13 +2,14 @@ package com.twistedplane.sealnote;
 
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 import android.util.TypedValue;
-import android.view.View;
-import android.view.ViewGroup;
+import android.view.*;
 import android.widget.TextView;
 import com.twistedplane.sealnote.data.Note;
 import it.gmariotti.cardslib.library.internal.Card;
 import it.gmariotti.cardslib.library.internal.CardHeader;
+import it.gmariotti.cardslib.library.view.CardView;
 
 public class SealnoteCard extends Card {
     protected Note mNote;
@@ -18,7 +19,7 @@ public class SealnoteCard extends Card {
     }
 
     public void init() {
-        this.mMultiChoiceEnabled = true;
+        this.setCheckable(true);
 
         if (mNote != null && !mNote.getTitle().equals("")) {
             CardHeader header = new CardHeader(getContext());
@@ -30,7 +31,18 @@ public class SealnoteCard extends Card {
             @Override
             public void onClick(Card card, View view) {
                 SealnoteCard sCard = (SealnoteCard) card;
-                startNoteActivity(getContext(), sCard.getNote().getId());
+                //startNoteActivity(getContext(), sCard.getNote().getId());
+                view.setActivated(true);
+                view.setSelected(true);
+            }
+        });
+
+        setOnLongClickListener(new OnLongCardClickListener() {
+            @Override
+            public boolean onLongClick(Card card, View view) {
+                SealnoteActivity.adapter.startActionMode(SealnoteActivity.activity);
+                view.setActivated(true);
+                return true;
             }
         });
     }
@@ -81,6 +93,7 @@ public class SealnoteCard extends Card {
             textView.setVisibility(View.GONE);
         }
 
+        /*
         switch(mNote.getColor()) {
             case 0:
                 this.setBackgroundResourceId(R.drawable.card_selector_color0);
@@ -110,5 +123,10 @@ public class SealnoteCard extends Card {
                 this.setBackgroundResourceId(R.drawable.card_selector_color8);
                 break;
         }
+        */
+    }
+
+    public void setMultichoiceEnabled() {
+        this.mMultiChoiceEnabled = true;
     }
 }
