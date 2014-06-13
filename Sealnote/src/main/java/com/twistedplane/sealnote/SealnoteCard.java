@@ -18,6 +18,8 @@ public class SealnoteCard extends Card {
     }
 
     public void init() {
+        this.mMultiChoiceEnabled = true;
+
         if (mNote != null && !mNote.getTitle().equals("")) {
             CardHeader header = new CardHeader(getContext());
             header.setTitle(mNote.getTitle());
