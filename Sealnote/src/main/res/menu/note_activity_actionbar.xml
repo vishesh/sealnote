@@ -4,9 +4,11 @@
     <item android:id="@+id/action_color"
           android:title="@string/action_color"
           android:showAsAction="always"
+          android:icon="@drawable/ic_menu_color"
           />
     <item android:id="@+id/action_save_note"
           android:title="@string/action_save_note"
           android:showAsAction="always"
+          android:icon="@android:drawable/ic_menu_save"
           />
 </menu>
