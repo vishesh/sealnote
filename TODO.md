@@ -12,15 +12,17 @@ Sealnote TODO
 * [DONE] Password login screen
 * [DONE] [FIX] Dynamic font size
 * [DONE] Minimum height of cards
+* [DONE] Multiple select and delete
+* [DONE] Application Icon
 * Card header menu
-* Multiple select and delete
 * Color Picker widget for note
 * Select pre-defined colors for note
-
-* Application Icon
 
 * Search notes
 * Tags
 * Archive and Trash
 * Faster encrypted storage engine
 * Margin between cards
+
+* MultiMode in AndroidStageredGrid library
+* [PROGRESS] LongPress in AndroidStaggeredGrid library
