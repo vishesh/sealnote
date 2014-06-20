@@ -2,14 +2,13 @@ package com.twistedplane.sealnote;
 
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
 import android.util.TypedValue;
-import android.view.*;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.TextView;
 import com.twistedplane.sealnote.data.Note;
 import it.gmariotti.cardslib.library.internal.Card;
 import it.gmariotti.cardslib.library.internal.CardHeader;
-import it.gmariotti.cardslib.library.view.CardView;
 
 public class SealnoteCard extends Card {
     protected Note mNote;
@@ -26,25 +25,6 @@ public class SealnoteCard extends Card {
             header.setTitle(mNote.getTitle());
             addCardHeader(header);
         }
-
-        setOnClickListener(new OnCardClickListener() {
-            @Override
-            public void onClick(Card card, View view) {
-                SealnoteCard sCard = (SealnoteCard) card;
-                //startNoteActivity(getContext(), sCard.getNote().getId());
-                view.setActivated(true);
-                view.setSelected(true);
-            }
-        });
-
-        setOnLongClickListener(new OnLongCardClickListener() {
-            @Override
-            public boolean onLongClick(Card card, View view) {
-                SealnoteActivity.adapter.startActionMode(SealnoteActivity.activity);
-                view.setActivated(true);
-                return true;
-            }
-        });
     }
 
     public static void startNoteActivity(Context con, int id) {
@@ -55,6 +35,16 @@ public class SealnoteCard extends Card {
 
     public void setNote(Note note) {
         this.mNote = note;
+    }
+
+    @Override
+    public void setId(String id) {
+        this.mNote.setId(Integer.parseInt(id));
+    }
+
+    @Override
+    public String getId() {
+        return Integer.toString(this.mNote.getId());
     }
 
     public Note getNote() {

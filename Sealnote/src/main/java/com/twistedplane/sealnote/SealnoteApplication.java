@@ -1,7 +1,6 @@
 package com.twistedplane.sealnote;
 
 import android.app.Application;
-import com.twistedplane.sealnote.data.DatabaseHandler;
 import net.sqlcipher.database.SQLiteDatabase;
 
 public class SealnoteApplication extends Application {
@@ -9,6 +8,5 @@ public class SealnoteApplication extends Application {
     public void onCreate() {
         super.onCreate();
         SQLiteDatabase.loadLibs(this);
-        DatabaseHandler.setPassword("test123");
     }
 }
