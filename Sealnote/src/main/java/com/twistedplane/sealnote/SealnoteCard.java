@@ -83,7 +83,6 @@ public class SealnoteCard extends Card {
             textView.setVisibility(View.GONE);
         }
 
-        /*
         switch(mNote.getColor()) {
             case 0:
                 this.setBackgroundResourceId(R.drawable.card_selector_color0);
@@ -113,7 +112,6 @@ public class SealnoteCard extends Card {
                 this.setBackgroundResourceId(R.drawable.card_selector_color8);
                 break;
         }
-        */
     }
 
     public void setMultichoiceEnabled() {

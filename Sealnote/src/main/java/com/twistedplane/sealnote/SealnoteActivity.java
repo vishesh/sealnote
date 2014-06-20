@@ -41,7 +41,7 @@ public class SealnoteActivity extends Activity {
         adapter = new SealnoteAdapter(this, cursor);
 
         final SealnoteCardGridStaggeredView noteListView = (SealnoteCardGridStaggeredView) findViewById(R.id.main_note_grid);
-        noteListView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
+        //noteListView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
         noteListView.setAdapter(adapter);
     }
 

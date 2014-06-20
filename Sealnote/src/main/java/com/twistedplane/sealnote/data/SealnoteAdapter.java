@@ -40,10 +40,10 @@ public class SealnoteAdapter extends CardGridStaggeredCursorAdapter {
                 } else {
                     setItemChecked((CardView) view, !getItemChecked((CardView) view));
                     mActionMode.invalidate();
-                }
 
-                if (mCheckedIds.size() == 0) {
-                    mActionMode.finish();
+                    if (mCheckedIds.size() == 0) {
+                        mActionMode.finish();
+                    }
                 }
             }
         });
