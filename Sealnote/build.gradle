@@ -57,4 +57,6 @@ dependencies {
     compile 'com.etsy.android.grid:library:1.0.4'
     compile 'com.github.gabrielemariotti.cards:library:1.6.0'
     compile 'com.github.gabrielemariotti.cards:library-extra:1.6.0'
+    compile 'com.nhaarman.listviewanimations:library:2.6.0'
+
 }
