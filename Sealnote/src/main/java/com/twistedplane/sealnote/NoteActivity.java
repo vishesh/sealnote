@@ -16,7 +16,7 @@ import com.twistedplane.sealnote.utils.EasyDate;
 
 public class NoteActivity extends Activity implements ColorDialogFragment.ColorChangedListener{
     private Note mNote;
-    private int mBackgroundColor;
+    int mBackgroundColor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
