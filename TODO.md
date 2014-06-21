@@ -14,11 +14,15 @@ Sealnote TODO
 * [DONE] Minimum height of cards
 * [DONE] Multiple select and delete
 * [DONE] Application Icon
-* Card header menu
 * [DONE] Color Picker widget for note
-* Select pre-defined colors for note
 
+21st June 2014 - 27th June 2014
+-------------------------------
+* Select pre-defined colors for note
+* Card header menu
 * Search notes
+
+
 * Tags
 * Archive and Trash
 * Faster encrypted storage engine
