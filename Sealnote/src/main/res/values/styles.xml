@@ -31,4 +31,15 @@
         <item name="android:minHeight">0dp</item>
     </style>
 
+    <style name="PasswordLoginButton">
+        <item name="android:background">@drawable/button_password_login</item>
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:textAllCaps">true</item>
+        <item name="android:fontFamily">sans-serif-condensed</item>
+        <item name="android:paddingTop">@dimen/password_activity_button_vertical_padding</item>
+        <item name="android:paddingRight">@dimen/password_activity_button_horizontal_padding</item>
+        <item name="android:paddingBottom">@dimen/password_activity_button_vertical_padding</item>
+        <item name="android:paddingLeft">@dimen/password_activity_button_horizontal_padding</item>
+    </style>
+
 </resources>
