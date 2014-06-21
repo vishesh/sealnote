@@ -15,7 +15,7 @@ Sealnote TODO
 * [DONE] Multiple select and delete
 * [DONE] Application Icon
 * Card header menu
-* Color Picker widget for note
+* [DONE] Color Picker widget for note
 * Select pre-defined colors for note
 
 * Search notes
