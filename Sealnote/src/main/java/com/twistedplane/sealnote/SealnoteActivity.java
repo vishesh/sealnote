@@ -3,10 +3,10 @@ package com.twistedplane.sealnote;
 import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
+import android.os.AsyncTask;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
+import android.view.*;
+import android.widget.LinearLayout;
 import com.nhaarman.listviewanimations.swinginadapters.AnimationAdapter;
 import com.nhaarman.listviewanimations.swinginadapters.prepared.ScaleInAnimationAdapter;
 import com.twistedplane.sealnote.data.DatabaseHandler;
@@ -22,12 +22,19 @@ public class SealnoteActivity extends Activity {
     public static SealnoteActivity activity;
 
     SealnoteCardGridStaggeredView noteListView;
+    private boolean mAdapterLoaded = false;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
+        setProgressBarIndeterminate(true);
+
         setContentView(R.layout.main);
         activity = this;
+        noteListView = (SealnoteCardGridStaggeredView) findViewById(R.id.main_note_grid);
+        final LinearLayout layoutProgressHeader = (LinearLayout) findViewById(R.id.layoutHeaderProgress);
 
         // setup database and password
         if (DatabaseHandler.getPassword() == null) {
@@ -37,14 +44,34 @@ public class SealnoteActivity extends Activity {
             return;
         }
 
-        /* Setup adapter for notes grid view */
-        final DatabaseHandler db = new DatabaseHandler(this);
-        final Cursor cursor = db.getAllNotesCursor();
-        adapter = new SealnoteAdapter(this, cursor);
+        AsyncTask<Void, Void, SealnoteAdapter> task = new AsyncTask<Void, Void, SealnoteAdapter>() {
+            @Override
+            protected void onPreExecute() {
+                super.onPreExecute();
+                noteListView.setVisibility(View.GONE);
+                layoutProgressHeader.setVisibility(View.VISIBLE);
+            }
 
-        noteListView = (SealnoteCardGridStaggeredView) findViewById(R.id.main_note_grid);
-        //noteListView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
-        //noteListView.setAdapter(adapter);
+            @Override
+            protected SealnoteAdapter doInBackground(Void... voids) {
+                final DatabaseHandler db = new DatabaseHandler(SealnoteActivity.this);
+                final Cursor cursor = db.getAllNotesCursor();
+                return new SealnoteAdapter(SealnoteActivity.this, cursor);
+            }
+
+            @Override
+            protected void onPostExecute(SealnoteAdapter sealnoteAdapter) {
+                super.onPostExecute(sealnoteAdapter);
+
+                adapter = sealnoteAdapter;
+                mAdapterLoaded = true;
+                loadGridAdapter();
+
+                noteListView.setVisibility(View.VISIBLE);
+                layoutProgressHeader.setVisibility(View.GONE);
+            }
+        };
+        task.execute();
     }
 
     @Override
@@ -67,17 +94,23 @@ public class SealnoteActivity extends Activity {
         }
     }
 
+    private void loadGridAdapter() {
+        if (mAdapterLoaded) {
+            final CardGridStaggeredView noteListView = (CardGridStaggeredView) findViewById(R.id.main_note_grid);
+
+            setScaleAnimationAdapter();
+
+            AnimationAdapter animationAdapter = (AnimationAdapter) noteListView.getAdapter();
+            SealnoteAdapter dataAdapter = (SealnoteAdapter) animationAdapter.getDecoratedBaseAdapter();
+
+            dataAdapter.swapCursor(new DatabaseHandler(this).getAllNotesCursor());
+        }
+    }
+
     @Override
     public void onResume() {
         super.onResume();
-        final CardGridStaggeredView noteListView = (CardGridStaggeredView) findViewById(R.id.main_note_grid);
-
-        setScaleAnimationAdapter();
-
-        AnimationAdapter animationAdapter = (AnimationAdapter) noteListView.getAdapter();
-        SealnoteAdapter dataAdapter = (SealnoteAdapter) animationAdapter.getDecoratedBaseAdapter();
-
-        dataAdapter.swapCursor(new DatabaseHandler(this).getAllNotesCursor());
+        loadGridAdapter();
     }
 
     private void setScaleAnimationAdapter() {
