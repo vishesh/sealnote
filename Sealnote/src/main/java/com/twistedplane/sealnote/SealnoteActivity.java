@@ -1,6 +1,7 @@
 package com.twistedplane.sealnote;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.AsyncTask;
@@ -89,6 +90,8 @@ public class SealnoteActivity extends Activity {
             case R.id.action_new_note:
                 SealnoteCard.startNoteActivity(this, -1);
                 return true;
+            case R.id.action_about:
+                showAboutDialog();
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -121,5 +124,16 @@ public class SealnoteActivity extends Activity {
 
         animCardArrayAdapter.setAbsListView(noteListView);
         noteListView.setExternalAdapter(animCardArrayAdapter, adapter);
+    }
+
+    private void showAboutDialog() {
+        View messageView = getLayoutInflater().inflate(R.layout.about, null, false);
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setIcon(R.drawable.ic_launcher);
+        builder.setTitle(R.string.app_name);
+        builder.setView(messageView);
+        builder.create();
+        builder.show();
     }
 }
