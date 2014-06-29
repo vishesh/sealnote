@@ -1,6 +1,8 @@
 package com.twistedplane.sealnote;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -18,26 +20,34 @@ public class NoteActivity extends Activity implements ColorDialogFragment.ColorC
     private Note mNote;
     int mBackgroundColor;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_note);
+    private class NoteLoadTask extends AsyncTask<Integer, Void, Note> {
+        ProgressDialog mProgressDialog;
 
-        Bundle extras = getIntent().getExtras();
-        int id = extras.getInt("NOTE_ID");
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            mProgressDialog = new ProgressDialog(NoteActivity.this);
+            mProgressDialog.setMessage("Loading");
+            mProgressDialog.setIndeterminate(true);
+            mProgressDialog.show();
+        }
 
-        mBackgroundColor = -1;
+        @Override
+        protected Note doInBackground(Integer... integers) {
+            DatabaseHandler db = new DatabaseHandler(getBaseContext());
+            return db.getNote(integers[0]);
+        }
 
-        final EditText titleView = (EditText) findViewById(R.id.note_activity_title);
-        final EditText textView = (EditText) findViewById(R.id.note_activity_note);
+        @Override
+        protected void onPostExecute(Note note) {
+            super.onPostExecute(note);
+            NoteActivity.this.mNote = note;
+            mProgressDialog.dismiss();
 
-        textView.requestFocus();
-
-        if (id != -1) {
-            DatabaseHandler db = new DatabaseHandler(this);
-            this.mNote = db.getNote(id);
-
+            NoteActivity.this.setContentView(R.layout.activity_note);
             final TextView editedView = (TextView) findViewById(R.id.note_activity_edited);
+            final EditText titleView = (EditText) findViewById(R.id.note_activity_title);
+            final EditText textView = (EditText) findViewById(R.id.note_activity_note);
 
             titleView.setText(mNote.getTitle());
             textView.setText(mNote.getNote());
@@ -52,6 +62,23 @@ public class NoteActivity extends Activity implements ColorDialogFragment.ColorC
             mBackgroundColor = mNote.getColor();
             onColorChanged(mBackgroundColor);
             getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
+            textView.requestFocus();
+        }
+    }
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        mBackgroundColor = -1;
+
+        Bundle extras = getIntent().getExtras();
+        int id = extras.getInt("NOTE_ID");
+        if (id != -1) {
+            new NoteLoadTask().execute(id);
+        } else {
+            setContentView(R.layout.activity_note);
+            final EditText textView = (EditText) findViewById(R.id.note_activity_note);
+            textView.requestFocus();
         }
     }
 
