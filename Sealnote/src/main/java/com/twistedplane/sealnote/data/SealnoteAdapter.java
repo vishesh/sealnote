@@ -1,8 +1,10 @@
 package com.twistedplane.sealnote.data;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.database.Cursor;
+import android.os.AsyncTask;
 import android.util.SparseBooleanArray;
 import android.view.*;
 import com.twistedplane.sealnote.R;
@@ -99,21 +101,53 @@ public class SealnoteAdapter extends CardGridStaggeredCursorAdapter {
 
     class MultiChoiceCallback implements ActionMode.Callback {
         void deleteSelectedNotes() {
-            DatabaseHandler db = new DatabaseHandler(getContext());
+            new AsyncTask<SparseBooleanArray, Integer, Cursor>() {
+                ProgressDialog dialog = new ProgressDialog(getContext());
 
-            for (int i = 0; i < mCheckedIds.size(); i++) {
-                int key = mCheckedIds.keyAt(i);
-                if (mCheckedIds.get(key)) {
-                    db.deleteNote(key);
+                @Override
+                protected void onPreExecute() {
+                    super.onPreExecute();
+                    dialog.setMax(mCheckedIds.size());
+                    dialog.setTitle("Deleting notes.");
+                    dialog.setProgress(0);
+                    dialog.setCancelable(false);
+                    dialog.setCanceledOnTouchOutside(false);
+                    dialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+                    dialog.show();
                 }
-            }
 
-            Cursor newCursor = db.getAllNotesCursor();
-            SealnoteAdapter.this.swapCursor(newCursor);
+                @Override
+                protected Cursor doInBackground(SparseBooleanArray... sparseBooleanArrays) {
+                    DatabaseHandler db = new DatabaseHandler(getContext());
 
-            mCheckedIds.clear();
-            notifyDataSetChanged();
-            mActionMode.finish();
+                    for (int i = 0; i < mCheckedIds.size(); i++) {
+                        publishProgress(i);
+                        int key = mCheckedIds.keyAt(i);
+                        if (mCheckedIds.get(key)) {
+                            db.deleteNote(key);
+                        }
+                    }
+
+                    return db.getAllNotesCursor();
+                }
+
+                @Override
+                protected void onProgressUpdate(Integer... values) {
+                    super.onProgressUpdate(values);
+                    dialog.setProgress(values[0]);
+                }
+
+                @Override
+                protected void onPostExecute(Cursor cursor) {
+                    super.onPostExecute(cursor);
+                    SealnoteAdapter.this.swapCursor(cursor);
+                    mCheckedIds.clear();
+                    notifyDataSetChanged();
+
+                    mActionMode.finish();
+                    dialog.dismiss();
+                }
+            }.execute(mCheckedIds);
         }
 
         @Override
