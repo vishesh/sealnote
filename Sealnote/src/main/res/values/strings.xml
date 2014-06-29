@@ -30,7 +30,7 @@
     <string name="welcome">Welcome to SealNote!</string>
     <string name="welcome_submessage">Keep notes safe and secure</string>
 
-    <string name="app_description">Objective is simple. Provide a quick, simple and <b>safe</b> notepad. Your notes are encrypted using strong encryption. No longer worry about losing your private information to malicious people.
+    <string name="app_description">Objective is simple. Provide a quick, simple and <b>safe</b> notepad. Your notes are encrypted using strong 256-bit AES algorithm. No longer worry about losing your private information to malicious people.
     </string>
     <string name="app_credits"><b>TwistedPlane:</b>\nwww.twistedplane.com\ncontact@twistedplane.com"
     </string>
