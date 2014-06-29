@@ -105,7 +105,11 @@ public class NoteActivity extends Activity implements ColorDialogFragment.ColorC
         }
     }
 
+    private boolean mSaveButtonClicked = false;
+
     public void saveNote() {
+        if (mSaveButtonClicked) return; else mSaveButtonClicked = true; //FIXME: Hack. Avoids double saving
+
         final DatabaseHandler handler = new DatabaseHandler(this);
         final EditText titleView = (EditText) findViewById(R.id.note_activity_title);
         final EditText textView = (EditText) findViewById(R.id.note_activity_note);
