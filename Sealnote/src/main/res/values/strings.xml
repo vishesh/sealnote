@@ -24,6 +24,7 @@
     <string name="get_started">Get Started</string>
     <string name="go">Go</string>
     <string name="cancel">Cancel</string>
+    <string name="invalid_password">Invalid password!</string>
 
     <string name="welcome">Welcome to SealNote!</string>
     <string name="welcome_submessage">Keep notes safe and secure</string>
