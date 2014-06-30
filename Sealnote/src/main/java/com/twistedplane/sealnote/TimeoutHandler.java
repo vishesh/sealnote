@@ -20,7 +20,7 @@ class TimeoutHandler implements Runnable {
         mTimedOut = true;
     }
 
-    private void passwordTimeoutClear() {
+    public void passwordTimeoutClear() {
         mHandler.removeCallbacks(mInstance, null);
         mTimedOut = false;
     }

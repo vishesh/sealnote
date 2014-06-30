@@ -65,8 +65,8 @@ public class PasswordActivity extends Activity {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                new LoginTask().execute(password.getText().toString());
                 toggleProgress();
+                new LoginTask().execute(password.getText().toString());
             }
         });
     }
@@ -100,6 +100,9 @@ public class PasswordActivity extends Activity {
 
         protected void onPostExecute(Boolean result) {
             if (result) {
+                // clear all timers if any to avoid bouncing back here from activity
+                TimeoutHandler.instance().passwordTimeoutClear();
+
                 Intent intent = new Intent(PasswordActivity.this, SealnoteActivity.class);
                 PasswordActivity.this.startActivity(intent);
                 PasswordActivity.this.finish();
