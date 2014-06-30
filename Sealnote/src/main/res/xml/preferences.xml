@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory android:title="@string/pref_catGeneral">
+        <ListPreference
+                android:key="pref_passwordTimeout"
+                android:title="@string/pref_passwordTimeout"
+                android:dialogTitle="@string/pref_passwordTimeout"
+                android:entries="@array/pref_passwordTimeoutValueNames"
+                android:entryValues="@array/pref_passwordTimeoutValues"
+                android:defaultValue="10000" />
+    </PreferenceCategory>
+</PreferenceScreen>

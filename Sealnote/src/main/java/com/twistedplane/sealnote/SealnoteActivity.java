@@ -37,11 +37,8 @@ public class SealnoteActivity extends Activity {
         noteListView = (SealnoteCardGridStaggeredView) findViewById(R.id.main_note_grid);
         final LinearLayout layoutProgressHeader = (LinearLayout) findViewById(R.id.layoutHeaderProgress);
 
-        // setup database and password
         if (DatabaseHandler.getPassword() == null) {
-            Intent intent = new Intent(this, PasswordActivity.class);
-            this.startActivity(intent);
-            this.finish();
+            // onResume will follow up which will start PasswordActivity and setup database password
             return;
         }
 
@@ -92,6 +89,10 @@ public class SealnoteActivity extends Activity {
                 return true;
             case R.id.action_about:
                 showAboutDialog();
+                return true;
+            case R.id.action_settings:
+                showSettings();
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -113,7 +114,16 @@ public class SealnoteActivity extends Activity {
     @Override
     public void onResume() {
         super.onResume();
+        if (TimeoutHandler.instance().resume(this)) {
+            return;
+        }
         loadGridAdapter();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        TimeoutHandler.instance().pause(this);
     }
 
     private void setScaleAnimationAdapter() {
@@ -135,5 +145,10 @@ public class SealnoteActivity extends Activity {
         builder.setView(messageView);
         builder.create();
         builder.show();
+    }
+
+    private void showSettings() {
+        Intent intent = new Intent(this, SettingsActivity.class);
+        this.startActivity(intent);
     }
 }

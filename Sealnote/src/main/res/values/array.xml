@@ -1,3 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string-array name="pref_passwordTimeoutValueNames">
+        <item>10 seconds</item>
+        <item>30 seconds</item>
+        <item>1 minute</item>
+        <item>1.5 minutes</item>
+        <item>2 minutes</item>
+        <item>5 minutes</item>
+    </string-array>
+
+    <string-array name="pref_passwordTimeoutValues">
+        <item>10000</item>
+        <item>30000</item>
+        <item>60000</item>
+        <item>90000</item>
+        <item>120000</item>
+        <item>300000</item>
+    </string-array>
 </resources>

@@ -82,6 +82,19 @@ public class NoteActivity extends Activity implements ColorDialogFragment.ColorC
         }
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (TimeoutHandler.instance().resume(this)) {
+            return;
+        }
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        TimeoutHandler.instance().pause(this);
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

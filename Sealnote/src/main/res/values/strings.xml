@@ -11,7 +11,6 @@
     <string name="action_new_note">Create New Note</string>
     <string name="action_save_note">Save</string>
     <string name="action_color">Color</string>
-
     <string name="empty_note">No point saving an empty note!</string>
     <string name="note_saved">Note Saved.</string>
 
@@ -26,13 +25,15 @@
     <string name="go">Go</string>
     <string name="cancel">Cancel</string>
     <string name="invalid_password">Invalid password!</string>
-
     <string name="welcome">Welcome to SealNote!</string>
     <string name="welcome_submessage">Keep notes safe and secure</string>
+    <string name="app_description">Objective is simple. Provide a quick, simple and <b>safe</b> notepad. Your notes are encrypted using strong 256-bit AES algorithm. No longer worry about losing your private information to malicious people.</string>
+    <string name="app_credits"><b>TwistedPlane:</b>\nwww.twistedplane.com\ncontact@twistedplane.com"</string>
 
-    <string name="app_description">Objective is simple. Provide a quick, simple and <b>safe</b> notepad. Your notes are encrypted using strong 256-bit AES algorithm. No longer worry about losing your private information to malicious people.
-    </string>
-    <string name="app_credits"><b>TwistedPlane:</b>\nwww.twistedplane.com\ncontact@twistedplane.com"
-    </string>
+    <!-- Preferences -->
+    <string name="pref_passwordTimeout">Password Timeout</string>
+    <string name="pref_catGeneral">General</string>
+
+    <string name="title_activity_settings">Settings</string>
 
 </resources>

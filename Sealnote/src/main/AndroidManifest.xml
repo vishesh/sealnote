@@ -33,6 +33,15 @@
                 android:label="@string/title_activity_note"
                 android:theme="@android:style/Theme.Holo.Light.NoActionBar">
         </activity>
+        <activity
+                android:name="com.twistedplane.sealnote.SettingsActivity"
+                android:label="@string/title_activity_settings"
+                android:parentActivityName="com.twistedplane.sealnote.SealnoteActivity"
+                android:theme="@style/Sealnote.Theme.Main">
+            <meta-data
+                    android:name="android.support.PARENT_ACTIVITY"
+                    android:value="SealnoteActivity"/>
+        </activity>
     </application>
 
 </manifest>
