@@ -16,8 +16,9 @@ Sealnote TODO
 * [DONE] Application Icon
 * [DONE] Color Picker widget for note
 
-21st June 2014 - 27th June 2014
+21st June 2014 - 30th June 2014
 -------------------------------
+* [DONE] Expire password after timeout
 * Select pre-defined colors for note
 * Card header menu
 * Search notes
