@@ -46,6 +46,12 @@ class TimeoutHandler implements Runnable {
         return mTimedOut;
     }
 
+    public void expire(Activity activity) {
+        mActivity = activity;
+        run();
+        resume(activity);
+    }
+
     public void pause(Activity activity) {
         mActivity = activity;
         passwordTimeoutStart();

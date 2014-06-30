@@ -11,6 +11,7 @@
     <string name="action_new_note">Create New Note</string>
     <string name="action_save_note">Save</string>
     <string name="action_color">Color</string>
+    <string name="action_logout">Logout</string>
     <string name="empty_note">No point saving an empty note!</string>
     <string name="note_saved">Note Saved.</string>
 

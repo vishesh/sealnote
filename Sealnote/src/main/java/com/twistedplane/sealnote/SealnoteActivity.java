@@ -93,6 +93,9 @@ public class SealnoteActivity extends Activity {
             case R.id.action_settings:
                 showSettings();
                 return true;
+            case R.id.action_logout:
+                TimeoutHandler.instance().expire(this);
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
