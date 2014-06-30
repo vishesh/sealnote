@@ -19,7 +19,7 @@ android {
     defaultConfig {
         minSdkVersion 14
         targetSdkVersion 19
-        versionCode 1
+        versionCode 3
         versionName "0.1"
     }
     buildTypes {
@@ -58,5 +58,4 @@ dependencies {
     compile 'com.github.gabrielemariotti.cards:library:1.6.0'
     compile 'com.github.gabrielemariotti.cards:library-extra:1.6.0'
     compile 'com.nhaarman.listviewanimations:library:2.6.0'
-
 }

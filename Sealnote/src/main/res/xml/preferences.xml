@@ -7,6 +7,15 @@
                 android:dialogTitle="@string/pref_passwordTimeout"
                 android:entries="@array/pref_passwordTimeoutValueNames"
                 android:entryValues="@array/pref_passwordTimeoutValues"
-                android:defaultValue="10000" />
+                android:defaultValue="10000"
+                android:summary="@string/pref_passwordTimeoutSummary"
+                />
     </PreferenceCategory>
+
+    <CheckBoxPreference
+        android:key="pref_secureWindow"
+        android:title="@string/pref_secureWindowTitle"
+        android:defaultValue="false"
+        android:summary="@string/pref_secureWindowSummary"
+        />
 </PreferenceScreen>

@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Handler;
 import android.preference.PreferenceManager;
-import android.util.Log;
 import com.twistedplane.sealnote.data.DatabaseHandler;
 
 class TimeoutHandler implements Runnable {

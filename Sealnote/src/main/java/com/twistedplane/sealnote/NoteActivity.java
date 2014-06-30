@@ -2,8 +2,10 @@ package com.twistedplane.sealnote;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -15,6 +17,7 @@ import com.twistedplane.sealnote.data.DatabaseHandler;
 import com.twistedplane.sealnote.data.Note;
 import com.twistedplane.sealnote.utils.EasyDate;
 
+//FIXME: Secure window. Clean up code and update flag on settings changed.
 
 public class NoteActivity extends Activity implements ColorDialogFragment.ColorChangedListener{
     private Note mNote;
@@ -45,6 +48,7 @@ public class NoteActivity extends Activity implements ColorDialogFragment.ColorC
             mProgressDialog.dismiss();
 
             NoteActivity.this.setContentView(R.layout.activity_note);
+
             final TextView editedView = (TextView) findViewById(R.id.note_activity_edited);
             final EditText titleView = (EditText) findViewById(R.id.note_activity_title);
             final EditText textView = (EditText) findViewById(R.id.note_activity_note);
@@ -63,6 +67,19 @@ public class NoteActivity extends Activity implements ColorDialogFragment.ColorC
             onColorChanged(mBackgroundColor);
             getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
             textView.requestFocus();
+
+            secureWindow();
+        }
+    }
+
+    private void secureWindow() {
+        // secure window content
+        SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
+        boolean isSecureWindow = sharedPrefs.getBoolean("pref_secureWindow", false);
+        if (isSecureWindow) {
+            getWindow().setFlags(WindowManager.LayoutParams.FLAG_SECURE, WindowManager.LayoutParams.FLAG_SECURE);
+        } else {
+            getWindow().setFlags(0, WindowManager.LayoutParams.FLAG_SECURE);
         }
     }
 
@@ -80,6 +97,7 @@ public class NoteActivity extends Activity implements ColorDialogFragment.ColorC
             final EditText textView = (EditText) findViewById(R.id.note_activity_note);
             textView.requestFocus();
         }
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_SECURE, WindowManager.LayoutParams.FLAG_SECURE);
     }
 
     @Override

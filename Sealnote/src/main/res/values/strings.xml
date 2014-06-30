@@ -32,8 +32,13 @@
     <string name="app_credits"><b>TwistedPlane:</b>\nwww.twistedplane.com\ncontact@twistedplane.com"</string>
 
     <!-- Preferences -->
-    <string name="pref_passwordTimeout">Password Timeout</string>
     <string name="pref_catGeneral">General</string>
+
+    <string name="pref_passwordTimeout">Password Timeout</string>
+    <string name="pref_passwordTimeoutSummary">Inactivity timeout after which re-login is required.</string>
+
+    <string name="pref_secureWindowTitle">Secure window content</string>
+    <string name="pref_secureWindowSummary">Prevent window content from appearing in screenshots, switcher or other non-secure displays.</string>
 
     <string name="title_activity_settings">Settings</string>
 

@@ -3,9 +3,11 @@ package com.twistedplane.sealnote;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.*;
 import android.widget.LinearLayout;
 import com.nhaarman.listviewanimations.swinginadapters.AnimationAdapter;
@@ -14,6 +16,8 @@ import com.twistedplane.sealnote.data.DatabaseHandler;
 import com.twistedplane.sealnote.data.SealnoteAdapter;
 import com.twistedplane.sealnote.views.SealnoteCardGridStaggeredView;
 import it.gmariotti.cardslib.library.extra.staggeredgrid.view.CardGridStaggeredView;
+
+//FIXME: Secure window. Clean up code and update flag on settings changed.
 
 public class SealnoteActivity extends Activity {
     /**
@@ -25,6 +29,17 @@ public class SealnoteActivity extends Activity {
     SealnoteCardGridStaggeredView noteListView;
     private boolean mAdapterLoaded = false;
 
+    private void secureWindow() {
+        // secure window content
+        SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
+        boolean isSecureWindow = sharedPrefs.getBoolean("pref_secureWindow", false);
+        if (isSecureWindow) {
+            getWindow().setFlags(WindowManager.LayoutParams.FLAG_SECURE, WindowManager.LayoutParams.FLAG_SECURE);
+        } else {
+            getWindow().setFlags(0, WindowManager.LayoutParams.FLAG_SECURE);
+        }
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -33,6 +48,8 @@ public class SealnoteActivity extends Activity {
         setProgressBarIndeterminate(true);
 
         setContentView(R.layout.main);
+        secureWindow();
+
         activity = this;
         noteListView = (SealnoteCardGridStaggeredView) findViewById(R.id.main_note_grid);
         final LinearLayout layoutProgressHeader = (LinearLayout) findViewById(R.id.layoutHeaderProgress);
@@ -121,6 +138,7 @@ public class SealnoteActivity extends Activity {
             return;
         }
         loadGridAdapter();
+        secureWindow();
     }
 
     @Override
