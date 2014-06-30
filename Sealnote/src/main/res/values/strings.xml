@@ -40,6 +40,17 @@
     <string name="pref_secureWindowTitle">Secure window content</string>
     <string name="pref_secureWindowSummary">Prevent window content from appearing in screenshots, switcher or other non-secure displays.</string>
 
+    <string name="pref_changePassword">Change Password</string>
+
     <string name="title_activity_settings">Settings</string>
+
+    <!-- change password -->
+    <string name="incorrect_old_password">Incorrect old password!</string>
+    <string name="password_dont_match">New passwords don\'t match!</string>
+    <string name="password_changed_success">Password changed successfully!</string>
+    <string name="old_password">Old password</string>
+    <string name="new_password">New password</string>
+    <string name="confirm_new_password">Confirm</string>
+    <string name="button_change">Change Password</string>
 
 </resources>
