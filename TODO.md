@@ -20,11 +20,13 @@ Sealnote TODO
 -------------------------------
 * [DONE] Expire password after timeout
 * Select pre-defined colors for note
-* Card header menu
 * Search notes
+* About in Settings
+* Change password
 
 
 * Tags
+* Card header menu
 * Archive and Trash
 * Faster encrypted storage engine
 * Margin between cards
