@@ -19,10 +19,10 @@ Sealnote TODO
 21st June 2014 - 30th June 2014
 -------------------------------
 * [DONE] Expire password after timeout
+* [DONE] Change password
 * Select pre-defined colors for note
 * Search notes
 * About in Settings
-* Change password
 
 
 * Tags

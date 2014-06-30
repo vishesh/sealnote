@@ -31,7 +31,7 @@ public class SealnoteActivity extends Activity {
 
     private void secureWindow() {
         // secure window content
-        SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
+        SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         boolean isSecureWindow = sharedPrefs.getBoolean("pref_secureWindow", false);
         if (isSecureWindow) {
             getWindow().setFlags(WindowManager.LayoutParams.FLAG_SECURE, WindowManager.LayoutParams.FLAG_SECURE);
