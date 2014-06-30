@@ -55,16 +55,14 @@ public class SealnoteCard extends Card {
         // TODO: Make it not dumb
         int length = str.length();
 
-        if (length > 100) {
-            return 16;
-        } else if (length < 100 && length > 70) {
-            return 20;
-        } else if (length < 70 && length > 30) {
+        if ( length > 50) {
+            return 18;
+        } else if (length < 50 && length > 20) {
             return 24;
-        } else if (length < 30 && length > 20) {
-            return 28;
+        } else if (length < 20 && length > 15) {
+            return 26;
         }
-        return 34;
+        return 30;
     }
 
     @Override

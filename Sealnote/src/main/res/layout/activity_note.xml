@@ -33,7 +33,8 @@
                 android:paddingRight="@dimen/note_view_horizontal_margin"
                 android:paddingTop="@dimen/note_view_vertical_margin"
                 android:textStyle="bold"
-                android:fontFamily="sans-serif-condensed"
+                android:textSize="20sp"
+                android:fontFamily="sans-serif"
                 />
 
         <EditText
@@ -46,6 +47,8 @@
                 android:paddingRight="@dimen/note_view_horizontal_margin"
                 android:paddingTop="@dimen/note_view_vertical_margin"
                 android:paddingBottom="@dimen/note_view_vertical_margin"
+                android:textSize="20sp"
+                android:fontFamily="sans-serif"
                 />
 
         <View
