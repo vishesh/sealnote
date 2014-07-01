@@ -20,8 +20,14 @@ Sealnote TODO
 -------------------------------
 * [DONE] Expire password after timeout
 * [DONE] Change password
-* Select pre-defined colors for note
+* [DONE] Select pre-defined colors for note
+
+1st July 2014 - 7th July 2014
+-----------------------------
 * Search notes
+* Single column, multi-column layout
+* Uniform font preference
+* PreferenceManager helper class
 * About in Settings
 
 
