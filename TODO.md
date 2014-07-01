@@ -26,8 +26,8 @@ Sealnote TODO
 -----------------------------
 * Search notes
 * Single column, multi-column layout
-* Uniform font preference
-* PreferenceManager helper class
+* [DONE] Uniform font preference
+* [DONT] PreferenceManager helper class
 * Import/Export notes
 * Backup database to server
 * About in Settings
