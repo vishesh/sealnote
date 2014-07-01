@@ -22,7 +22,7 @@
                 android:theme="@style/Sealnote.Theme.Note">
             <meta-data
                     android:name="android.support.PARENT_ACTIVITY"
-                    android:value="SealnoteActivity"/>
+                    android:value="com.twistedplane.sealnote.SealnoteActivity"/>
         </activity>
         <activity
                 android:name="com.twistedplane.sealnote.PasswordActivity"
@@ -36,7 +36,7 @@
                 android:theme="@style/Sealnote.Theme.Main">
             <meta-data
                     android:name="android.support.PARENT_ACTIVITY"
-                    android:value="SealnoteActivity"/>
+                    android:value="com.twistedplane.sealnote.SealnoteActivity"/>
         </activity>
     </application>
 

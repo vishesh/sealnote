@@ -1,5 +1,6 @@
 package com.twistedplane.sealnote;
 
+import android.app.ActionBar;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.SharedPreferences;
@@ -97,6 +98,9 @@ public class NoteActivity extends Activity implements ColorDialogFragment.ColorC
             textView.requestFocus();
         }
         secureWindow();
+        ActionBar actionBar = getActionBar();
+        actionBar.setHomeButtonEnabled(true);
+        actionBar.setDisplayHomeAsUpEnabled(true);
     }
 
     @Override
@@ -130,6 +134,10 @@ public class NoteActivity extends Activity implements ColorDialogFragment.ColorC
             case R.id.action_color:
                 ColorDialogFragment cdf = new ColorDialogFragment();
                 cdf.show(getFragmentManager(), "ColorDialogFragment");
+                return true;
+            case android.R.id.home:
+                onBackPressed();
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
