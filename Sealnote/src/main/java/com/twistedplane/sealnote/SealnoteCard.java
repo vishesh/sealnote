@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import com.twistedplane.sealnote.data.Note;
 import com.twistedplane.sealnote.utils.FontCache;
+import com.twistedplane.sealnote.utils.PreferenceHandler;
 import it.gmariotti.cardslib.library.internal.Card;
 import it.gmariotti.cardslib.library.internal.CardHeader;
 
@@ -95,7 +96,9 @@ public class SealnoteCard extends Card {
         if (text != null && !text.equals("")) {
             textView.setVisibility(View.VISIBLE);
             textView.setText(this.mNote.getNote());
-            textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, getBigFontSize(text));
+            if (PreferenceHandler.isDynamicFontSizeEnabled(getContext())) {
+                textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, getBigFontSize(text));
+            }
         } else {
             textView.setText("");
             textView.setVisibility(View.GONE);

@@ -14,4 +14,9 @@ public class PreferenceHandler {
         SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(c);
         return Integer.parseInt(sharedPrefs.getString("pref_passwordTimeout", "10000")); //FIXME: Get integer
     }
+
+    public static boolean isDynamicFontSizeEnabled(Context c) {
+        SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(c);
+        return sharedPrefs.getBoolean("pref_dynamicFontSize", true);
+    }
 }

@@ -25,4 +25,12 @@
 
     </PreferenceCategory>
 
+    <PreferenceCategory android:title="@string/pref_catAppearance">
+        <CheckBoxPreference
+                android:key="pref_dynamicFontSize"
+                android:title="@string/pref_dynamicFontSize"
+                android:defaultValue="true"
+                android:summary="@string/pref_dynamicFontSizeSummary"
+                />
+    </PreferenceCategory>
 </PreferenceScreen>

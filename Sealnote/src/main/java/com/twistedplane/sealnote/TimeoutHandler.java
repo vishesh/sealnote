@@ -2,9 +2,7 @@ package com.twistedplane.sealnote;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Handler;
-import android.preference.PreferenceManager;
 import com.twistedplane.sealnote.data.DatabaseHandler;
 import com.twistedplane.sealnote.utils.PreferenceHandler;
 
