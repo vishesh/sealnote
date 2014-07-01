@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <!-- actionbar -->
+    <item name="actionbar_background" type="color">#0099bb</item>
+    <item name="actionbar_item_pressed_background" type="color">#0089a8</item>
+
     <item name="transparent" type="color">#00000000</item>
     <item name="note_view_tint" type="color">#22ffffff</item>
     <item name="darkblue" type="color">#FF0099CC</item>
