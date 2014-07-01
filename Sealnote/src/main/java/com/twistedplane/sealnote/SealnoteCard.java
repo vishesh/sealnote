@@ -7,8 +7,28 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import com.twistedplane.sealnote.data.Note;
+import com.twistedplane.sealnote.utils.FontCache;
 import it.gmariotti.cardslib.library.internal.Card;
 import it.gmariotti.cardslib.library.internal.CardHeader;
+
+
+class SealnoteCardHeader extends CardHeader {
+    public SealnoteCardHeader(Context context) {
+        super(context);
+    }
+
+    @Override
+    public void setupInnerViewElements(ViewGroup parent, View view) {
+        super.setupInnerViewElements(parent, view);
+
+        if (view != null){
+            TextView titleView = (TextView) view.findViewById(R.id.card_header_inner_simple_title);
+            if (titleView != null) {
+                titleView.setTypeface(FontCache.getFont(getContext(), "RobotoSlab-Bold.ttf"));
+            }
+        }
+    }
+}
 
 public class SealnoteCard extends Card {
     protected Note mNote;
@@ -21,7 +41,7 @@ public class SealnoteCard extends Card {
         this.setCheckable(true);
 
         if (mNote != null && !mNote.getTitle().equals("")) {
-            CardHeader header = new CardHeader(getContext());
+            CardHeader header = new SealnoteCardHeader(getContext());
             header.setTitle(mNote.getTitle());
             addCardHeader(header);
         }
@@ -81,6 +101,8 @@ public class SealnoteCard extends Card {
             textView.setVisibility(View.GONE);
         }
 
+        textView.setTypeface(FontCache.getFont(getContext(), "RobotoSlab-Light.ttf"));
+
         switch(mNote.getColor()) {
             case 0:
                 this.setBackgroundResourceId(R.drawable.card_selector_color0);
@@ -105,9 +127,6 @@ public class SealnoteCard extends Card {
                 break;
             case 7:
                 this.setBackgroundResourceId(R.drawable.card_selector_color7);
-                break;
-            case 8:
-                this.setBackgroundResourceId(R.drawable.card_selector_color8);
                 break;
         }
     }

@@ -75,6 +75,7 @@
     <orderEntry type="library" exported="" name="sqlcipher" level="project" />
     <orderEntry type="library" exported="" name="native-libs" level="project" />
     <orderEntry type="library" exported="" name="library-2.6.0" level="project" />
+    <orderEntry type="library" exported="" name="internal_impl-20.0.0" level="project" />
     <orderEntry type="library" exported="" name="commons-codec" level="project" />
     <orderEntry type="library" exported="" name="support-annotations-20.0.0" level="project" />
     <orderEntry type="library" exported="" name="library-extra-1.6.0" level="project" />

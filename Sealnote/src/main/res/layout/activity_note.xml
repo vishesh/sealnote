@@ -5,11 +5,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         >
-    <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@color/note_view_tint"
-            />
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
                   xmlns:tools="http://schemas.android.com/tools"
                   android:orientation="vertical"
@@ -34,7 +29,7 @@
                 android:paddingTop="@dimen/note_view_vertical_margin"
                 android:textStyle="bold"
                 android:textSize="20sp"
-                android:fontFamily="sans-serif"
+                android:textColor="@color/note_foreground"
                 />
 
         <EditText
@@ -48,7 +43,7 @@
                 android:paddingTop="@dimen/note_view_vertical_margin"
                 android:paddingBottom="@dimen/note_view_vertical_margin"
                 android:textSize="20sp"
-                android:fontFamily="sans-serif"
+                android:textColor="@color/note_foreground"
                 />
 
         <View

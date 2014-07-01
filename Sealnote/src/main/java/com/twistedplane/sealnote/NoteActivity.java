@@ -17,6 +17,7 @@ import android.widget.Toast;
 import com.twistedplane.sealnote.data.DatabaseHandler;
 import com.twistedplane.sealnote.data.Note;
 import com.twistedplane.sealnote.utils.EasyDate;
+import com.twistedplane.sealnote.utils.FontCache;
 
 //FIXME: Secure window. Clean up code and update flag on settings changed.
 
@@ -54,6 +55,9 @@ public class NoteActivity extends Activity implements ColorDialogFragment.ColorC
             final TextView editedView = (TextView) findViewById(R.id.note_activity_edited);
             final EditText titleView = (EditText) findViewById(R.id.note_activity_title);
             final EditText textView = (EditText) findViewById(R.id.note_activity_note);
+
+            titleView.setTypeface(FontCache.getFont(getBaseContext(), "RobotoSlab-Bold.ttf"));
+            textView.setTypeface(FontCache.getFont(getBaseContext(), "RobotoSlab-Regular.ttf"));
 
             titleView.setText(mNote.getTitle());
             textView.setText(mNote.getNote());
@@ -190,31 +194,28 @@ public class NoteActivity extends Activity implements ColorDialogFragment.ColorC
 
         switch (color) {
             case 0:
-                view.setBackgroundColor(getResources().getColor(R.color.card_background_color0_noalpha));
+                view.setBackgroundColor(getResources().getColor(R.color.card_background_color0));
                 break;
             case 1:
-                view.setBackgroundColor(getResources().getColor(R.color.card_background_color1_noalpha));
+                view.setBackgroundColor(getResources().getColor(R.color.card_background_color1));
                 break;
             case 2:
-                view.setBackgroundColor(getResources().getColor(R.color.card_background_color2_noalpha));
+                view.setBackgroundColor(getResources().getColor(R.color.card_background_color2));
                 break;
             case 3:
-                view.setBackgroundColor(getResources().getColor(R.color.card_background_color3_noalpha));
+                view.setBackgroundColor(getResources().getColor(R.color.card_background_color3));
                 break;
             case 4:
-                view.setBackgroundColor(getResources().getColor(R.color.card_background_color4_noalpha));
+                view.setBackgroundColor(getResources().getColor(R.color.card_background_color4));
                 break;
             case 5:
-                view.setBackgroundColor(getResources().getColor(R.color.card_background_color5_noalpha));
+                view.setBackgroundColor(getResources().getColor(R.color.card_background_color5));
                 break;
             case 6:
-                view.setBackgroundColor(getResources().getColor(R.color.card_background_color6_noalpha));
+                view.setBackgroundColor(getResources().getColor(R.color.card_background_color6));
                 break;
             case 7:
-                view.setBackgroundColor(getResources().getColor(R.color.card_background_color7_noalpha));
-                break;
-            case 8:
-                view.setBackgroundColor(getResources().getColor(R.color.card_background_color8_noalpha));
+                view.setBackgroundColor(getResources().getColor(R.color.card_background_color7));
                 break;
         }
     }

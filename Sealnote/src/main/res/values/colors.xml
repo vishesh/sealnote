@@ -4,28 +4,19 @@
     <item name="transparent" type="color">#00000000</item>
     <item name="note_view_tint" type="color">#22ffffff</item>
     <item name="darkblue" type="color">#FF0099CC</item>
+    <item name="note_foreground" type="color">#ff373737</item>
+    <color name="card_text_color">@color/note_foreground</color>
+    <color name="card_text_color_header">#ff494949</color>
 
     <!-- color card -->
-    <color name="card_background_color0_noalpha">#FFFFFFFF</color>
-    <color name="card_background_color1_noalpha">#FFFFBB33</color>
-    <color name="card_background_color2_noalpha">#FFFF8800</color>
-    <color name="card_background_color3_noalpha">#FF669900</color>
-    <color name="card_background_color4_noalpha">#FF99cc00</color>
-    <color name="card_background_color5_noalpha">#FF33B5E5</color>
-    <color name="card_background_color6_noalpha">#FF0099cc</color>
-    <color name="card_background_color7_noalpha">#FFFF4444</color>
-    <color name="card_background_color8_noalpha">#FFaa66cc</color>
-
-    <!-- color card -->
-    <color name="card_background_color0">#55FFFFFF</color>
-    <color name="card_background_color1">#55FFBB33</color>
-    <color name="card_background_color2">#55FF8800</color>
-    <color name="card_background_color3">#55669900</color>
-    <color name="card_background_color4">#5599cc00</color>
-    <color name="card_background_color5">#5533B5E5</color>
-    <color name="card_background_color6">#550099cc</color>
-    <color name="card_background_color7">#55FF4444</color>
-    <color name="card_background_color8">#55aa66cc</color>
+    <color name="card_background_color0">#ffecf0f1</color>
+    <color name="card_background_color1">#ffffbb22</color>
+    <color name="card_background_color2">#ffcbcb1d</color>
+    <color name="card_background_color3">#ffbbe535</color>
+    <color name="card_background_color4">#ff66ccdd</color>
+    <color name="card_background_color5">#ff77ddbb</color>
+    <color name="card_background_color6">#ffb5c5c5</color>
+    <color name="card_background_color7">#fff56545</color>
 
     <integer-array name="note_colors">
         <item>@color/card_background_color0</item>
@@ -36,7 +27,6 @@
         <item>@color/card_background_color5</item>
         <item>@color/card_background_color6</item>
         <item>@color/card_background_color7</item>
-        <item>@color/card_background_color8</item>
     </integer-array>
 
     <string-array name="note_colors_name">
@@ -48,7 +38,6 @@
         <item>color5</item>
         <item>color6</item>
         <item>color7</item>
-        <item>color8</item>
     </string-array>
 
 </resources>

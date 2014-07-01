@@ -17,6 +17,6 @@
             android:layout_marginRight="@dimen/cardcontent_margin_right"
             android:layout_marginBottom="@dimen/cardcontent_margin_bottom"
             android:textSize="@dimen/cardcontent_note_size"
-            android:fontFamily="sans-serif-light"
+            android:textColor="@color/card_text_color"
             />
 </LinearLayout>
