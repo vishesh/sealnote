@@ -14,6 +14,7 @@ import com.nhaarman.listviewanimations.swinginadapters.AnimationAdapter;
 import com.nhaarman.listviewanimations.swinginadapters.prepared.ScaleInAnimationAdapter;
 import com.twistedplane.sealnote.data.DatabaseHandler;
 import com.twistedplane.sealnote.data.SealnoteAdapter;
+import com.twistedplane.sealnote.utils.PreferenceHandler;
 import com.twistedplane.sealnote.views.SealnoteCardGridStaggeredView;
 import it.gmariotti.cardslib.library.extra.staggeredgrid.view.CardGridStaggeredView;
 
@@ -31,8 +32,7 @@ public class SealnoteActivity extends Activity {
 
     private void secureWindow() {
         // secure window content
-        SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-        boolean isSecureWindow = sharedPrefs.getBoolean("pref_secureWindow", false);
+        boolean isSecureWindow = PreferenceHandler.isSecureWindowEnabled(getBaseContext());
         if (isSecureWindow) {
             getWindow().setFlags(WindowManager.LayoutParams.FLAG_SECURE, WindowManager.LayoutParams.FLAG_SECURE);
         } else {

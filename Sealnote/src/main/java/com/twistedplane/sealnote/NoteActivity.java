@@ -18,6 +18,7 @@ import com.twistedplane.sealnote.data.DatabaseHandler;
 import com.twistedplane.sealnote.data.Note;
 import com.twistedplane.sealnote.utils.EasyDate;
 import com.twistedplane.sealnote.utils.FontCache;
+import com.twistedplane.sealnote.utils.PreferenceHandler;
 
 //FIXME: Secure window. Clean up code and update flag on settings changed.
 
@@ -78,8 +79,7 @@ public class NoteActivity extends Activity implements ColorDialogFragment.ColorC
 
     private void secureWindow() {
         // secure window content
-        SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-        boolean isSecureWindow = sharedPrefs.getBoolean("pref_secureWindow", false);
+        boolean isSecureWindow = PreferenceHandler.isSecureWindowEnabled(getBaseContext());
         if (isSecureWindow) {
             getWindow().setFlags(WindowManager.LayoutParams.FLAG_SECURE, WindowManager.LayoutParams.FLAG_SECURE);
         } else {

@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.os.Handler;
 import android.preference.PreferenceManager;
 import com.twistedplane.sealnote.data.DatabaseHandler;
+import com.twistedplane.sealnote.utils.PreferenceHandler;
 
 class TimeoutHandler implements Runnable {
     private Activity mActivity;
@@ -26,9 +27,8 @@ class TimeoutHandler implements Runnable {
     }
 
     private void passwordTimeoutStart() {
+        int timeout = PreferenceHandler.getPasswordTimeout(mActivity);
         passwordTimeoutClear();
-        SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(mActivity);
-        int timeout = Integer.parseInt(sharedPrefs.getString("pref_passwordTimeout", "10000")); //FIXME: Get integer
         mHandler.postDelayed(mInstance, timeout);
         mTimedOut = false;
     }
