@@ -28,6 +28,8 @@ Sealnote TODO
 * Single column, multi-column layout
 * Uniform font preference
 * PreferenceManager helper class
+* Import/Export notes
+* Backup database to server
 * About in Settings
 
 
