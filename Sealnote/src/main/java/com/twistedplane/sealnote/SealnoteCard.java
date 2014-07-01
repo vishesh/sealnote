@@ -95,7 +95,12 @@ public class SealnoteCard extends Card {
 
         if (text != null && !text.equals("")) {
             textView.setVisibility(View.VISIBLE);
-            textView.setText(this.mNote.getNote());
+            String trimmedText = this.mNote.getNote().trim();
+            final int MAX_LENGTH = 400; //FIXME
+            if (trimmedText.length() > MAX_LENGTH) {
+                trimmedText = trimmedText.substring(0, MAX_LENGTH) + "...";
+            }
+            textView.setText(trimmedText);
             if (PreferenceHandler.isDynamicFontSizeEnabled(getContext())) {
                 textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, getBigFontSize(text));
             }
