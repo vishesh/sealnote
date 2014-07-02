@@ -45,6 +45,9 @@
     <string name="pref_dynamicFontSize">Dynamic Font Size in Cards</string>
     <string name="pref_dynamicFontSizeSummary">Card font size is calculated dynamically as per note content. Requires re-login.</string>
 
+    <string name="pref_multiColumnGrid">Multi-column view</string>
+    <string name="pref_multiColumnGridSummary">Use single or multiple columns in notes grid view</string>
+
     <string name="pref_changePassword">Change Password</string>
 
     <string name="title_activity_settings">Settings</string>

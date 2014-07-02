@@ -32,5 +32,11 @@
                 android:defaultValue="true"
                 android:summary="@string/pref_dynamicFontSizeSummary"
                 />
+        <CheckBoxPreference
+                android:key="pref_multiColumnGrid"
+                android:title="@string/pref_multiColumnGrid"
+                android:defaultValue="true"
+                android:summary="@string/pref_multiColumnGridSummary"
+                />
     </PreferenceCategory>
 </PreferenceScreen>

@@ -19,4 +19,9 @@ public class PreferenceHandler {
         SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(c);
         return sharedPrefs.getBoolean("pref_dynamicFontSize", true);
     }
+
+    public static boolean isMultiColumnGridEnabled(Context c) {
+        SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(c);
+        return sharedPrefs.getBoolean("pref_multiColumnGrid", true);
+    }
 }

@@ -27,6 +27,7 @@ public class SealnoteActivity extends Activity {
 
     SealnoteCardGridStaggeredView noteListView;
     private boolean mAdapterLoaded = false;
+    private boolean mIsMultiColumnEnabled;
 
     private void secureWindow() {
         // secure window content
@@ -45,8 +46,10 @@ public class SealnoteActivity extends Activity {
         setContentView(R.layout.main);
         secureWindow();
 
+        mIsMultiColumnEnabled = PreferenceHandler.isMultiColumnGridEnabled(this);
         activity = this;
         noteListView = (SealnoteCardGridStaggeredView) findViewById(R.id.main_note_grid);
+
         final LinearLayout layoutProgressHeader = (LinearLayout) findViewById(R.id.layoutHeaderProgress);
 
         if (DatabaseHandler.getPassword() == null) {
@@ -127,8 +130,27 @@ public class SealnoteActivity extends Activity {
     }
 
     @Override
+    protected void onStart() {
+        super.onStart();
+    }
+
+    @Override
     public void onResume() {
         super.onResume();
+
+        noteListView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                if (mIsMultiColumnEnabled != PreferenceHandler.isMultiColumnGridEnabled(SealnoteActivity.this)) {
+                    noteListView.invalidate();
+                    noteListView.updateGridColumnCount();
+                    mIsMultiColumnEnabled = PreferenceHandler.isMultiColumnGridEnabled(SealnoteActivity.this);
+                    noteListView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                }
+
+            }
+        });
+
         if (TimeoutHandler.instance().resume(this)) {
             return;
         }

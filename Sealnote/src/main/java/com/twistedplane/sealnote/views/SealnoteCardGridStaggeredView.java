@@ -1,10 +1,12 @@
 package com.twistedplane.sealnote.views;
 
 import android.content.Context;
+import android.content.res.Configuration;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.widget.ListAdapter;
 import com.twistedplane.sealnote.data.CardGridStaggeredCursorAdapter;
+import com.twistedplane.sealnote.utils.PreferenceHandler;
 import it.gmariotti.cardslib.library.extra.staggeredgrid.internal.CardGridStaggeredArrayAdapter;
 import it.gmariotti.cardslib.library.extra.staggeredgrid.view.CardGridStaggeredView;
 
@@ -47,6 +49,18 @@ public class SealnoteCardGridStaggeredView extends CardGridStaggeredView {
         } else {
             Log.w(TAG, "You are using a generic adapter. Pay attention: your adapter has to call cardGridArrayAdapter#getView method.");
             super.setAdapter(adapter);
+        }
+    }
+
+    public void updateGridColumnCount() {
+        if (!PreferenceHandler.isMultiColumnGridEnabled(getContext())) {
+            setColumnCount(1);
+        } else {
+            if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+                setColumnCount(3);
+            } else {
+                setColumnCount(2);
+            }
         }
     }
 }
