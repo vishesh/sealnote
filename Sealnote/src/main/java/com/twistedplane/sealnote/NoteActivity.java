@@ -129,6 +129,8 @@ public class NoteActivity extends Activity implements ColorDialogFragment.ColorC
             textView.requestFocus();
             textView.addTextChangedListener(textWatcher);
             titleView.addTextChangedListener(textWatcher);
+            titleView.setTypeface(FontCache.getFont(getBaseContext(), "RobotoSlab-Bold.ttf"));
+            textView.setTypeface(FontCache.getFont(getBaseContext(), "RobotoSlab-Regular.ttf"));
         }
         secureWindow();
         ActionBar actionBar = getActionBar();
