@@ -28,7 +28,7 @@ Sealnote TODO
 * [DONE] Single column, multi-column layout
 * [DONE] Uniform font preference
 * [DONE] PreferenceManager helper class
-* Drawable on grid when no cards are there
+* [DONE] Drawable on grid when no cards are there
 * Import/Export notes
 * Backup database to server
 * About in Settings
