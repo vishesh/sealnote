@@ -52,14 +52,22 @@ public class SealnoteCardGridStaggeredView extends CardGridStaggeredView {
         }
     }
 
+    @Override
+    protected void onLayout(boolean changed, int l, int t, int r, int b) {
+        updateGridColumnCount();
+        super.onLayout(changed, l, t, r, b);
+    }
+
     public void updateGridColumnCount() {
         if (!PreferenceHandler.isMultiColumnGridEnabled(getContext())) {
             setColumnCount(1);
         } else {
             if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
-                setColumnCount(3);
+                setColumnCountPortrait(2);
+                setColumnCountLandscape(3);
             } else {
-                setColumnCount(2);
+                setColumnCountLandscape(3);
+                setColumnCountPortrait(2);
             }
         }
     }
