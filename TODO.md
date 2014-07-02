@@ -25,9 +25,10 @@ Sealnote TODO
 1st July 2014 - 7th July 2014
 -----------------------------
 * Search notes
-* Single column, multi-column layout
+* [DONE] Single column, multi-column layout
 * [DONE] Uniform font preference
-* [DONT] PreferenceManager helper class
+* [DONE] PreferenceManager helper class
+* Drawable on grid when no cards are there
 * Import/Export notes
 * Backup database to server
 * About in Settings
