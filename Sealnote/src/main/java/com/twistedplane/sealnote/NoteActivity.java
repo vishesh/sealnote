@@ -3,13 +3,17 @@ package com.twistedplane.sealnote;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.EditText;
+import android.widget.ShareActionProvider;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.twistedplane.sealnote.data.DatabaseHandler;
@@ -23,6 +27,25 @@ import com.twistedplane.sealnote.utils.PreferenceHandler;
 public class NoteActivity extends Activity implements ColorDialogFragment.ColorChangedListener{
     private Note mNote;
     int mBackgroundColor;
+    private ShareActionProvider mShareActionProvider;
+    private Intent mShareIntent;
+
+    private TextWatcher textWatcher = new TextWatcher() {
+        @Override
+        public void beforeTextChanged(CharSequence charSequence, int i, int i2, int i3) {
+            //
+        }
+
+        @Override
+        public void onTextChanged(CharSequence charSequence, int i, int i2, int i3) {
+            //
+        }
+
+        @Override
+        public void afterTextChanged(Editable editable) {
+            updateShareIntent();
+        }
+    };
 
     private class NoteLoadTask extends AsyncTask<Integer, Void, Note> {
         ProgressDialog mProgressDialog;
@@ -72,6 +95,10 @@ public class NoteActivity extends Activity implements ColorDialogFragment.ColorC
             onColorChanged(mBackgroundColor);
             getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
             textView.requestFocus();
+
+            textView.addTextChangedListener(textWatcher);
+            titleView.addTextChangedListener(textWatcher);
+            updateShareIntent();
         }
     }
 
@@ -88,6 +115,7 @@ public class NoteActivity extends Activity implements ColorDialogFragment.ColorC
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         mBackgroundColor = -1;
 
         Bundle extras = getIntent().getExtras();
@@ -96,8 +124,11 @@ public class NoteActivity extends Activity implements ColorDialogFragment.ColorC
             new NoteLoadTask().execute(id);
         } else {
             setContentView(R.layout.activity_note);
+            final EditText titleView = (EditText) findViewById(R.id.note_activity_title);
             final EditText textView = (EditText) findViewById(R.id.note_activity_note);
             textView.requestFocus();
+            textView.addTextChangedListener(textWatcher);
+            titleView.addTextChangedListener(textWatcher);
         }
         secureWindow();
         ActionBar actionBar = getActionBar();
@@ -123,7 +154,30 @@ public class NoteActivity extends Activity implements ColorDialogFragment.ColorC
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.note_activity_actionbar, menu);
+
+        // Fetch and store ShareActionProvider
+        MenuItem item = menu.findItem(R.id.action_share);
+        mShareActionProvider = (ShareActionProvider) item.getActionProvider();
+        mShareIntent = new Intent(Intent.ACTION_SEND);
+        mShareIntent.setType("text/plain");
+        mShareActionProvider.setShareIntent(mShareIntent);
+        updateShareIntent();
+
         return true;
+    }
+
+    private void updateShareIntent() {
+        final EditText titleView = (EditText) findViewById(R.id.note_activity_title);
+        final EditText textView = (EditText) findViewById(R.id.note_activity_note);
+        String shareText;
+
+        if (textView != null && titleView != null) {
+            shareText = titleView.getText().toString() + "\n\n" + textView.getText().toString();
+        } else {
+            shareText = "";
+        }
+
+        mShareIntent.putExtra(Intent.EXTRA_TEXT, shareText.trim());
     }
 
     @Override
