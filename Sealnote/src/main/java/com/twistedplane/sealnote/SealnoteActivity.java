@@ -4,9 +4,11 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.database.Cursor;
+import android.database.DataSetObserver;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.*;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import com.nhaarman.listviewanimations.swinginadapters.AnimationAdapter;
 import com.nhaarman.listviewanimations.swinginadapters.prepared.ScaleInAnimationAdapter;
@@ -26,6 +28,8 @@ public class SealnoteActivity extends Activity {
     public static SealnoteActivity activity;
 
     SealnoteCardGridStaggeredView noteListView;
+    View mEmptyGridLayout;
+
     private boolean mAdapterLoaded = false;
     private boolean mIsMultiColumnEnabled;
 
@@ -49,6 +53,15 @@ public class SealnoteActivity extends Activity {
         mIsMultiColumnEnabled = PreferenceHandler.isMultiColumnGridEnabled(this);
         activity = this;
         noteListView = (SealnoteCardGridStaggeredView) findViewById(R.id.main_note_grid);
+        mEmptyGridLayout = (View) findViewById(R.id.layout_empty_grid);
+
+        final Button createNoteButton = (Button) findViewById(R.id.create_note_button);
+        createNoteButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                SealnoteCard.startNoteActivity(SealnoteActivity.this, -1);
+            }
+        });
 
         final LinearLayout layoutProgressHeader = (LinearLayout) findViewById(R.id.layoutHeaderProgress);
 
@@ -78,6 +91,20 @@ public class SealnoteActivity extends Activity {
 
                 adapter = sealnoteAdapter;
                 mAdapterLoaded = true;
+
+                adapter.registerDataSetObserver(new DataSetObserver() {
+                    @Override
+                    public void onChanged() {
+                        super.onChanged();
+                        if (adapter.getCount() > 0) {
+                            noteListView.setVisibility(View.VISIBLE);
+                            mEmptyGridLayout.setVisibility(View.GONE);
+                        } else {
+                            noteListView.setVisibility(View.GONE);
+                            mEmptyGridLayout.setVisibility(View.VISIBLE);
+                        }
+                    }
+                });
                 loadGridAdapter();
 
                 noteListView.setVisibility(View.VISIBLE);

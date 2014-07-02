@@ -43,4 +43,12 @@
         <item name="android:paddingLeft">@dimen/password_activity_button_horizontal_padding</item>
     </style>
 
+    <style name="CreateNoteButton">
+        <item name="android:background">@drawable/button_create_note</item>
+        <item name="android:paddingRight">25dip</item>
+        <item name="android:paddingLeft">25dip</item>
+        <item name="android:textColor">@drawable/button_text_color_selector</item>
+        <item name="android:fontFamily">sans-serif-condensed</item>
+    </style>
+
 </resources>
