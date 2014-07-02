@@ -7,7 +7,7 @@
     </style>
 
     <style name="Sealnote.Theme.Main.ActionBar" parent="@android:style/Widget.Holo.Light.ActionBar">
-        <item name="android:background">@color/actionbar_background</item>
+        <item name="android:background">@color/theme_background</item>
         <item name="android:titleTextStyle">@style/Sealnote.Theme.Main.ActionBar.Title</item>
     </style>
 

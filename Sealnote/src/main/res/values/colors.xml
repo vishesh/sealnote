@@ -2,7 +2,8 @@
 <resources>
 
     <!-- actionbar -->
-    <item name="actionbar_background" type="color">#0099bb</item>
+    <item name="theme_background" type="color">#0099bb</item>
+    <item name="theme_background_pressed" type="color">#005b70</item>
     <item name="actionbar_item_pressed_background" type="color">#0089a8</item>
 
     <item name="transparent" type="color">#00000000</item>
