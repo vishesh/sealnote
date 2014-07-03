@@ -1,7 +1,6 @@
 package com.twistedplane.sealnote;
 
 import android.content.Context;
-import android.content.Intent;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +12,10 @@ import it.gmariotti.cardslib.library.internal.Card;
 import it.gmariotti.cardslib.library.internal.CardHeader;
 
 
+/**
+ * CardHeader for SealNote Card. Just changes typeface of header title.
+ * Not using XML for API Level 14 compatibility
+ */
 class SealnoteCardHeader extends CardHeader {
     public SealnoteCardHeader(Context context) {
         super(context);
@@ -31,6 +34,10 @@ class SealnoteCardHeader extends CardHeader {
     }
 }
 
+/**
+ * Extends Card to glue with Note class. Uses Note for card content,
+ * and adds note background to Card.
+ */
 public class SealnoteCard extends Card {
     protected Note mNote;
 
@@ -38,6 +45,20 @@ public class SealnoteCard extends Card {
         super(context, R.layout.cardcontent);
     }
 
+    /**
+     * Takes a note, create a SealnoteCard and initialize it.
+     * @param context
+     * @param note
+     */
+    public SealnoteCard(Context context, Note note) {
+        super(context, R.layout.cardcontent);
+        setNote(note);
+        init();
+    }
+
+    /**
+     * Initialize Card using custom header and Note data.
+     */
     public void init() {
         this.setCheckable(true);
 
@@ -46,12 +67,6 @@ public class SealnoteCard extends Card {
             header.setTitle(mNote.getTitle());
             addCardHeader(header);
         }
-    }
-
-    public static void startNoteActivity(Context con, int id) {
-        Intent intent = new Intent(con, NoteActivity.class);
-        intent.putExtra("NOTE_ID", id);
-        con.startActivity(intent);
     }
 
     public void setNote(Note note) {
@@ -72,6 +87,13 @@ public class SealnoteCard extends Card {
         return this.mNote;
     }
 
+    /**
+     * Try to guess a good font size as per the given string that
+     * fits well and looks nice on card content view.
+     *
+     * @param str   String for which font size is to be calculated
+     * @return      Font size in sp
+     */
     private float getBigFontSize(String str) {
         // TODO: Make it not dumb
         int length = str.length();
@@ -86,6 +108,12 @@ public class SealnoteCard extends Card {
         return 30;
     }
 
+    /**
+     * Setup card content views and backgrounds
+     *
+     * @param parent
+     * @param view      Card view
+     */
     @Override
     public void setupInnerViewElements(ViewGroup parent, View view) {
         super.setupInnerViewElements(parent, view);
@@ -93,14 +121,22 @@ public class SealnoteCard extends Card {
         TextView textView = (TextView) view.findViewById(R.id.cardcontent_note);
         String text = this.mNote.getNote();
 
+        textView.setTypeface(FontCache.getFont(getContext(), "RobotoSlab-Light.ttf"));
+
+        // We make text view gone in content is there is no text show to avoid them
+        // taking space that shows nothing
         if (text != null && !text.equals("")) {
             textView.setVisibility(View.VISIBLE);
-            String trimmedText = this.mNote.getNote().trim();
+
+            // Trim note and just show note content upto MAX_LENGTH characters
             final int MAX_LENGTH = 400; //FIXME
+            String trimmedText = this.mNote.getNote().trim();
             if (trimmedText.length() > MAX_LENGTH) {
                 trimmedText = trimmedText.substring(0, MAX_LENGTH) + "...";
             }
             textView.setText(trimmedText);
+
+            // Dynamic Text Size
             if (PreferenceHandler.isDynamicFontSizeEnabled(getContext())) {
                 textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, getBigFontSize(text));
             }
@@ -109,8 +145,7 @@ public class SealnoteCard extends Card {
             textView.setVisibility(View.GONE);
         }
 
-        textView.setTypeface(FontCache.getFont(getContext(), "RobotoSlab-Light.ttf"));
-
+        // set background for card as per given
         switch(mNote.getColor()) {
             case 0:
                 this.setBackgroundResourceId(R.drawable.card_selector_color0);
@@ -140,9 +175,5 @@ public class SealnoteCard extends Card {
                 this.setBackgroundResourceId(R.drawable.card_selector_color0);
                 break;
         }
-    }
-
-    public void setMultichoiceEnabled() {
-        this.mMultiChoiceEnabled = true;
     }
 }

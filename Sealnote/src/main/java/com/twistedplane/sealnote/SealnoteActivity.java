@@ -57,7 +57,7 @@ public class SealnoteActivity extends Activity {
         createNoteButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                SealnoteCard.startNoteActivity(SealnoteActivity.this, -1);
+                NoteActivity.startForNoteId(SealnoteActivity.this, -1);
             }
         });
 
@@ -125,7 +125,7 @@ public class SealnoteActivity extends Activity {
         // Handle presses on the action bar items
         switch (item.getItemId()) {
             case R.id.action_new_note:
-                SealnoteCard.startNoteActivity(this, -1);
+                NoteActivity.startForNoteId(this, -1);
                 return true;
             case R.id.action_about:
                 showAboutDialog();

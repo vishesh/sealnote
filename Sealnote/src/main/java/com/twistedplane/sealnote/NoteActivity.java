@@ -3,6 +3,7 @@ package com.twistedplane.sealnote;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -37,6 +38,20 @@ public class NoteActivity extends Activity implements ColorDialogFragment.ColorC
     TextView mEditedView;
 
     int mBackgroundColor;
+
+    /**
+     * Start a new NoteActivity with given note id.
+     *
+     * TODO: Take note object directly to make loading faster
+     *
+     * @param context   Context to use
+     * @param id        Id of note. -1 for new note.
+     */
+    public static void startForNoteId(Context context, int id) {
+        Intent intent = new Intent(context, NoteActivity.class);
+        intent.putExtra("NOTE_ID", id);
+        context.startActivity(intent);
+    }
 
     /**
      * TextWatcher for note text and title. Right now just updates share button intent.

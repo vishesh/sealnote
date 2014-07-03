@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.os.AsyncTask;
 import android.util.SparseBooleanArray;
 import android.view.*;
+import com.twistedplane.sealnote.NoteActivity;
 import com.twistedplane.sealnote.R;
 import com.twistedplane.sealnote.SealnoteActivity;
 import com.twistedplane.sealnote.SealnoteCard;
@@ -76,7 +77,7 @@ public class SealnoteAdapter extends CardGridStaggeredCursorAdapter {
             public void onClick(Card card, View view) {
                 SealnoteCard sCard = (SealnoteCard) card;
                 if (mActionMode == null) {
-                    SealnoteCard.startNoteActivity(getContext(), sCard.getNote().getId());
+                    NoteActivity.startForNoteId(getContext(), sCard.getNote().getId());
                 } else {
                     // Currently in action mode. Set the toggle current items checked state.
                     setItemChecked((CardView) view, !getItemChecked((CardView) view));
