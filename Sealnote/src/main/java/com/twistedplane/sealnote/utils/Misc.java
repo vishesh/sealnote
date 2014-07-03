@@ -41,7 +41,9 @@ public class Misc {
             case 7:
                 return resources.getColor(R.color.card_background_color7);
         }
-        return -1;
+
+        // return the first color
+        return resources.getColor(R.color.card_background_color0);
     }
 
     /**

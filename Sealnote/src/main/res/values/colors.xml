@@ -14,7 +14,8 @@
     <color name="card_text_color_header">#ff494949</color>
 
     <!-- color card -->
-    <color name="card_background_color0">#ffecf0f1</color>
+    <!--<color name="card_background_color0">#ffecf0f1</color>--> <!-- Cloudy -->
+    <color name="card_background_color0">#ffffffff</color>
     <color name="card_background_color1">#ffffbb22</color>
     <color name="card_background_color2">#ffcbcb1d</color>
     <color name="card_background_color3">#ffbbe535</color>

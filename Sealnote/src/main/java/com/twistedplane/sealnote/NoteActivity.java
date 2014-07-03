@@ -66,7 +66,7 @@ public class NoteActivity extends Activity implements ColorDialogFragment.ColorC
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mBackgroundColor = -1;
+        mBackgroundColor = 0;
 
         Bundle extras = getIntent().getExtras();
         int id = extras.getInt("NOTE_ID");

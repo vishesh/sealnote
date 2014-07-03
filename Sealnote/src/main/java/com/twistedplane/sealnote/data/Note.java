@@ -16,7 +16,7 @@ public class Note {
 
     public Note() {
         this.mId = -1;
-        this.mColor = -1;
+        this.mColor = 0;
     }
 
     public Note(int id, int position, String title, String content) {

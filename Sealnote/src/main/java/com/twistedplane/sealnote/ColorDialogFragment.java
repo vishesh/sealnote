@@ -14,8 +14,6 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import com.twistedplane.sealnote.utils.Misc;
 
-import java.util.zip.Inflater;
-
 
 /**
  * Dialog for selecting color for note.
@@ -35,7 +33,6 @@ public class ColorDialogFragment extends DialogFragment {
      * the color values.
      */
     class ColorAdapter extends ArrayAdapter<String> {
-        Inflater mInflator = new Inflater();
         Context mContext;
         int mBackground;
 
@@ -65,12 +62,11 @@ public class ColorDialogFragment extends DialogFragment {
             ImageView checkedView = (ImageView) view.findViewById(R.id.color_picker_checked);
             checkedView.setVisibility(mBackground == position ? View.VISIBLE : View.INVISIBLE);
 
-            // Set background of current listitem
+            // Set background of current list item
             view.setBackgroundColor(Misc.getColorForCode(getContext(), position));
 
             return view;
         }
-
     }
 
     /**

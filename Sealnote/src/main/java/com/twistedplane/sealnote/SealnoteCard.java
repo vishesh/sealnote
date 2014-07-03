@@ -136,6 +136,9 @@ public class SealnoteCard extends Card {
             case 7:
                 this.setBackgroundResourceId(R.drawable.card_selector_color7);
                 break;
+            default:
+                this.setBackgroundResourceId(R.drawable.card_selector_color0);
+                break;
         }
     }
 
