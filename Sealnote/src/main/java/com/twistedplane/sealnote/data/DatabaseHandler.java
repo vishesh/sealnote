@@ -213,7 +213,9 @@ public class DatabaseHandler extends SQLiteOpenHelper {
      * Get a cursor object pointing to all notes in database.
      */
     public Cursor getAllNotesCursor() {
-        return getReadableDatabase().rawQuery("SELECT * FROM " + TABLE_NAME, null);
+        return getReadableDatabase().rawQuery(
+                "SELECT * FROM " + TABLE_NAME + " ORDER BY " + COL_CREATED + " DESC", null
+            );
     }
 
 }
