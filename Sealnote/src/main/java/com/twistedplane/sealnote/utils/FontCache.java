@@ -6,6 +6,9 @@ import android.graphics.Typeface;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Cache to store external fonts.
+ */
 public class FontCache {
     private static Map<String, Typeface> mFontMap = new HashMap<String, Typeface>();
 
