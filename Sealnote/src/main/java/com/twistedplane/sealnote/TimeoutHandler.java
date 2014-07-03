@@ -96,6 +96,7 @@ class TimeoutHandler implements Runnable {
      */
     public void expire(Activity activity) {
         mActivity = activity;
+        passwordTimeoutClear();
         run();
         resume(activity);
     }
