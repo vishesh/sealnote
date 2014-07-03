@@ -35,7 +35,7 @@ public class PasswordActivity extends Activity {
     /**
      * Check if database for this application already exisits
      */
-    public boolean checkExistingDatabase() {
+    private boolean checkExistingDatabase() {
         File dbFile = getDatabasePath(DatabaseHandler.DBNAME);
         return dbFile.exists();
     }
@@ -44,7 +44,7 @@ public class PasswordActivity extends Activity {
      * Create views for welcome screen. Executed when application is
      * started for first time without any database in storage.
      */
-    public void createWelcomeScreen() {
+    private void createWelcomeScreen() {
         setContentView(R.layout.activity_password_first);
 
         final Button createButton = (Button) findViewById(R.id.create_password_button);
@@ -71,7 +71,7 @@ public class PasswordActivity extends Activity {
     /**
      * Create login screen
      */
-    public void createLoginScreen() {
+    private void createLoginScreen() {
         setContentView(R.layout.activity_password);
 
         final Button button = (Button) findViewById(R.id.go_password_button);
@@ -91,7 +91,7 @@ public class PasswordActivity extends Activity {
      *
      * NOTE: Currently works for login password button
      */
-    public void toggleProgress() {
+    private void toggleProgress() {
         //TODO: Toggle editable property of password textedit
         final Button button = (Button) findViewById(R.id.go_password_button);
         final ProgressBar progress_circle = (ProgressBar) findViewById(R.id.go_password_progress);

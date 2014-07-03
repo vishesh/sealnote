@@ -19,7 +19,7 @@ import com.twistedplane.sealnote.utils.Misc;
  * Dialog for selecting color for note.
  */
 public class ColorDialogFragment extends DialogFragment {
-    ColorChangedListener mListener;
+    private ColorChangedListener mListener;
 
     /**
      * Callback dispatched when color is changed
@@ -33,8 +33,8 @@ public class ColorDialogFragment extends DialogFragment {
      * the color values.
      */
     class ColorAdapter extends ArrayAdapter<String> {
-        Context mContext;
-        int mBackground;
+        final Context mContext;
+        final int mBackground;
 
         public ColorAdapter(Context context, int background, int resource, String[] colorNames) {
             super(context, resource, colorNames);

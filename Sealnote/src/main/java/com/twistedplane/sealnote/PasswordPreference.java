@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.res.Resources;
 import android.preference.DialogPreference;
+import android.support.annotation.NonNull;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.AttributeSet;
@@ -21,11 +22,11 @@ import net.sqlcipher.database.SQLiteException;
  * override the default behaviour of dismissing dialog when clicked.
  */
 public class PasswordPreference extends DialogPreference implements TextWatcher {
-    EditText mOldView;
-    EditText mNewView;
-    EditText mNewConfirmView;
-    Button mChangeButton;
-    Button mCancelButton;
+    private EditText mOldView;
+    private EditText mNewView;
+    private EditText mNewConfirmView;
+    private Button mChangeButton;
+    private Button mCancelButton;
 
     public PasswordPreference(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -55,7 +56,7 @@ public class PasswordPreference extends DialogPreference implements TextWatcher 
      * @param view Dialog view
      */
     @Override
-    protected void onBindDialogView(View view) {
+    protected void onBindDialogView(@NonNull View view) {
         super.onBindDialogView(view);
 
         mOldView = (EditText) view.findViewById(R.id.diag_password_pref_oldPassword);

@@ -14,7 +14,7 @@ import java.util.TimeZone;
 public class EasyDate {
     private final static String mDF_ISO_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSS zzz";
 
-    private Date mDate;
+    final private Date mDate;
 
     /**
      * Return EasyDate object containing current timestamp.

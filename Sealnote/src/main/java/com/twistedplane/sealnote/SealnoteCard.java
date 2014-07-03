@@ -47,8 +47,8 @@ public class SealnoteCard extends Card {
 
     /**
      * Takes a note, create a SealnoteCard and initialize it.
-     * @param context
-     * @param note
+     * @param context   Context to use
+     * @param note      Note to attach with card
      */
     public SealnoteCard(Context context, Note note) {
         super(context, R.layout.cardcontent);
@@ -111,7 +111,7 @@ public class SealnoteCard extends Card {
     /**
      * Setup card content views and backgrounds
      *
-     * @param parent
+     * @param parent    Parent view
      * @param view      Card view
      */
     @Override

@@ -19,13 +19,13 @@ import it.gmariotti.cardslib.library.view.CardView;
  * appropriate listeners to card and maintaining the CAB multi-choice state.
  */
 public class SealnoteAdapter extends CardGridStaggeredCursorAdapter {
-    ActionMode mActionMode;
+    private ActionMode mActionMode;
 
     /**
      * Array of all checked items in view for emulating multi-choice mode
      */
-    SparseBooleanArray mCheckedIds = new SparseBooleanArray();
-    MultiChoiceCallback mMultiChoiceCallback; // Is instantiated only once per adapter.
+    final private SparseBooleanArray mCheckedIds = new SparseBooleanArray();
+    private MultiChoiceCallback mMultiChoiceCallback; // Is instantiated only once per adapter.
 
     public SealnoteAdapter(Context context, Cursor c) {
         super(context, c, 0);
@@ -102,7 +102,7 @@ public class SealnoteAdapter extends CardGridStaggeredCursorAdapter {
             @Override
             public boolean onLongClick(Card card, View view) {
                 if (mActionMode == null) {
-                    SealnoteActivity.adapter.startActionMode();
+                    SealnoteActivity.adapter.startActionMode(); //FIXME
                 }
                 setItemChecked((CardView) view, !getItemChecked((CardView) view));
                 return true;
@@ -117,7 +117,7 @@ public class SealnoteAdapter extends CardGridStaggeredCursorAdapter {
         if (mMultiChoiceCallback == null) {
             mMultiChoiceCallback = new MultiChoiceCallback();
         }
-        mActionMode = SealnoteActivity.activity.startActionMode(mMultiChoiceCallback);
+        mActionMode = SealnoteActivity.activity.startActionMode(mMultiChoiceCallback); //FIXME
     }
 
     /**
@@ -134,7 +134,7 @@ public class SealnoteAdapter extends CardGridStaggeredCursorAdapter {
 
         // update the array containing ids of checked cards
         if (value) {
-            mCheckedIds.put(id, value);
+            mCheckedIds.put(id, true);
         } else {
             mCheckedIds.delete(id);
         }
@@ -216,7 +216,7 @@ public class SealnoteAdapter extends CardGridStaggeredCursorAdapter {
          */
         void deleteSelectedNotes() {
             new AsyncTask<SparseBooleanArray, Integer, Cursor>() {
-                ProgressDialog dialog = new ProgressDialog(getContext());
+                final ProgressDialog dialog = new ProgressDialog(getContext());
 
                 /**
                  * Create and show dialog.

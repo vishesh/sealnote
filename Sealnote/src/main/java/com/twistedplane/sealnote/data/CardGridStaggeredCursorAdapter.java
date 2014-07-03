@@ -41,7 +41,7 @@ import java.util.HashMap;
  */
 public abstract class CardGridStaggeredCursorAdapter extends BaseCardCursorAdapter  {
 
-    protected static String TAG = "CardGridCursorAdapter";
+    final protected static String TAG = "CardGridCursorAdapter";
 
     /**
      * {@link it.gmariotti.cardslib.library.view.CardGridView}
@@ -78,16 +78,10 @@ public abstract class CardGridStaggeredCursorAdapter extends BaseCardCursorAdapt
     // Views
     // -------------------------------------------------------------
 
-
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         //Check for recycle
-        if (convertView == null) {
-            recycle = false;
-        } else {
-            recycle = true;
-        }
-
+        recycle = (convertView != null);
         return super.getView(position, convertView, parent);
     }
 

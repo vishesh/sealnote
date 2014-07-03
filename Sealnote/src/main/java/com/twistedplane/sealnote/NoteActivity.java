@@ -35,14 +35,14 @@ public class NoteActivity extends Activity implements ColorDialogFragment.ColorC
 
     private EditText mTitleView;
     private EditText mTextView;
-    TextView mEditedView;
+    private TextView mEditedView;
 
     int mBackgroundColor;
 
     /**
      * Start a new NoteActivity with given note id.
      *
-     * TODO: Take note object directly to make loading faster
+     * TODO: Take note object to make loading faster
      *
      * @param context   Context to use
      * @param id        Id of note. -1 for new note.
@@ -56,7 +56,7 @@ public class NoteActivity extends Activity implements ColorDialogFragment.ColorC
     /**
      * TextWatcher for note text and title. Right now just updates share button intent.
      */
-    private TextWatcher mNoteTextWatcher = new TextWatcher() {
+    final private TextWatcher mNoteTextWatcher = new TextWatcher() {
         @Override
         public void beforeTextChanged(CharSequence charSequence, int i, int i2, int i3) {
             // do nothing
@@ -232,7 +232,7 @@ public class NoteActivity extends Activity implements ColorDialogFragment.ColorC
         final String title = mTitleView.getText().toString();
         final String text = mTextView.getText().toString();
 
-        if ((title == null && text == null) || (title.equals("") && text.equals(""))) {
+        if (title.equals("") && text.equals("")) {
             Toast.makeText(this, getResources().getString(R.string.empty_note), Toast.LENGTH_SHORT).show();
             return;
         }

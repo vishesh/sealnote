@@ -16,6 +16,7 @@
     <string name="action_share">Share</string>
     <string name="empty_note">No point saving an empty note!</string>
     <string name="note_saved">Note Saved.</string>
+    <string name="create_a_new_note">Create a New Note</string>
 
     <!-- color dialog -->
     <string name="msg_pick_color">Pick a color</string>

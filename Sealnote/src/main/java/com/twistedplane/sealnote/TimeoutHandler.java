@@ -12,7 +12,7 @@ import com.twistedplane.sealnote.utils.PreferenceHandler;
  * with its own Handler instance.
  */
 class TimeoutHandler implements Runnable {
-    private Handler mHandler = new Handler();
+    final private Handler mHandler = new Handler();
 
     /**
      * Current activity to use. Always updated from all public
@@ -28,7 +28,7 @@ class TimeoutHandler implements Runnable {
     /**
      * Singleton instance
      */
-    private static TimeoutHandler mInstance = new TimeoutHandler();
+    final private static TimeoutHandler mInstance = new TimeoutHandler();
 
     private TimeoutHandler() {}
 
@@ -78,7 +78,7 @@ class TimeoutHandler implements Runnable {
      */
     public boolean resume(Activity activity) {
         mActivity = activity;
-        if (mTimedOut == true) {
+        if (mTimedOut) {
             Intent intent = new Intent(mActivity, PasswordActivity.class);
             mActivity.startActivity(intent);
             mActivity.finish();
