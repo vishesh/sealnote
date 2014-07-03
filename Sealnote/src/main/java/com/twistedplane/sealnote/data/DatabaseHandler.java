@@ -10,6 +10,9 @@ import net.sqlcipher.database.SQLiteOpenHelper;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Helper class to manage database creation and upgrade, and manage notes.
+ */
 public class DatabaseHandler extends SQLiteOpenHelper {
     public static final String DBNAME = "sealnote.sqlite";
     public static final int VERSION = 1;
@@ -24,27 +27,50 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     public static final String COL_CREATED = "created";
     public static final String COL_EDITED = "edited";
 
+    /**
+     * Keep only one instance of database throughout application for performace
+     */
     private static SQLiteDatabase mDatabase = null;
+
+    /**
+     * Store current password used. Password expires after timeouts.
+     */
     private static String mPassword = null;
 
     public DatabaseHandler(Context context) {
         super(context, DBNAME, null, VERSION);
     }
 
+    /**
+     * Set the password used to unlock database.
+     */
     public static void setPassword(String password) {
         mPassword = password;
     }
 
+    /**
+     * Get current password in use. This function is used extensively in
+     * application. Note that password can be null due to timeouts which
+     * resets the password for security.
+     *
+     * @return  Current password in use or null is nothing is set
+     */
     public static String getPassword() {
         return mPassword;
     }
 
+    /**
+     * Update the cached static database instance using current password.
+     */
     public void update() {
         if (mDatabase == null) {
             mDatabase = this.getWritableDatabase(getPassword());
         }
     }
 
+    /**
+     * Reset cached database and password.
+     */
     public void recycle() {
         mDatabase = null;
         mPassword = null;
@@ -59,8 +85,13 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         return getWritableDatabase();
     }
 
+    /**
+     * Convert row at given cursor position to Note object.
+     *
+     * @param cursor    Cursor object from which note data is to be retrieved
+     * @return          Note object with data set
+     */
     public static Note cursorToNote(Cursor cursor) {
-        //FIXME
         Note note = new Note();
         try {
             note.setId(Integer.parseInt(cursor.getString(cursor.getColumnIndex(COL_ID))));
@@ -75,6 +106,9 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         return note;
     }
 
+    /**
+     * Create a new database. Runs on first install of application.
+     */
     @Override
     public void onCreate(SQLiteDatabase db) {
         String query = "CREATE TABLE " + TABLE_NAME + " ( " +
@@ -88,11 +122,17 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         db.execSQL(query);
     }
 
+    /**
+     * Upgrade database
+     */
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         // do nothing for now
     }
 
+    /**
+     * Add a note to database
+     */
     public void addNote(Note note) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
@@ -105,9 +145,13 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         values.put(COL_CREATED, date.toString());
         values.put(COL_EDITED, date.toString());
         db.insert(TABLE_NAME, null, values);
+
         db.close();
     }
 
+    /**
+     * Update given note. Note id is used to identify the database tuple.
+     */
     public void updateNote(Note note) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
@@ -122,6 +166,12 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         db.close();
     }
 
+    /**
+     * Get note object of given id from database
+     *
+     * @param id    Id of note
+     * @return      Note object
+     */
     public Note getNote(int id) {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.query(TABLE_NAME, null, COL_ID + " = ?", new String[]{Integer.toString(id)},
@@ -132,12 +182,18 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         return null;
     }
 
+    /**
+     * Delete a note of given id from database.
+     */
     public void deleteNote(int id) {
         SQLiteDatabase db = this.getWritableDatabase();
         db.delete(TABLE_NAME, COL_ID + " = ?", new String[] {Integer.toString(id)});
         db.close();
     }
 
+    /**
+     * Get a list of all notes stored in database
+     */
     public List<Note> getAllNotes() {
         List<Note> list = new ArrayList<Note>();
         SQLiteDatabase db = getReadableDatabase();
@@ -153,8 +209,13 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         return list;
     }
 
+    /**
+     * Get a cursor object pointing to all notes in database.
+     */
     public Cursor getAllNotesCursor() {
-        return getReadableDatabase().rawQuery("SELECT * FROM " + TABLE_NAME, null);
+        return getReadableDatabase().rawQuery(
+                "SELECT * FROM " + TABLE_NAME + " ORDER BY " + COL_CREATED + " DESC", null
+            );
     }
 
 }

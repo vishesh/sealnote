@@ -1,6 +1,11 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
       xmlns:tools="http://schemas.android.com/tools"
       tools:context="com.twistedplane.sealnote.NoteActivity">
+    <item android:id="@+id/action_share"
+          android:title="@string/action_share"
+          android:showAsAction="ifRoom"
+          android:actionProviderClass="android.widget.ShareActionProvider"
+          />
     <item android:id="@+id/action_color"
           android:title="@string/action_color"
           android:showAsAction="always"

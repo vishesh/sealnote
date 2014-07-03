@@ -10,6 +10,13 @@ import com.twistedplane.sealnote.utils.PreferenceHandler;
 import it.gmariotti.cardslib.library.extra.staggeredgrid.internal.CardGridStaggeredArrayAdapter;
 import it.gmariotti.cardslib.library.extra.staggeredgrid.view.CardGridStaggeredView;
 
+/**
+ * Specialized CardGridStaggeredView class used in SealNote.
+ *
+ *   + Add support for cursor adapter
+ *   + Changes to make column mode change as per latest Sealnote settings
+ *     preferences
+ */
 public class SealnoteCardGridStaggeredView extends CardGridStaggeredView {
     protected CardGridStaggeredCursorAdapter mCursorAdapter;
 
@@ -25,6 +32,11 @@ public class SealnoteCardGridStaggeredView extends CardGridStaggeredView {
         super(context, attrs, defStyle);
     }
 
+    /**
+     * Uses CardGridStaggeredCursorAdapter to avoid dispatch to generic
+     * ListAdapter version of this function which doesn't support this
+     * kind of adapter.
+     */
     public void setAdapter(CardGridStaggeredCursorAdapter adapter) {
         super.setAdapter(adapter);
         adapter.setRowLayoutId(list_card_layout_resourceID);
@@ -32,6 +44,11 @@ public class SealnoteCardGridStaggeredView extends CardGridStaggeredView {
         mCursorAdapter = adapter;
     }
 
+    /**
+     * Uses CardGridStaggeredCursorAdapter to avoid dispatch to generic
+     * ListAdapter version of this function which doesn't support this
+     * kind of adapter.
+     */
     public void setExternalAdapter(ListAdapter adapter, CardGridStaggeredCursorAdapter cardCursorAdapter) {
         setAdapter(adapter);
 
@@ -40,6 +57,9 @@ public class SealnoteCardGridStaggeredView extends CardGridStaggeredView {
         mCursorAdapter.setRowLayoutId(list_card_layout_resourceID);
     }
 
+    /**
+     * Add support for CardGridStaggeredCursorAdapter.
+     */
     @Override
     public void setAdapter(ListAdapter adapter) {
         if (adapter instanceof CardGridStaggeredArrayAdapter) {
@@ -52,14 +72,31 @@ public class SealnoteCardGridStaggeredView extends CardGridStaggeredView {
         }
     }
 
+    /**
+     * Apart from usual behaviour, update latest column count from SealNote
+     * preference value.
+     */
+    @Override
+    protected void onLayout(boolean changed, int l, int t, int r, int b) {
+        updateGridColumnCount();
+        super.onLayout(changed, l, t, r, b);
+    }
+
+    /**
+     * Update column count as per current orientation of device and SealNote
+     * multi-column/single-column preference value.
+     */
     public void updateGridColumnCount() {
         if (!PreferenceHandler.isMultiColumnGridEnabled(getContext())) {
+            // Single-column mode is enabled
             setColumnCount(1);
         } else {
             if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
-                setColumnCount(3);
+                setColumnCountPortrait(2);
+                setColumnCountLandscape(3);
             } else {
-                setColumnCount(2);
+                setColumnCountLandscape(3);
+                setColumnCountPortrait(2);
             }
         }
     }

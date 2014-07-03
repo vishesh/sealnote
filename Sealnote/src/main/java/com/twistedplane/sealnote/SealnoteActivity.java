@@ -7,19 +7,23 @@ import android.database.Cursor;
 import android.database.DataSetObserver;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.view.*;
-import android.widget.Button;
-import android.widget.LinearLayout;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.view.View;
 import com.nhaarman.listviewanimations.swinginadapters.AnimationAdapter;
 import com.nhaarman.listviewanimations.swinginadapters.prepared.ScaleInAnimationAdapter;
 import com.twistedplane.sealnote.data.DatabaseHandler;
 import com.twistedplane.sealnote.data.SealnoteAdapter;
-import com.twistedplane.sealnote.utils.PreferenceHandler;
+import com.twistedplane.sealnote.utils.Misc;
 import com.twistedplane.sealnote.views.SealnoteCardGridStaggeredView;
 import it.gmariotti.cardslib.library.extra.staggeredgrid.view.CardGridStaggeredView;
 
-//FIXME: Secure window. Clean up code and update flag on settings changed.
+//FIXME: Clean up code and update flag on settings changed.
 
+/**
+ * Main activity where all cards are listed in a staggered grid
+ */
 public class SealnoteActivity extends Activity {
     /**
      * Called when the activity is first created.
@@ -27,93 +31,81 @@ public class SealnoteActivity extends Activity {
     public static SealnoteAdapter adapter;
     public static SealnoteActivity activity;
 
-    SealnoteCardGridStaggeredView noteListView;
-    View mEmptyGridLayout;
+    final private AdapterLoadTask adapterLoadTask = new AdapterLoadTask();
+    private SealnoteCardGridStaggeredView mNoteListView;
 
+    /**
+     * View to show when AdapterLoadTask is running. Show activity
+     * progress circle
+     */
+    private View layoutProgressHeader;
+
+    /**
+     * View shown where is no cards available.
+     */
+    private View mEmptyGridLayout;
+
+    /**
+     * Is adapter loaded? Is set by task that loads adapter asynchronously.
+     * Prevents the code flow where resume executes before adapter is loaded
+     */
     private boolean mAdapterLoaded = false;
-    private boolean mIsMultiColumnEnabled;
 
-    private void secureWindow() {
-        // secure window content
-        boolean isSecureWindow = PreferenceHandler.isSecureWindowEnabled(getBaseContext());
-        if (isSecureWindow) {
-            getWindow().setFlags(WindowManager.LayoutParams.FLAG_SECURE, WindowManager.LayoutParams.FLAG_SECURE);
-        } else {
-            getWindow().setFlags(0, WindowManager.LayoutParams.FLAG_SECURE);
-        }
-    }
 
+    /**
+     * Create activity
+     */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.main);
-        secureWindow();
+        Misc.secureWindow(this);
 
-        mIsMultiColumnEnabled = PreferenceHandler.isMultiColumnGridEnabled(this);
         activity = this;
-        noteListView = (SealnoteCardGridStaggeredView) findViewById(R.id.main_note_grid);
-        mEmptyGridLayout = (View) findViewById(R.id.layout_empty_grid);
+        mNoteListView = (SealnoteCardGridStaggeredView) findViewById(R.id.main_note_grid);
+        mEmptyGridLayout = findViewById(R.id.layout_empty_grid);
+        layoutProgressHeader = findViewById(R.id.layoutHeaderProgress);
 
-        final Button createNoteButton = (Button) findViewById(R.id.create_note_button);
-        createNoteButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                SealnoteCard.startNoteActivity(SealnoteActivity.this, -1);
-            }
-        });
-
-        final LinearLayout layoutProgressHeader = (LinearLayout) findViewById(R.id.layoutHeaderProgress);
 
         if (DatabaseHandler.getPassword() == null) {
             // onResume will follow up which will start PasswordActivity and setup database password
             return;
         }
 
-        AsyncTask<Void, Void, SealnoteAdapter> task = new AsyncTask<Void, Void, SealnoteAdapter>() {
-            @Override
-            protected void onPreExecute() {
-                super.onPreExecute();
-                noteListView.setVisibility(View.GONE);
-                layoutProgressHeader.setVisibility(View.VISIBLE);
-            }
-
-            @Override
-            protected SealnoteAdapter doInBackground(Void... voids) {
-                final DatabaseHandler db = new DatabaseHandler(SealnoteActivity.this);
-                final Cursor cursor = db.getAllNotesCursor();
-                return new SealnoteAdapter(SealnoteActivity.this, cursor);
-            }
-
-            @Override
-            protected void onPostExecute(SealnoteAdapter sealnoteAdapter) {
-                super.onPostExecute(sealnoteAdapter);
-
-                adapter = sealnoteAdapter;
-                mAdapterLoaded = true;
-
-                adapter.registerDataSetObserver(new DataSetObserver() {
-                    @Override
-                    public void onChanged() {
-                        super.onChanged();
-                        if (adapter.getCount() > 0) {
-                            noteListView.setVisibility(View.VISIBLE);
-                            mEmptyGridLayout.setVisibility(View.GONE);
-                        } else {
-                            noteListView.setVisibility(View.GONE);
-                            mEmptyGridLayout.setVisibility(View.VISIBLE);
-                        }
-                    }
-                });
-                loadGridAdapter();
-
-                noteListView.setVisibility(View.VISIBLE);
-                layoutProgressHeader.setVisibility(View.GONE);
-            }
-        };
-        task.execute();
+        adapterLoadTask.execute();
     }
 
+    /**
+     * When coming back from foreground check if timeout has expired and if
+     * so load logout to password activity. Otherwise reset the timeout status.
+     */
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        if (TimeoutHandler.instance().resume(this)) {
+            return;
+        }
+        loadGridAdapter();
+
+        // preference may have changed, so do it again. Happens when coming
+        // back from settings activity
+        Misc.secureWindow(this);
+    }
+
+    /**
+     * Schedules a delayed callback after configured password expiry timeout.
+     */
+    @Override
+    public void onPause() {
+        super.onPause();
+        TimeoutHandler.instance().pause(this);
+    }
+
+    /**
+     * Inflate the ActionBar menu
+     */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu items for use in the action bar
@@ -122,12 +114,15 @@ public class SealnoteActivity extends Activity {
         return super.onCreateOptionsMenu(menu);
     }
 
+    /**
+     * An item is selected from ActionBar
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle presses on the action bar items
         switch (item.getItemId()) {
             case R.id.action_new_note:
-                SealnoteCard.startNoteActivity(this, -1);
+                onCreateNoteClick(null);
                 return true;
             case R.id.action_about:
                 showAboutDialog();
@@ -143,59 +138,39 @@ public class SealnoteActivity extends Activity {
         }
     }
 
+    /**
+     * Load adapter to card grid view. Reload data from database. Also setup animations.
+     */
     private void loadGridAdapter() {
         if (mAdapterLoaded) {
             final CardGridStaggeredView noteListView = (CardGridStaggeredView) findViewById(R.id.main_note_grid);
 
-            setScaleAnimationAdapter();
+            setAnimationAdapter();
 
             AnimationAdapter animationAdapter = (AnimationAdapter) noteListView.getAdapter();
             SealnoteAdapter dataAdapter = (SealnoteAdapter) animationAdapter.getDecoratedBaseAdapter();
 
+            // get fresh data and swap
             dataAdapter.swapCursor(new DatabaseHandler(this).getAllNotesCursor());
         }
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-
-        noteListView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-            @Override
-            public void onGlobalLayout() {
-                if (mIsMultiColumnEnabled != PreferenceHandler.isMultiColumnGridEnabled(SealnoteActivity.this)) {
-                    noteListView.invalidate();
-                    noteListView.updateGridColumnCount();
-                    mIsMultiColumnEnabled = PreferenceHandler.isMultiColumnGridEnabled(SealnoteActivity.this);
-                    noteListView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-                }
-
-            }
-        });
-
-        if (TimeoutHandler.instance().resume(this)) {
-            return;
-        }
-        loadGridAdapter();
-        secureWindow();
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        TimeoutHandler.instance().pause(this);
-    }
-
-    private void setScaleAnimationAdapter() {
+    /**
+     * Set animation adapter for card grid view and make it card grid's external adapter.
+     */
+    private void setAnimationAdapter() {
         AnimationAdapter animCardArrayAdapter = new ScaleInAnimationAdapter(adapter);
 
         animCardArrayAdapter.setAnimationDurationMillis(1000);
         animCardArrayAdapter.setAnimationDelayMillis(500);
 
-        animCardArrayAdapter.setAbsListView(noteListView);
-        noteListView.setExternalAdapter(animCardArrayAdapter, adapter);
+        animCardArrayAdapter.setAbsListView(mNoteListView);
+        mNoteListView.setExternalAdapter(animCardArrayAdapter, adapter);
     }
 
+    /**
+     * Create and show about dialog
+     */
     private void showAboutDialog() {
         View messageView = getLayoutInflater().inflate(R.layout.about, null, false);
 
@@ -207,8 +182,90 @@ public class SealnoteActivity extends Activity {
         builder.show();
     }
 
+    /**
+     * Start settings activity
+     */
     private void showSettings() {
         Intent intent = new Intent(this, SettingsActivity.class);
         this.startActivity(intent);
+    }
+
+    /**
+     * Callback when dataset in card grid's adapter is changed.
+     */
+    private void onAdapterDataSetChanged() {
+        if (adapter.getCount() > 0) {
+            mNoteListView.setVisibility(View.VISIBLE);
+            mEmptyGridLayout.setVisibility(View.GONE);
+        } else {
+            mNoteListView.setVisibility(View.GONE);
+            mEmptyGridLayout.setVisibility(View.VISIBLE);
+        }
+    }
+
+    /**
+     * Called when any create new button/action is clicked.
+     */
+    public void onCreateNoteClick(View view) {
+        NoteActivity.startForNoteId(SealnoteActivity.this, -1);
+    }
+
+    /**
+     * Asynchronous Task to load adapter.
+     *
+     * Hide the grid view in activity and shows layoutProgressHeader.
+     */
+    private class AdapterLoadTask extends AsyncTask<Void, Void, SealnoteAdapter> {
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            // Before starting background task, update visibility of views
+            mNoteListView.setVisibility(View.GONE);
+            layoutProgressHeader.setVisibility(View.VISIBLE);
+        }
+
+        /**
+         * Loads database, get cursor to all notes in database and return a
+         * new Cursor Adapter.
+         *
+         * @return  Adapter object containing all notes
+         */
+        @Override
+        protected SealnoteAdapter doInBackground(Void... voids) {
+            final DatabaseHandler db = new DatabaseHandler(SealnoteActivity.this);
+            final Cursor cursor = db.getAllNotesCursor();
+            return new SealnoteAdapter(SealnoteActivity.this, cursor);
+        }
+
+        /**
+         * Takes the result of task ie. adapter and load it to the view.
+         * Revert back the visibilities of views.
+         *
+         * @param sealnoteAdapter   Result of background task
+         */
+        @Override
+        protected void onPostExecute(SealnoteAdapter sealnoteAdapter) {
+            super.onPostExecute(sealnoteAdapter);
+
+            adapter = sealnoteAdapter;
+            mAdapterLoaded = true;
+
+            /**
+             * Called whenever there is change in dataset. Any future changes
+             * will call this
+             */
+            adapter.registerDataSetObserver(new DataSetObserver() {
+                @Override
+                public void onChanged() {
+                    super.onChanged();
+                    SealnoteActivity.this.onAdapterDataSetChanged();
+                }
+            });
+            SealnoteActivity.this.loadGridAdapter();
+
+            // Make the progress view gone and card grid visible
+            mNoteListView.setVisibility(View.VISIBLE);
+            layoutProgressHeader.setVisibility(View.GONE);
+        }
     }
 }
