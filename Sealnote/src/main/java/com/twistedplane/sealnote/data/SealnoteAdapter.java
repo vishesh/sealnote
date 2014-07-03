@@ -140,7 +140,9 @@ public class SealnoteAdapter extends CardGridStaggeredCursorAdapter {
 
         // To force redrawing the actionbar view and show updated number of
         // selected items
-        mActionMode.invalidate();
+        if (mActionMode != null) {
+            mActionMode.invalidate();
+        }
     }
 
     public boolean getItemChecked(CardView card) {

@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import com.twistedplane.sealnote.utils.Misc;
 
 import java.util.zip.Inflater;
 
@@ -65,34 +66,11 @@ public class ColorDialogFragment extends DialogFragment {
             checkedView.setVisibility(mBackground == position ? View.VISIBLE : View.INVISIBLE);
 
             // Set background of current listitem
-            switch (position) {
-                case 0:
-                    view.setBackgroundColor(getResources().getColor(R.color.card_background_color0));
-                    break;
-                case 1:
-                    view.setBackgroundColor(getResources().getColor(R.color.card_background_color1));
-                    break;
-                case 2:
-                    view.setBackgroundColor(getResources().getColor(R.color.card_background_color2));
-                    break;
-                case 3:
-                    view.setBackgroundColor(getResources().getColor(R.color.card_background_color3));
-                    break;
-                case 4:
-                    view.setBackgroundColor(getResources().getColor(R.color.card_background_color4));
-                    break;
-                case 5:
-                    view.setBackgroundColor(getResources().getColor(R.color.card_background_color5));
-                    break;
-                case 6:
-                    view.setBackgroundColor(getResources().getColor(R.color.card_background_color6));
-                    break;
-                case 7:
-                    view.setBackgroundColor(getResources().getColor(R.color.card_background_color7));
-                    break;
-            }
+            view.setBackgroundColor(Misc.getColorForCode(getContext(), position));
+
             return view;
         }
+
     }
 
     /**
