@@ -2,6 +2,10 @@ package com.twistedplane.sealnote.data;
 
 import com.twistedplane.sealnote.utils.EasyDate;
 
+/**
+ * Note contains all the data and helper functions related to a particular
+ * note. Acts as a map between an entry in storage database and Java.
+ */
 public class Note {
     private int mId;
     private int mPosition;
