@@ -77,6 +77,7 @@ public class NoteActivity extends Activity implements ColorDialogFragment.ColorC
             init(); // new note simply setup views
         }
 
+        //NOTE: For ICS
         ActionBar actionBar = getActionBar();
         actionBar.setHomeButtonEnabled(true);
         actionBar.setDisplayHomeAsUpEnabled(true);
