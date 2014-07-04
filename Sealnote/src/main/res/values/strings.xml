@@ -1,12 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
+
+<!--
+    Strings
+-->
+
 <resources>
 
     <string name="app_name">SealNote</string>
+    <string name="app_description">Objective is simple. Provide a quick, simple and <b>safe</b> notepad. Your notes are encrypted using strong 256-bit AES algorithm. No longer worry about losing your private information to malicious people.</string>
+    <string name="app_credits"><b>TwistedPlane:</b>\nwww.twistedplane.com\ncontact@twistedplane.com"</string>
+
+    <!-- Activities -->
     <string name="title_activity_note">" "</string>
+    <string name="title_activity_settings">Settings</string>
+
+    <!-- Actions -->
     <string name="action_settings">Settings</string>
     <string name="action_about">About</string>
-    <string name="note_title">Title</string>
-    <string name="note_note">Note</string>
     <string name="action_search">Search</string>
     <string name="action_new_note">Create New Note</string>
     <string name="action_save_note">Save</string>
@@ -14,6 +24,10 @@
     <string name="action_logout">Logout</string>
     <string name="action_delete">Delete</string>
     <string name="action_share">Share</string>
+
+    <!-- Note Activity -->
+    <string name="note_title">Title</string>
+    <string name="note_note">Note</string>
     <string name="empty_note">No point saving an empty note!</string>
     <string name="note_saved">Note Saved.</string>
     <string name="create_a_new_note">Create a New Note</string>
@@ -22,17 +36,15 @@
     <string name="msg_pick_color">Pick a color</string>
 
     <!-- password dialog -->
+    <string name="welcome">Welcome to SealNote!</string>
+    <string name="welcome_submessage">Keep notes safe and secure</string>
     <string name="password">Password</string>
     <string name="create_password">Enter a new password</string>
     <string name="show_notes">Show Notes</string>
     <string name="get_started">Get Started</string>
+    <string name="invalid_password">Invalid password!</string>
     <string name="go">Go</string>
     <string name="cancel">Cancel</string>
-    <string name="invalid_password">Invalid password!</string>
-    <string name="welcome">Welcome to SealNote!</string>
-    <string name="welcome_submessage">Keep notes safe and secure</string>
-    <string name="app_description">Objective is simple. Provide a quick, simple and <b>safe</b> notepad. Your notes are encrypted using strong 256-bit AES algorithm. No longer worry about losing your private information to malicious people.</string>
-    <string name="app_credits"><b>TwistedPlane:</b>\nwww.twistedplane.com\ncontact@twistedplane.com"</string>
 
     <!-- Preferences -->
     <string name="pref_catGeneral">General</string>
@@ -52,7 +64,6 @@
 
     <string name="pref_changePassword">Change Password</string>
 
-    <string name="title_activity_settings">Settings</string>
 
     <!-- change password -->
     <string name="incorrect_old_password">Incorrect old password!</string>
