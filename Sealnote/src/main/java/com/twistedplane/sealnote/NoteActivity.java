@@ -115,8 +115,8 @@ public class NoteActivity extends Activity implements ColorDialogFragment.ColorC
         mTextView.addTextChangedListener(mNoteTextWatcher);
         mTitleView.addTextChangedListener(mNoteTextWatcher);
 
-        mTitleView.setTypeface(FontCache.getFont(getBaseContext(), "RobotoSlab-Bold.ttf"));
-        mTextView.setTypeface(FontCache.getFont(getBaseContext(), "RobotoSlab-Regular.ttf"));
+        mTitleView.setTypeface(FontCache.getFont(this, "RobotoSlab-Bold.ttf"));
+        mTextView.setTypeface(FontCache.getFont(this, "RobotoSlab-Regular.ttf"));
 
         // set focus to text view //TODO: Only if id=-1
         mTextView.requestFocus();
@@ -235,7 +235,7 @@ public class NoteActivity extends Activity implements ColorDialogFragment.ColorC
     public void saveNote() {
         if (mSaveButtonClicked) return; else mSaveButtonClicked = true; //FIXME: Hack. Avoids double saving
 
-        final DatabaseHandler handler = new DatabaseHandler(this);
+        final DatabaseHandler handler = new DatabaseHandler(getApplicationContext());
         final String title = mTitleView.getText().toString();
         final String text = mTextView.getText().toString();
 
@@ -277,7 +277,7 @@ public class NoteActivity extends Activity implements ColorDialogFragment.ColorC
         }
 
         View view = findViewById(R.id.note_activity_title).getRootView();
-        view.setBackgroundColor(Misc.getColorForCode(getBaseContext(), color));
+        view.setBackgroundColor(Misc.getColorForCode(this, color));
     }
 
     /**
@@ -303,7 +303,7 @@ public class NoteActivity extends Activity implements ColorDialogFragment.ColorC
          */
         @Override
         protected Note doInBackground(Integer... integers) {
-            DatabaseHandler db = new DatabaseHandler(getBaseContext());
+            DatabaseHandler db = new DatabaseHandler(getApplicationContext());
             return db.getNote(integers[0]);
         }
 
@@ -318,5 +318,4 @@ public class NoteActivity extends Activity implements ColorDialogFragment.ColorC
             loadNote(note);
         }
     }
-
 }

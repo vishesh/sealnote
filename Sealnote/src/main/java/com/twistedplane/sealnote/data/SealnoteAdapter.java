@@ -1,5 +1,6 @@
 package com.twistedplane.sealnote.data;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.database.Cursor;
@@ -8,7 +9,6 @@ import android.util.SparseBooleanArray;
 import android.view.*;
 import com.twistedplane.sealnote.NoteActivity;
 import com.twistedplane.sealnote.R;
-import com.twistedplane.sealnote.SealnoteActivity;
 import com.twistedplane.sealnote.internal.SealnoteCard;
 import it.gmariotti.cardslib.library.internal.Card;
 import it.gmariotti.cardslib.library.view.CardView;
@@ -102,7 +102,7 @@ public class SealnoteAdapter extends CardGridStaggeredCursorAdapter {
             @Override
             public boolean onLongClick(Card card, View view) {
                 if (mActionMode == null) {
-                    SealnoteActivity.adapter.startActionMode(); //FIXME
+                    startActionMode();
                 }
                 setItemChecked((CardView) view, !getItemChecked((CardView) view));
                 return true;
@@ -117,7 +117,9 @@ public class SealnoteAdapter extends CardGridStaggeredCursorAdapter {
         if (mMultiChoiceCallback == null) {
             mMultiChoiceCallback = new MultiChoiceCallback();
         }
-        mActionMode = SealnoteActivity.activity.startActionMode(mMultiChoiceCallback); //FIXME
+        // We assume activity is used as context
+        Activity activity = (Activity) getContext();
+        mActionMode = activity.startActionMode(mMultiChoiceCallback);
     }
 
     /**

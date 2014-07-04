@@ -19,7 +19,6 @@ import com.twistedplane.sealnote.data.SealnoteAdapter;
 import com.twistedplane.sealnote.utils.Misc;
 import com.twistedplane.sealnote.utils.TimeoutHandler;
 import com.twistedplane.sealnote.views.SealnoteCardGridStaggeredView;
-import it.gmariotti.cardslib.library.extra.staggeredgrid.view.CardGridStaggeredView;
 
 //FIXME: Clean up code and update flag on settings changed.
 
@@ -28,10 +27,9 @@ import it.gmariotti.cardslib.library.extra.staggeredgrid.view.CardGridStaggeredV
  */
 public class SealnoteActivity extends Activity {
     /**
-     * Called when the activity is first created.
+     * Adapter used by Staggered Grid View to display note cards
      */
-    public static SealnoteAdapter adapter;
-    public static SealnoteActivity activity;
+    private SealnoteAdapter mAdapter;
 
     final private AdapterLoadTask adapterLoadTask = new AdapterLoadTask();
     private SealnoteCardGridStaggeredView mNoteListView;
@@ -55,7 +53,7 @@ public class SealnoteActivity extends Activity {
 
 
     /**
-     * Create activity
+     * Called when the activity is first created.
      */
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -64,11 +62,9 @@ public class SealnoteActivity extends Activity {
         setContentView(R.layout.main);
         Misc.secureWindow(this);
 
-        activity = this;
         mNoteListView = (SealnoteCardGridStaggeredView) findViewById(R.id.main_note_grid);
         mEmptyGridLayout = findViewById(R.id.layout_empty_grid);
         layoutProgressHeader = findViewById(R.id.layoutHeaderProgress);
-
 
         if (DatabaseHandler.getPassword() == null) {
             // onResume will follow up which will start PasswordActivity and setup database password
@@ -104,8 +100,8 @@ public class SealnoteActivity extends Activity {
         super.onPause();
 
         // Close cursor used by adapter
-        if (adapter != null) {
-            Cursor cursor = adapter.swapCursor(null);
+        if (mAdapter != null) {
+            Cursor cursor = mAdapter.swapCursor(null);
             if (cursor != null) {
                 cursor.close();
             }
@@ -160,7 +156,7 @@ public class SealnoteActivity extends Activity {
             SealnoteAdapter dataAdapter = (SealnoteAdapter) animationAdapter.getDecoratedBaseAdapter();
 
             // get fresh data and swap
-            dataAdapter.changeCursor(new DatabaseHandler(this).getAllNotesCursor());
+            dataAdapter.changeCursor(new DatabaseHandler(getApplicationContext()).getAllNotesCursor());
             mNoteListView.requestLayout();
             mNoteListView.invalidate();
         } else {
@@ -172,13 +168,13 @@ public class SealnoteActivity extends Activity {
      * Set animation adapter for card grid view and make it card grid's external adapter.
      */
     private void setAnimationAdapter() {
-        AnimationAdapter animCardArrayAdapter = new ScaleInAnimationAdapter(adapter);
+        AnimationAdapter animCardArrayAdapter = new ScaleInAnimationAdapter(mAdapter);
 
         animCardArrayAdapter.setAnimationDurationMillis(1000);
         animCardArrayAdapter.setAnimationDelayMillis(500);
 
         animCardArrayAdapter.setAbsListView(mNoteListView);
-        mNoteListView.setExternalAdapter(animCardArrayAdapter, adapter);
+        mNoteListView.setExternalAdapter(animCardArrayAdapter, mAdapter);
     }
 
     /**
@@ -207,7 +203,7 @@ public class SealnoteActivity extends Activity {
      * Callback when dataset in card grid's adapter is changed.
      */
     private void onAdapterDataSetChanged() {
-        if (adapter.getCount() > 0) {
+        if (mAdapter.getCount() > 0) {
             mEmptyGridLayout.setVisibility(View.GONE);
         } else {
             mEmptyGridLayout.setVisibility(View.VISIBLE);
@@ -242,7 +238,7 @@ public class SealnoteActivity extends Activity {
          */
         @Override
         protected SealnoteAdapter doInBackground(Void... voids) {
-            final DatabaseHandler db = new DatabaseHandler(SealnoteActivity.this);
+            final DatabaseHandler db = new DatabaseHandler(getApplicationContext());
             final Cursor cursor = db.getAllNotesCursor();
             return new SealnoteAdapter(SealnoteActivity.this, cursor);
         }
@@ -257,14 +253,14 @@ public class SealnoteActivity extends Activity {
         protected void onPostExecute(SealnoteAdapter sealnoteAdapter) {
             super.onPostExecute(sealnoteAdapter);
 
-            adapter = sealnoteAdapter;
+            mAdapter = sealnoteAdapter;
             mAdapterLoaded = true;
 
             /**
              * Called whenever there is change in dataset. Any future changes
              * will call this
              */
-            adapter.registerDataSetObserver(new DataSetObserver() {
+            mAdapter.registerDataSetObserver(new DataSetObserver() {
                 @Override
                 public void onChanged() {
                     super.onChanged();
