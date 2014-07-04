@@ -24,6 +24,7 @@ public class PasswordActivity extends Activity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_password);
 
         if (checkExistingDatabase()) {
             createLoginScreen();
@@ -46,10 +47,12 @@ public class PasswordActivity extends Activity {
      * started for first time without any database in storage.
      */
     private void createWelcomeScreen() {
-        setContentView(R.layout.activity_password_first);
+        final Button createButton = (Button) findViewById(R.id.password_action_button);
+        final EditText passwordView = (EditText) findViewById(R.id.password_input);
 
-        final Button createButton = (Button) findViewById(R.id.create_password_button);
-        final EditText passwordView = (EditText) findViewById(R.id.new_password_input);
+        // Override the default text set in layout
+        passwordView.setHint(getResources().getString(R.string.create_password));
+        createButton.setText(getResources().getString(R.string.get_started));
 
         createButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -73,9 +76,7 @@ public class PasswordActivity extends Activity {
      * Create login screen
      */
     private void createLoginScreen() {
-        setContentView(R.layout.activity_password);
-
-        final Button button = (Button) findViewById(R.id.go_password_button);
+        final Button button = (Button) findViewById(R.id.password_action_button);
         final EditText password = (EditText) findViewById(R.id.password_input);
 
         button.setOnClickListener(new View.OnClickListener() {
@@ -94,8 +95,8 @@ public class PasswordActivity extends Activity {
      */
     private void toggleProgress() {
         //TODO: Toggle editable property of password textedit
-        final Button button = (Button) findViewById(R.id.go_password_button);
-        final ProgressBar progress_circle = (ProgressBar) findViewById(R.id.go_password_progress);
+        final Button button = (Button) findViewById(R.id.password_action_button);
+        final ProgressBar progress_circle = (ProgressBar) findViewById(R.id.password_progress);
 
         if (button.getVisibility() == View.VISIBLE) {
             // toggle ON
