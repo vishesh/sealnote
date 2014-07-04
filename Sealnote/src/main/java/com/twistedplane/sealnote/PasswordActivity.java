@@ -158,7 +158,7 @@ public class PasswordActivity extends Activity {
                 PasswordActivity.this.finish();
             } else {
                 Toast.makeText(PasswordActivity.this, getResources()
-                     .getString(R.string.invalid_password), Toast.LENGTH_SHORT)
+                     .getString(R.string.invalid_password), Toast.LENGTH_LONG)
                      .show();
                 PasswordActivity.this.toggleProgress();
             }
