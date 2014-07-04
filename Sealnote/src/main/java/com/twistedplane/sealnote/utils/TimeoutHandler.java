@@ -16,12 +16,6 @@ public class TimeoutHandler implements Runnable {
     final private Handler mHandler = new Handler();
 
     /**
-     * Current activity to use. Always updated from all public
-     * methods
-     */
-    private Activity mActivity;
-
-    /**
      * Are we timed out?
      */
     private boolean mTimedOut = true;
@@ -63,8 +57,8 @@ public class TimeoutHandler implements Runnable {
      * Resets any existing/pending callbacks and resets the timeout/state
      * by postDelaying another callback.
      */
-    private void passwordTimeoutStart() {
-        int timeout = PreferenceHandler.getPasswordTimeout(mActivity);
+    private void passwordTimeoutStart(Activity activity) {
+        int timeout = PreferenceHandler.getPasswordTimeout(activity);
         passwordTimeoutClear();
         mHandler.postDelayed(mInstance, timeout);
         mTimedOut = false;
@@ -78,11 +72,10 @@ public class TimeoutHandler implements Runnable {
      * @return          true if we are timed out, else false
      */
     public boolean resume(Activity activity) {
-        mActivity = activity;
         if (mTimedOut) {
-            Intent intent = new Intent(mActivity, PasswordActivity.class);
-            mActivity.startActivity(intent);
-            mActivity.finish();
+            Intent intent = new Intent(activity, PasswordActivity.class);
+            activity.startActivity(intent);
+            activity.finish();
         } else {
             passwordTimeoutClear();
         }
@@ -93,10 +86,9 @@ public class TimeoutHandler implements Runnable {
      * Expire the state immediately ie. set state to timed out.
      * Usage example: logout button
      *
-     * @param activity  Current active activity
+     * @param activity  Current active activity to use
      */
     public void expire(Activity activity) {
-        mActivity = activity;
         passwordTimeoutClear();
         run();
         resume(activity);
@@ -106,10 +98,9 @@ public class TimeoutHandler implements Runnable {
      * Schedule a new timeout callback. Called from activity onPause
      * method
      *
-     * @param activity  Current active activity
+     * @param activity  Current active activity to use
      */
     public void pause(Activity activity) {
-        mActivity = activity;
-        passwordTimeoutStart();
+        passwordTimeoutStart(activity);
     }
 }
