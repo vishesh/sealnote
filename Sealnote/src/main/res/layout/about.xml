@@ -9,7 +9,7 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="22sp"
+        android:textSize="18sp"
         android:text="@string/app_description"
         android:fontFamily="sans-serif-light"
         />
@@ -18,8 +18,8 @@
         android:id="@+id/about_credits"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingTop="20dip"
-        android:textSize="20sp"
+        android:paddingTop="18dip"
+        android:textSize="18sp"
         android:text="@string/app_credits"
         android:fontFamily="sans-serif-light"
         android:autoLink="web|email"
@@ -27,7 +27,7 @@
 
     <TextView android:layout_width="wrap_content"
               android:layout_height="wrap_content"
-              android:textSize="18sp"
+              android:textSize="14sp"
               android:textStyle="bold"
               android:paddingTop="20dip"
               android:text="BETA RELEASE - UNDER DEVELOPMENT AND CAN BE UNSTABLE"
