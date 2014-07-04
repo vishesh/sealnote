@@ -61,7 +61,7 @@ public class SealnoteActivity extends Activity {
         mEmptyGridLayout = findViewById(R.id.layout_empty_grid);
         layoutProgressHeader = findViewById(R.id.layoutHeaderProgress);
 
-        if (DatabaseHandler.getPassword() == null) {
+        if (SealnoteApplication.getDatabase().getPassword() == null) {
             // onResume will follow up which will start PasswordActivity and setup database password
             return;
         }

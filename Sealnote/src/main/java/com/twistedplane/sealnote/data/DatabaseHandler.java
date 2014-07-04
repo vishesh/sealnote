@@ -30,12 +30,12 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     /**
      * Keep only one instance of database throughout application for performace
      */
-    private static SQLiteDatabase mDatabase = null;
+    private SQLiteDatabase mDatabase = null;
 
     /**
      * Store current password used. Password expires after timeouts.
      */
-    private static String mPassword = null;
+    private String mPassword = null;
 
     public DatabaseHandler(Context context) {
         super(context, DBNAME, null, VERSION);
@@ -44,7 +44,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     /**
      * Set the password used to unlock database.
      */
-    public static void setPassword(String password) {
+    public void setPassword(String password) {
         mPassword = password;
     }
 
@@ -55,7 +55,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
      *
      * @return  Current password in use or null is nothing is set
      */
-    public static String getPassword() {
+    public String getPassword() {
         return mPassword;
     }
 
@@ -80,7 +80,11 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     @Override
     public synchronized void close() {
         super.close();
-        mDatabase = null;
+        if (mDatabase != null) {
+            if (!mDatabase.isOpen())
+            mDatabase.close();
+            mDatabase = null;
+        }
     }
 
     public SQLiteDatabase getWritableDatabase() {
