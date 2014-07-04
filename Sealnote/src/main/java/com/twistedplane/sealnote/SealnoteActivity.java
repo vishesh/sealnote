@@ -101,6 +101,15 @@ public class SealnoteActivity extends Activity {
     @Override
     public void onPause() {
         super.onPause();
+
+        // Close cursor used by adapter
+        if (adapter != null) {
+            Cursor cursor = adapter.swapCursor(null);
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
+
         TimeoutHandler.instance().pause(this);
     }
 
@@ -152,7 +161,7 @@ public class SealnoteActivity extends Activity {
             SealnoteAdapter dataAdapter = (SealnoteAdapter) animationAdapter.getDecoratedBaseAdapter();
 
             // get fresh data and swap
-            dataAdapter.swapCursor(new DatabaseHandler(this).getAllNotesCursor());
+            dataAdapter.changeCursor(new DatabaseHandler(this).getAllNotesCursor());
         }
     }
 

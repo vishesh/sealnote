@@ -63,7 +63,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
      * Update the cached static database instance using current password.
      */
     public void update() {
-        if (mDatabase == null) {
+        if (mDatabase == null || !mDatabase.isOpen()) {
             mDatabase = this.getWritableDatabase(getPassword());
         }
     }
@@ -72,13 +72,20 @@ public class DatabaseHandler extends SQLiteOpenHelper {
      * Reset cached database and password.
      */
     public void recycle() {
+        close();
         mDatabase = null;
         mPassword = null;
     }
 
+    @Override
+    public synchronized void close() {
+        super.close();
+        mDatabase = null;
+    }
+
     public SQLiteDatabase getWritableDatabase() {
         update();
-        return this.getWritableDatabase(mPassword);
+        return mDatabase;
     }
 
     public SQLiteDatabase getReadableDatabase() {
@@ -145,8 +152,6 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         values.put(COL_CREATED, date.toString());
         values.put(COL_EDITED, date.toString());
         db.insert(TABLE_NAME, null, values);
-
-        db.close();
     }
 
     /**
@@ -163,7 +168,6 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         values.put(COL_COLOR, note.getColor());
         values.put(COL_EDITED, EasyDate.now().toString());
         db.update(TABLE_NAME, values, COL_ID + " = ?", new String[]{Integer.toString(note.getId())});
-        db.close();
     }
 
     /**
@@ -176,10 +180,14 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.query(TABLE_NAME, null, COL_ID + " = ?", new String[]{Integer.toString(id)},
                 null, null, null, null);
+        Note note = null;
+
         if (cursor.moveToFirst()) {
-            return cursorToNote(cursor);
+            note = cursorToNote(cursor);
+            cursor.close();
         }
-        return null;
+
+        return note;
     }
 
     /**
@@ -187,8 +195,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
      */
     public void deleteNote(int id) {
         SQLiteDatabase db = this.getWritableDatabase();
-        db.delete(TABLE_NAME, COL_ID + " = ?", new String[] {Integer.toString(id)});
-        db.close();
+        db.delete(TABLE_NAME, COL_ID + " = ?", new String[]{Integer.toString(id)});
     }
 
     /**
@@ -205,7 +212,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
             } while (cursor.moveToNext());
         }
 
-        db.close();
+        cursor.close();
         return list;
     }
 

@@ -184,7 +184,7 @@ public class PasswordPreference extends DialogPreference implements TextWatcher 
         }
 
         // make query to change database key
-        db.getWritableDatabase().rawQuery("PRAGMA rekey = '" + newPassword + "'", null);
+        db.getWritableDatabase().rawQuery("PRAGMA rekey = '" + newPassword + "'", null).close();
 
         // Recycle old password and state, and set new password in handler
         db.recycle();
