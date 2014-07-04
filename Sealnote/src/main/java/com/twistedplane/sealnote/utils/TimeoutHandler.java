@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Handler;
 import com.twistedplane.sealnote.PasswordActivity;
+import com.twistedplane.sealnote.SealnoteApplication;
 import com.twistedplane.sealnote.data.DatabaseHandler;
 
 /**
@@ -45,7 +46,7 @@ public class TimeoutHandler implements Runnable {
      */
     @Override
     public void run() {
-        DatabaseHandler db = new DatabaseHandler(mActivity);
+        DatabaseHandler db = SealnoteApplication.getDatabase();
         db.recycle();
         mTimedOut = true;
     }

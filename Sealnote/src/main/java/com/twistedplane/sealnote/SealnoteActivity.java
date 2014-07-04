@@ -7,7 +7,6 @@ import android.database.Cursor;
 import android.database.DataSetObserver;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -29,9 +28,7 @@ public class SealnoteActivity extends Activity {
     /**
      * Adapter used by Staggered Grid View to display note cards
      */
-    private SealnoteAdapter mAdapter;
-
-    final private AdapterLoadTask adapterLoadTask = new AdapterLoadTask();
+    private SealnoteAdapter mAdapter = new SealnoteAdapter(this, null);
     private SealnoteCardGridStaggeredView mNoteListView;
 
     /**
@@ -46,11 +43,9 @@ public class SealnoteActivity extends Activity {
     private View mEmptyGridLayout;
 
     /**
-     * Is adapter loaded? Is set by task that loads adapter asynchronously.
-     * Prevents the code flow where resume executes before adapter is loaded
+     * If a task is already executing to load adapter
      */
-    private boolean mAdapterLoaded = false;
-
+    private boolean mAdapterLoading = false;
 
     /**
      * Called when the activity is first created.
@@ -71,7 +66,17 @@ public class SealnoteActivity extends Activity {
             return;
         }
 
-        adapterLoadTask.execute();
+        /**
+         * Called whenever there is change in dataset. Any future changes
+         * will call this
+         */
+        mAdapter.registerDataSetObserver(new DataSetObserver() {
+            @Override
+            public void onChanged() {
+                super.onChanged();
+                onAdapterDataSetChanged();
+            }
+        });
     }
 
     /**
@@ -85,7 +90,10 @@ public class SealnoteActivity extends Activity {
         if (TimeoutHandler.instance().resume(this)) {
             return;
         }
-        loadGridAdapter();
+
+        if (!mAdapterLoading) {
+            new AdapterLoadTask().execute();
+        }
 
         // preference may have changed, so do it again. Happens when coming
         // back from settings activity
@@ -98,16 +106,13 @@ public class SealnoteActivity extends Activity {
     @Override
     public void onPause() {
         super.onPause();
-
-        // Close cursor used by adapter
-        if (mAdapter != null) {
-            Cursor cursor = mAdapter.swapCursor(null);
-            if (cursor != null) {
-                cursor.close();
-            }
-        }
-
+        mAdapter.clearCursor();
         TimeoutHandler.instance().pause(this);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
     }
 
     /**
@@ -148,20 +153,12 @@ public class SealnoteActivity extends Activity {
     /**
      * Load adapter to card grid view. Reload data from database. Also setup animations.
      */
-    private void loadGridAdapter() {
-        if (mAdapterLoaded) {
-            setAnimationAdapter();
+    private void loadAdapter() {
+        setAnimationAdapter();
 
-            AnimationAdapter animationAdapter = (AnimationAdapter) mNoteListView.getAdapter();
-            SealnoteAdapter dataAdapter = (SealnoteAdapter) animationAdapter.getDecoratedBaseAdapter();
-
-            // get fresh data and swap
-            dataAdapter.changeCursor(new DatabaseHandler(getApplicationContext()).getAllNotesCursor());
-            mNoteListView.requestLayout();
-            mNoteListView.invalidate();
-        } else {
-            Log.w("DEBUG", "Adapter not loaded, view may misbehave?");
-        }
+        // get fresh data and swap
+        mNoteListView.requestLayout();
+        mNoteListView.invalidate();
     }
 
     /**
@@ -222,10 +219,13 @@ public class SealnoteActivity extends Activity {
      *
      * Hide the grid view in activity and shows layoutProgressHeader.
      */
-    private class AdapterLoadTask extends AsyncTask<Void, Void, SealnoteAdapter> {
+    private class AdapterLoadTask extends AsyncTask<Void, Void, Cursor> {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
+            mAdapterLoading = true;
+            mAdapter.clearCursor();
+
             // Before starting background task, update visibility of views
             layoutProgressHeader.setVisibility(View.VISIBLE);
         }
@@ -237,41 +237,28 @@ public class SealnoteActivity extends Activity {
          * @return  Adapter object containing all notes
          */
         @Override
-        protected SealnoteAdapter doInBackground(Void... voids) {
-            final DatabaseHandler db = new DatabaseHandler(getApplicationContext());
+        protected Cursor doInBackground(Void... voids) {
+            final DatabaseHandler db = SealnoteApplication.getDatabase();
             final Cursor cursor = db.getAllNotesCursor();
-            return new SealnoteAdapter(SealnoteActivity.this, cursor);
+            return cursor;
         }
 
         /**
          * Takes the result of task ie. adapter and load it to the view.
          * Revert back the visibilities of views.
          *
-         * @param sealnoteAdapter   Result of background task
+         * @param cursor   Result containing cursor to notes
          */
         @Override
-        protected void onPostExecute(SealnoteAdapter sealnoteAdapter) {
-            super.onPostExecute(sealnoteAdapter);
-
-            mAdapter = sealnoteAdapter;
-            mAdapterLoaded = true;
-
-            /**
-             * Called whenever there is change in dataset. Any future changes
-             * will call this
-             */
-            mAdapter.registerDataSetObserver(new DataSetObserver() {
-                @Override
-                public void onChanged() {
-                    super.onChanged();
-                    SealnoteActivity.this.onAdapterDataSetChanged();
-                }
-            });
+        protected void onPostExecute(Cursor cursor) {
+            super.onPostExecute(cursor);
+            mAdapter.changeCursor(cursor);
 
             // Make the progress view gone and card grid visible
             layoutProgressHeader.setVisibility(View.GONE);
 
-            SealnoteActivity.this.loadGridAdapter();
+            SealnoteActivity.this.loadAdapter();
+            mAdapterLoading = false;
         }
     }
 }

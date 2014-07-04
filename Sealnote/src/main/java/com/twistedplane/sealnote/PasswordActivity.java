@@ -134,7 +134,7 @@ public class PasswordActivity extends Activity {
          * @return      true is successfully created/login to encrypted database
          */
         protected Boolean doInBackground(String... args) {
-            DatabaseHandler handler = new DatabaseHandler(getApplicationContext());
+            DatabaseHandler handler = SealnoteApplication.getDatabase();
             handler.recycle();
             try {
                 DatabaseHandler.setPassword(args[0]);

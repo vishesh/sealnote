@@ -235,7 +235,7 @@ public class NoteActivity extends Activity implements ColorDialogFragment.ColorC
     public void saveNote() {
         if (mSaveButtonClicked) return; else mSaveButtonClicked = true; //FIXME: Hack. Avoids double saving
 
-        final DatabaseHandler handler = new DatabaseHandler(getApplicationContext());
+        final DatabaseHandler handler = SealnoteApplication.getDatabase();
         final String title = mTitleView.getText().toString();
         final String text = mTextView.getText().toString();
 
@@ -303,7 +303,7 @@ public class NoteActivity extends Activity implements ColorDialogFragment.ColorC
          */
         @Override
         protected Note doInBackground(Integer... integers) {
-            DatabaseHandler db = new DatabaseHandler(getApplicationContext());
+            DatabaseHandler db = SealnoteApplication.getDatabase();
             return db.getNote(integers[0]);
         }
 

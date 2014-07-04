@@ -9,6 +9,7 @@ import android.util.SparseBooleanArray;
 import android.view.*;
 import com.twistedplane.sealnote.NoteActivity;
 import com.twistedplane.sealnote.R;
+import com.twistedplane.sealnote.SealnoteApplication;
 import com.twistedplane.sealnote.internal.SealnoteCard;
 import it.gmariotti.cardslib.library.internal.Card;
 import it.gmariotti.cardslib.library.view.CardView;
@@ -29,6 +30,16 @@ public class SealnoteAdapter extends CardGridStaggeredCursorAdapter {
 
     public SealnoteAdapter(Context context, Cursor c) {
         super(context, c, 0);
+    }
+
+    /**
+     * Close the cursor held by adapter
+     */
+    public void clearCursor() {
+        Cursor cursor = swapCursor(null);
+        if (cursor != null) {
+            cursor.close();
+        }
     }
 
     @Override
@@ -226,6 +237,7 @@ public class SealnoteAdapter extends CardGridStaggeredCursorAdapter {
                 @Override
                 protected void onPreExecute() {
                     super.onPreExecute();
+                    clearCursor();
                     dialog.setMax(mCheckedIds.size());
                     dialog.setTitle("Deleting notes.");
                     dialog.setProgress(0);
@@ -243,7 +255,7 @@ public class SealnoteAdapter extends CardGridStaggeredCursorAdapter {
                  */
                 @Override
                 protected Cursor doInBackground(SparseBooleanArray... sparseBooleanArrays) {
-                    DatabaseHandler db = new DatabaseHandler(getContext());
+                    DatabaseHandler db = SealnoteApplication.getDatabase();
 
                     for (int i = 0; i < mCheckedIds.size(); i++) {
                         publishProgress(i);

@@ -13,6 +13,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 import com.twistedplane.sealnote.R;
+import com.twistedplane.sealnote.SealnoteApplication;
 import com.twistedplane.sealnote.data.DatabaseHandler;
 import net.sqlcipher.database.SQLiteException;
 
@@ -151,7 +152,7 @@ public class PasswordPreference extends DialogPreference implements TextWatcher 
      */
     private boolean changePassword() {
         Resources resources = getContext().getResources();
-        DatabaseHandler db = new DatabaseHandler(getContext());
+        DatabaseHandler db = SealnoteApplication.getDatabase();
 
         String oldDbPassword = DatabaseHandler.getPassword();
         String oldPassword = mOldView.getText().toString();
