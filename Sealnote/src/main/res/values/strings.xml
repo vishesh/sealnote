@@ -29,7 +29,8 @@
     <string name="note_title">Title</string>
     <string name="note_note">Note</string>
     <string name="empty_note">No point saving an empty note!</string>
-    <string name="note_saved">Note Saved.</string>
+    <string name="note_saved">Note saved.</string>
+    <string name="note_deleted">Note deleted.</string>
     <string name="create_a_new_note">Create a New Note</string>
 
     <!-- color dialog -->

@@ -196,6 +196,12 @@ public class NoteActivity extends Activity implements ColorDialogFragment.ColorC
             saveMenuItem.setVisible(false);
         }
 
+        // don't show delete action if note is newly created
+        if (mNote == null || mNote.getId() == -1) {
+            MenuItem deleteMenuItem = menu.findItem(R.id.action_note_delete);
+            deleteMenuItem.setVisible(false);
+        }
+
         // Fetch and store ShareActionProvider
         MenuItem item = menu.findItem(R.id.action_share);
         ShareActionProvider shareActionProvider = (ShareActionProvider) item.getActionProvider();
@@ -244,6 +250,9 @@ public class NoteActivity extends Activity implements ColorDialogFragment.ColorC
                 ColorDialogFragment cdf = new ColorDialogFragment();
                 cdf.show(getFragmentManager(), "ColorDialogFragment");
                 return true;
+            case R.id.action_note_delete:
+                doDelete();
+                return true;
             case android.R.id.home:
                 onBackPressed();
                 return true;
@@ -282,13 +291,29 @@ public class NoteActivity extends Activity implements ColorDialogFragment.ColorC
     }
 
     /**
+     * Delete current note
+     */
+    public void doDelete() {
+        final DatabaseHandler handler = SealnoteApplication.getDatabase();
+        handler.deleteNote(mNote.getId());
+        mNote = null;
+        Toast.makeText(this, getResources().getString(R.string.note_deleted), Toast.LENGTH_SHORT).show();
+
+        // to disable saving when activity is finished when its
+        // done in onPause()
+        mAutoSaveEnabled = false;
+
+        finish();
+    }
+
+    /**
      * Called when save action is invoked by click
      */
     public void doSave() {
         if (mSaveButtonClicked) return; else mSaveButtonClicked = true; //FIXME: Hack. Avoids double saving
         saveNote();
         Toast.makeText(this, getResources().getString(R.string.note_saved), Toast.LENGTH_SHORT).show();
-        this.finish();
+        finish();
     }
 
     /**
