@@ -1,17 +1,17 @@
-package com.twistedplane.sealnote;
+package com.twistedplane.sealnote.utils;
 
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Handler;
+import com.twistedplane.sealnote.PasswordActivity;
 import com.twistedplane.sealnote.data.DatabaseHandler;
-import com.twistedplane.sealnote.utils.PreferenceHandler;
 
 /**
  * Handler implementing the password expiry and appropriate callbacks.
  * This is a singleton and manages timeout for complete application
  * with its own Handler instance.
  */
-class TimeoutHandler implements Runnable {
+public class TimeoutHandler implements Runnable {
     final private Handler mHandler = new Handler();
 
     /**

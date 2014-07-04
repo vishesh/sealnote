@@ -11,6 +11,7 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 import com.twistedplane.sealnote.data.DatabaseHandler;
+import com.twistedplane.sealnote.utils.TimeoutHandler;
 import net.sqlcipher.database.SQLiteException;
 
 import java.io.File;

@@ -1,10 +1,11 @@
-package com.twistedplane.sealnote;
+package com.twistedplane.sealnote.internal;
 
 import android.content.Context;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import com.twistedplane.sealnote.R;
 import com.twistedplane.sealnote.data.Note;
 import com.twistedplane.sealnote.utils.FontCache;
 import com.twistedplane.sealnote.utils.PreferenceHandler;

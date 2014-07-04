@@ -16,6 +16,7 @@ import com.nhaarman.listviewanimations.swinginadapters.prepared.ScaleInAnimation
 import com.twistedplane.sealnote.data.DatabaseHandler;
 import com.twistedplane.sealnote.data.SealnoteAdapter;
 import com.twistedplane.sealnote.utils.Misc;
+import com.twistedplane.sealnote.utils.TimeoutHandler;
 import com.twistedplane.sealnote.views.SealnoteCardGridStaggeredView;
 import it.gmariotti.cardslib.library.extra.staggeredgrid.view.CardGridStaggeredView;
 

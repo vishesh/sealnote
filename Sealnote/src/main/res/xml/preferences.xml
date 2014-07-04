@@ -23,7 +23,7 @@
                 android:summary="@string/pref_passwordTimeoutSummary"
                 />
 
-        <com.twistedplane.sealnote.PasswordPreference
+        <com.twistedplane.sealnote.internal.PasswordPreference
             android:title="@string/pref_changePassword"
             android:dialogTitle="@string/pref_changePassword"
             />

@@ -22,6 +22,7 @@ import com.twistedplane.sealnote.data.Note;
 import com.twistedplane.sealnote.utils.EasyDate;
 import com.twistedplane.sealnote.utils.FontCache;
 import com.twistedplane.sealnote.utils.Misc;
+import com.twistedplane.sealnote.utils.TimeoutHandler;
 
 //FIXME: Clean up code and update flag on settings changed.
 

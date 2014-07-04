@@ -9,7 +9,7 @@ import android.view.*;
 import com.twistedplane.sealnote.NoteActivity;
 import com.twistedplane.sealnote.R;
 import com.twistedplane.sealnote.SealnoteActivity;
-import com.twistedplane.sealnote.SealnoteCard;
+import com.twistedplane.sealnote.internal.SealnoteCard;
 import it.gmariotti.cardslib.library.internal.Card;
 import it.gmariotti.cardslib.library.view.CardView;
 

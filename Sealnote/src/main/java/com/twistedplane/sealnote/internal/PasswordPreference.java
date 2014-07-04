@@ -1,4 +1,4 @@
-package com.twistedplane.sealnote;
+package com.twistedplane.sealnote.internal;
 
 import android.app.AlertDialog;
 import android.content.Context;
@@ -12,6 +12,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
+import com.twistedplane.sealnote.R;
 import com.twistedplane.sealnote.data.DatabaseHandler;
 import net.sqlcipher.database.SQLiteException;
 
