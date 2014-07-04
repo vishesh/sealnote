@@ -188,6 +188,11 @@ public class NoteActivity extends Activity implements ColorDialogFragment.ColorC
      * Update share intent with current note values
      */
     private void updateShareIntent() {
+        if (mShareIntent == null) {
+            //FIX: crash when orientation is changed
+            return;
+        }
+
         final EditText titleView = (EditText) findViewById(R.id.note_activity_title);
         final EditText textView = (EditText) findViewById(R.id.note_activity_note);
         String shareText;
