@@ -91,6 +91,7 @@ public class NoteActivity extends Activity implements ColorDialogFragment.ColorC
             new NoteLoadTask().execute(id);
         } else {
             init(); // new note simply setup views
+            getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
         }
 
         //NOTE: For ICS
