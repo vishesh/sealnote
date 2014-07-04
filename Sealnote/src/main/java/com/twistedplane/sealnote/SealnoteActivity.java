@@ -7,6 +7,7 @@ import android.database.Cursor;
 import android.database.DataSetObserver;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -153,15 +154,17 @@ public class SealnoteActivity extends Activity {
      */
     private void loadGridAdapter() {
         if (mAdapterLoaded) {
-            final CardGridStaggeredView noteListView = (CardGridStaggeredView) findViewById(R.id.main_note_grid);
-
             setAnimationAdapter();
 
-            AnimationAdapter animationAdapter = (AnimationAdapter) noteListView.getAdapter();
+            AnimationAdapter animationAdapter = (AnimationAdapter) mNoteListView.getAdapter();
             SealnoteAdapter dataAdapter = (SealnoteAdapter) animationAdapter.getDecoratedBaseAdapter();
 
             // get fresh data and swap
             dataAdapter.changeCursor(new DatabaseHandler(this).getAllNotesCursor());
+            mNoteListView.requestLayout();
+            mNoteListView.invalidate();
+        } else {
+            Log.w("DEBUG", "Adapter not loaded, view may misbehave?");
         }
     }
 
@@ -205,10 +208,8 @@ public class SealnoteActivity extends Activity {
      */
     private void onAdapterDataSetChanged() {
         if (adapter.getCount() > 0) {
-            mNoteListView.setVisibility(View.VISIBLE);
             mEmptyGridLayout.setVisibility(View.GONE);
         } else {
-            mNoteListView.setVisibility(View.GONE);
             mEmptyGridLayout.setVisibility(View.VISIBLE);
         }
     }
@@ -230,7 +231,6 @@ public class SealnoteActivity extends Activity {
         protected void onPreExecute() {
             super.onPreExecute();
             // Before starting background task, update visibility of views
-            mNoteListView.setVisibility(View.GONE);
             layoutProgressHeader.setVisibility(View.VISIBLE);
         }
 
@@ -271,11 +271,11 @@ public class SealnoteActivity extends Activity {
                     SealnoteActivity.this.onAdapterDataSetChanged();
                 }
             });
-            SealnoteActivity.this.loadGridAdapter();
 
             // Make the progress view gone and card grid visible
-            mNoteListView.setVisibility(View.VISIBLE);
             layoutProgressHeader.setVisibility(View.GONE);
+
+            SealnoteActivity.this.loadGridAdapter();
         }
     }
 }
