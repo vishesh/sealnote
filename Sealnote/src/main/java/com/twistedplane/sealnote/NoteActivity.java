@@ -9,6 +9,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -19,10 +20,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import com.twistedplane.sealnote.data.DatabaseHandler;
 import com.twistedplane.sealnote.data.Note;
-import com.twistedplane.sealnote.utils.EasyDate;
-import com.twistedplane.sealnote.utils.FontCache;
-import com.twistedplane.sealnote.utils.Misc;
-import com.twistedplane.sealnote.utils.TimeoutHandler;
+import com.twistedplane.sealnote.utils.*;
 
 //FIXME: Clean up code and update flag on settings changed.
 
@@ -33,6 +31,9 @@ public class NoteActivity extends Activity implements ColorDialogFragment.ColorC
     private Note mNote;
     private Intent mShareIntent;
     private boolean mSaveButtonClicked = false;
+    private boolean mAutoSaveEnabled;
+    private boolean mLoadingNote = true;
+    private boolean mTimedOut = false;
 
     private EditText mTitleView;
     private EditText mTextView;
@@ -58,6 +59,7 @@ public class NoteActivity extends Activity implements ColorDialogFragment.ColorC
      * TextWatcher for note text and title. Right now just updates share button intent.
      */
     final private TextWatcher mNoteTextWatcher = new TextWatcher() {
+
         @Override
         public void beforeTextChanged(CharSequence charSequence, int i, int i2, int i3) {
             // do nothing
@@ -82,7 +84,9 @@ public class NoteActivity extends Activity implements ColorDialogFragment.ColorC
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         mBackgroundColor = 0;
+        mAutoSaveEnabled = PreferenceHandler.isAutosaveEnabled(NoteActivity.this);
 
         Bundle extras = getIntent().getExtras();
         int id = extras.getInt("NOTE_ID");
@@ -152,7 +156,10 @@ public class NoteActivity extends Activity implements ColorDialogFragment.ColorC
     public void onResume() {
         super.onResume();
         if (TimeoutHandler.instance().resume(this)) {
+            mTimedOut = true;
             return;
+        } else {
+            mTimedOut = false;
         }
     }
 
@@ -162,6 +169,16 @@ public class NoteActivity extends Activity implements ColorDialogFragment.ColorC
     @Override
     public void onPause() {
         super.onPause();
+
+        // makes sure that note is loaded. onPause is also called when
+        // progress dialog is shown at which moment we haven't set our
+        // content view
+        // FIXME: This can be made simpler maybe by making better layout
+        if (!mTimedOut && mAutoSaveEnabled && !mLoadingNote) {
+            saveNote();
+            Log.w("DEBUG", "Note saved automatically due to activity pause.");
+        }
+
         TimeoutHandler.instance().pause(this);
     }
 
@@ -172,6 +189,12 @@ public class NoteActivity extends Activity implements ColorDialogFragment.ColorC
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.note_activity_actionbar, menu);
+
+        // check if autosave is enabled and set visibility of action
+        if (mAutoSaveEnabled) {
+            MenuItem saveMenuItem = menu.findItem(R.id.action_save_note);
+            saveMenuItem.setVisible(false);
+        }
 
         // Fetch and store ShareActionProvider
         MenuItem item = menu.findItem(R.id.action_share);
@@ -215,7 +238,7 @@ public class NoteActivity extends Activity implements ColorDialogFragment.ColorC
         // Handle presses on the action bar items
         switch (item.getItemId()) {
             case R.id.action_save_note:
-                saveNote();
+                doSave();
                 return true;
             case R.id.action_color:
                 ColorDialogFragment cdf = new ColorDialogFragment();
@@ -233,8 +256,6 @@ public class NoteActivity extends Activity implements ColorDialogFragment.ColorC
      * Save old or new note to database
      */
     public void saveNote() {
-        if (mSaveButtonClicked) return; else mSaveButtonClicked = true; //FIXME: Hack. Avoids double saving
-
         final DatabaseHandler handler = SealnoteApplication.getDatabase();
         final String title = mTitleView.getText().toString();
         final String text = mTextView.getText().toString();
@@ -244,22 +265,28 @@ public class NoteActivity extends Activity implements ColorDialogFragment.ColorC
             return;
         }
 
-        Note note = this.mNote;
-        if (note == null) {
-            // this is a new note
-            note = new Note();
-        }
-        note.setTitle(title);
-        note.setNote(text);
-        note.setColor(mBackgroundColor);
-
         if (mNote == null) {
-            note.setPosition(-1);
-            handler.addNote(note);
-        } else {
-            handler.updateNote(note);
+            // this is a new note
+            mNote = new Note();
         }
+        mNote.setTitle(title);
+        mNote.setNote(text);
+        mNote.setColor(mBackgroundColor);
 
+        if (mNote.getId() == -1) {
+            mNote.setPosition(-1);
+            handler.addNote(mNote);
+        } else {
+            handler.updateNote(mNote);
+        }
+    }
+
+    /**
+     * Called when save action is invoked by click
+     */
+    public void doSave() {
+        if (mSaveButtonClicked) return; else mSaveButtonClicked = true; //FIXME: Hack. Avoids double saving
+        saveNote();
         Toast.makeText(this, getResources().getString(R.string.note_saved), Toast.LENGTH_SHORT).show();
         this.finish();
     }
@@ -316,6 +343,7 @@ public class NoteActivity extends Activity implements ColorDialogFragment.ColorC
             mProgressDialog.dismiss();
             init();
             loadNote(note);
+            mLoadingNote = false;
         }
     }
 }

@@ -27,4 +27,9 @@ public class PreferenceHandler {
         SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(c);
         return sharedPrefs.getBoolean("pref_multiColumnGrid", true);
     }
+
+    public static boolean isAutosaveEnabled(Context c) {
+        SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(c);
+        return sharedPrefs.getBoolean("pref_autoSave", true);
+    }
 }

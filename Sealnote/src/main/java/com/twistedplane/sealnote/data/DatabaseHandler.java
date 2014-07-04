@@ -3,6 +3,7 @@ package com.twistedplane.sealnote.data;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.util.Log;
 import com.twistedplane.sealnote.utils.EasyDate;
 import net.sqlcipher.database.SQLiteDatabase;
 import net.sqlcipher.database.SQLiteOpenHelper;
@@ -64,6 +65,10 @@ public class DatabaseHandler extends SQLiteOpenHelper {
      */
     public void update() {
         if (mDatabase == null || !mDatabase.isOpen()) {
+            if (getPassword() == null || getPassword().equals("")) {
+                Log.w("DEBUG", "Password expired yet we are trying to access database");
+                throw new IllegalArgumentException("Password null or not acceptable");
+            }
             mDatabase = this.getWritableDatabase(getPassword());
         }
     }

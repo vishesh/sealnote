@@ -7,6 +7,13 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
     <PreferenceCategory android:title="@string/pref_catGeneral">
         <CheckBoxPreference
+                android:key="pref_autoSave"
+                android:title="@string/pref_autoSave"
+                android:defaultValue="false"
+                android:summary="@string/pref_autoSaveSummary"
+                />
+
+        <CheckBoxPreference
                 android:key="pref_secureWindow"
                 android:title="@string/pref_secureWindowTitle"
                 android:defaultValue="false"
