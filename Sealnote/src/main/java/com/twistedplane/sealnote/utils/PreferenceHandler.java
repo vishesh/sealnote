@@ -30,6 +30,6 @@ public class PreferenceHandler {
 
     public static boolean isAutosaveEnabled(Context c) {
         SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(c);
-        return sharedPrefs.getBoolean("pref_autoSave", true);
+        return sharedPrefs.getBoolean("pref_autoSave", false);
     }
 }
