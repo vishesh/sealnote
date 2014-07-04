@@ -4,8 +4,10 @@
               android:orientation="vertical"
               android:layout_width="fill_parent"
               android:layout_height="fill_parent"
-              android:paddingTop="@dimen/activity_vertical_margin"
-              android:paddingBottom="@dimen/activity_vertical_margin"
+              android:paddingTop="@dimen/sealnote_activity_vertical_margin"
+              android:paddingBottom="@dimen/sealnote_activity_vertical_margin"
+              android:paddingLeft="@dimen/sealnote_activity_horizontal_margin"
+              android:paddingRight="@dimen/sealnote_activity_horizontal_margin"
         >
     <!-- Progress View -->
     <LinearLayout
@@ -61,6 +63,7 @@
                 android:layout_height="wrap_content"
                 card:column_count_portrait="2"
                 card:column_count_landscape="3"
+                card:item_margin="8dp"
                 android:layout_gravity="center_horizontal|bottom"/>
     </FrameLayout>
 </LinearLayout>

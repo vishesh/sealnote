@@ -29,6 +29,7 @@ Sealnote TODO
 * [DONE] Uniform font preference
 * [DONE] PreferenceManager helper class
 * [DONE] Drawable on grid when no cards are there
+* [DONE] Margin between cards
 * Import/Export notes
 * Backup database to server
 * About in Settings
@@ -38,7 +39,6 @@ Sealnote TODO
 * Card header menu
 * Archive and Trash
 * Faster encrypted storage engine
-* Margin between cards
 
 * MultiMode in AndroidStageredGrid library
 * [PROGRESS] LongPress in AndroidStaggeredGrid library

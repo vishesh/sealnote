@@ -9,6 +9,9 @@
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
 
+    <dimen name="sealnote_activity_horizontal_margin">4dp</dimen>
+    <dimen name="sealnote_activity_vertical_margin">6dp</dimen>
+
     <!--
                     Card contents
     -->
