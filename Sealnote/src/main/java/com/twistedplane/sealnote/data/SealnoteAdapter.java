@@ -20,6 +20,8 @@ import it.gmariotti.cardslib.library.view.CardView;
  * appropriate listeners to card and maintaining the CAB multi-choice state.
  */
 public class SealnoteAdapter extends CardGridStaggeredCursorAdapter {
+    public final static String TAG = "SealnoteAdapter";
+
     private ActionMode mActionMode;
 
     /**

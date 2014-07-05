@@ -18,6 +18,8 @@ import it.gmariotti.cardslib.library.extra.staggeredgrid.view.CardGridStaggeredV
  *     preferences
  */
 public class SealnoteCardGridStaggeredView extends CardGridStaggeredView {
+    public final static String TAG = "SealnoteCardGridStaggeredView";
+
     protected CardGridStaggeredCursorAdapter mCursorAdapter;
 
     public SealnoteCardGridStaggeredView(Context context) {

@@ -10,6 +10,8 @@ import java.util.Map;
  * Cache to store external fonts.
  */
 public class FontCache {
+    public static final String TAG = "FontCache";
+
     final private static Map<String, Typeface> mFontMap = new HashMap<String, Typeface>();
 
     public static Typeface getFont(Context context, String fontName){

@@ -8,6 +8,8 @@ import android.preference.PreferenceManager;
  * Helper class to easily access preference values used by SealNote.
  */
 public class PreferenceHandler {
+    public final static String TAG = "PreferenceHandler";
+
     public static boolean isSecureWindowEnabled(Context c) {
         SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(c);
         return sharedPrefs.getBoolean("pref_secureWindow", false);

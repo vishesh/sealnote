@@ -1,12 +1,19 @@
 package com.twistedplane.sealnote.data;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+import android.util.Log;
 import com.twistedplane.sealnote.utils.EasyDate;
+
+import java.text.ParseException;
 
 /**
  * Note contains all the data and helper functions related to a particular
  * note. Acts as a map between an entry in storage database and Java.
  */
-public class Note {
+public class Note implements Parcelable{
+    public static final String TAG = "Note";
+
     private int mId;
     private int mPosition;
     private String mNoteTitle;
@@ -25,6 +32,39 @@ public class Note {
         this.mNote = content;
         this.mNoteTitle = title;
         this.mColor = -1;
+    }
+
+    /**
+     * Constructor to recreate object for Parcel
+     */
+    public Note(Parcel inParcel) {
+        readFromParcel(inParcel);
+    }
+
+    /**
+     * Helper method called by constructor to read from parcel
+     */
+    private void readFromParcel(Parcel inParcel) {
+        mId = inParcel.readInt();
+        mPosition = inParcel.readInt();
+        mNoteTitle = inParcel.readString();
+        mNote = inParcel.readString();
+        try {
+            mEditedDate = EasyDate.fromIsoString(inParcel.readString());
+        } catch (ParseException e) {
+            Log.e(TAG, "Error parsing date retrieved from database!");
+        }
+        mColor = inParcel.readInt();
+    }
+
+    @Override
+    public void writeToParcel(Parcel outParcel, int flags) {
+        outParcel.writeInt(mId);
+        outParcel.writeInt(mPosition);
+        outParcel.writeString(mNoteTitle);
+        outParcel.writeString(mNote);
+        outParcel.writeString(mEditedDate.toString());
+        outParcel.writeInt(mColor);
     }
 
     public int getId() {
@@ -74,4 +114,19 @@ public class Note {
     public void setColor(int color) {
         this.mColor = color;
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    public static final Parcelable.Creator CREATOR = new Parcelable.Creator() {
+        public Note createFromParcel(Parcel in) {
+            return new Note(in);
+        }
+
+        public Note[] newArray(int size) {
+            return new Note[size];
+        }
+    };
 }

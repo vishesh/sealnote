@@ -24,6 +24,8 @@ import net.sqlcipher.database.SQLiteException;
  * override the default behaviour of dismissing dialog when clicked.
  */
 public class PasswordPreference extends DialogPreference implements TextWatcher {
+    public final static String TAG = "PasswordPreference";
+
     private EditText mOldView;
     private EditText mNewView;
     private EditText mNewConfirmView;

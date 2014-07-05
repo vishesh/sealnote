@@ -12,6 +12,8 @@ import java.util.TimeZone;
  * scenes.
  */
 public class EasyDate {
+    public final static String TAG = "EasyDate";
+
     private final static String mDF_ISO_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSS zzz";
 
     final private Date mDate;
