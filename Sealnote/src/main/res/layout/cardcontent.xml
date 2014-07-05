@@ -19,5 +19,7 @@
             android:layout_marginBottom="@dimen/cardcontent_margin_bottom"
             android:textSize="@dimen/cardcontent_note_size"
             android:textColor="@color/card_text_color"
+            android:maxLines="11"
+            android:maxLength="400"
             />
 </LinearLayout>

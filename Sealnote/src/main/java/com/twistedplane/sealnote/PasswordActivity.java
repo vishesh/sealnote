@@ -137,7 +137,7 @@ public class PasswordActivity extends Activity {
             DatabaseHandler handler = SealnoteApplication.getDatabase();
             handler.recycle();
             try {
-                DatabaseHandler.setPassword(args[0]);
+                SealnoteApplication.getDatabase().setPassword(args[0]);
                 handler.update();
             } catch (SQLiteException e) {
                 return false;

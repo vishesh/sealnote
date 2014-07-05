@@ -154,7 +154,7 @@ public class PasswordPreference extends DialogPreference implements TextWatcher 
         Resources resources = getContext().getResources();
         DatabaseHandler db = SealnoteApplication.getDatabase();
 
-        String oldDbPassword = DatabaseHandler.getPassword();
+        String oldDbPassword = SealnoteApplication.getDatabase().getPassword();
         String oldPassword = mOldView.getText().toString();
         String newPassword = mNewView.getText().toString();
         String newConfirmPassword = mNewConfirmView.getText().toString();
@@ -163,13 +163,13 @@ public class PasswordPreference extends DialogPreference implements TextWatcher 
         // is correct
         db.recycle();
         try {
-            DatabaseHandler.setPassword(oldPassword);
+            SealnoteApplication.getDatabase().setPassword(oldPassword);
             db.update();
         } catch (SQLiteException e) {
             Toast.makeText(getContext(), resources.getString(R.string.incorrect_old_password),
                     Toast.LENGTH_SHORT).show();
             db.recycle();
-            DatabaseHandler.setPassword(oldDbPassword);
+            SealnoteApplication.getDatabase().setPassword(oldDbPassword);
             db.update();
             return false;
         }
@@ -179,7 +179,7 @@ public class PasswordPreference extends DialogPreference implements TextWatcher 
             Toast.makeText(getContext(), resources.getString(R.string.password_dont_match),
                     Toast.LENGTH_SHORT).show();
             db.recycle();
-            DatabaseHandler.setPassword(oldDbPassword);
+            SealnoteApplication.getDatabase().setPassword(oldDbPassword);
             db.update();
             return false;
         }
@@ -189,7 +189,7 @@ public class PasswordPreference extends DialogPreference implements TextWatcher 
 
         // Recycle old password and state, and set new password in handler
         db.recycle();
-        DatabaseHandler.setPassword(newPassword);
+        SealnoteApplication.getDatabase().setPassword(newPassword);
         db.update();
         Toast.makeText(getContext(), resources.getString(R.string.password_changed_success),
                 Toast.LENGTH_SHORT).show();

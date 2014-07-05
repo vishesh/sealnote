@@ -24,15 +24,21 @@ Sealnote TODO
 
 1st July 2014 - 7th July 2014
 -----------------------------
-* Search notes
 * [DONE] Single column, multi-column layout
 * [DONE] Uniform font preference
 * [DONE] PreferenceManager helper class
 * [DONE] Drawable on grid when no cards are there
 * [DONE] Margin between cards
+* Search notes
 * Import/Export notes
 * Backup database to server
 * About in Settings
+* FIX: Screen-off. If there is no lockscreen, screen off doesn't result in
+       password expiry
+* FIX: Save state of activity
+* FIX: Continue NoteActivity after unlock if required
+* Use fragments
+* List mode
 
 
 * Tags

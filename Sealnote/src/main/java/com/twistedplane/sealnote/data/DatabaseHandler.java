@@ -3,6 +3,7 @@ package com.twistedplane.sealnote.data;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.util.Log;
 import com.twistedplane.sealnote.utils.EasyDate;
 import net.sqlcipher.database.SQLiteDatabase;
 import net.sqlcipher.database.SQLiteOpenHelper;
@@ -30,12 +31,12 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     /**
      * Keep only one instance of database throughout application for performace
      */
-    private static SQLiteDatabase mDatabase = null;
+    private SQLiteDatabase mDatabase = null;
 
     /**
      * Store current password used. Password expires after timeouts.
      */
-    private static String mPassword = null;
+    private String mPassword = null;
 
     public DatabaseHandler(Context context) {
         super(context, DBNAME, null, VERSION);
@@ -44,7 +45,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     /**
      * Set the password used to unlock database.
      */
-    public static void setPassword(String password) {
+    public void setPassword(String password) {
         mPassword = password;
     }
 
@@ -55,7 +56,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
      *
      * @return  Current password in use or null is nothing is set
      */
-    public static String getPassword() {
+    public String getPassword() {
         return mPassword;
     }
 
@@ -64,6 +65,10 @@ public class DatabaseHandler extends SQLiteOpenHelper {
      */
     public void update() {
         if (mDatabase == null || !mDatabase.isOpen()) {
+            if (getPassword() == null || getPassword().equals("")) {
+                Log.w("DEBUG", "Password expired yet we are trying to access database");
+                throw new IllegalArgumentException("Password null or not acceptable");
+            }
             mDatabase = this.getWritableDatabase(getPassword());
         }
     }
@@ -80,7 +85,11 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     @Override
     public synchronized void close() {
         super.close();
-        mDatabase = null;
+        if (mDatabase != null) {
+            if (!mDatabase.isOpen())
+            mDatabase.close();
+            mDatabase = null;
+        }
     }
 
     public SQLiteDatabase getWritableDatabase() {
@@ -140,7 +149,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     /**
      * Add a note to database
      */
-    public void addNote(Note note) {
+    public long addNote(Note note) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         EasyDate date = EasyDate.now();
@@ -151,7 +160,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         values.put(COL_COLOR, note.getColor());
         values.put(COL_CREATED, date.toString());
         values.put(COL_EDITED, date.toString());
-        db.insert(TABLE_NAME, null, values);
+        return db.insert(TABLE_NAME, null, values);
     }
 
     /**
