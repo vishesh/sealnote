@@ -33,9 +33,12 @@ Sealnote TODO
 * Import/Export notes
 * Backup database to server
 * About in Settings
-* FIX: Screen-off?
+* FIX: Screen-off. If there is no lockscreen, screen off doesn't result in
+       password expiry
 * FIX: Save state of activity
 * FIX: Continue NoteActivity after unlock if required
+* Use fragments
+* List mode
 
 
 * Tags
