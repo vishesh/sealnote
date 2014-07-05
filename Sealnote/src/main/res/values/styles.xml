@@ -25,7 +25,7 @@
     </style>
 
     <!-- Note activity theme. -->
-    <style name="Sealnote.Theme.Note" parent="android:Theme.Holo.Light.DarkActionBar">
+    <style name="Sealnote.Theme.Note" parent="@android:Theme.Holo.Light.DarkActionBar">
         <item name="android:actionBarStyle">@style/Sealnote.Theme.Note.ActionBar</item>
     </style>
 

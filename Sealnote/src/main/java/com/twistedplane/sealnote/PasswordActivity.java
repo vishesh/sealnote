@@ -142,6 +142,10 @@ public class PasswordActivity extends Activity {
                 SealnoteApplication.getDatabase().setPassword(args[0]);
                 handler.update();
             } catch (SQLiteException e) {
+                // Most likely wrong password provided
+                return false;
+            } catch (IllegalArgumentException e) {
+                // Illegal password provided. eg. empty password
                 return false;
             }
             return true;
