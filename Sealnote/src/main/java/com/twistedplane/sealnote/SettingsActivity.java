@@ -9,6 +9,8 @@ import android.view.MenuItem;
  * Activity for configuring the preferences/settings of application.
  */
 public class SettingsActivity extends PreferenceActivity {
+    public final static String TAG = "SettingsActivity";
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

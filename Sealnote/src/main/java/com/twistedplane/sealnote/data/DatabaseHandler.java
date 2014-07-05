@@ -17,6 +17,8 @@ import java.util.List;
  * Helper class to manage database creation and upgrade, and manage notes.
  */
 public class DatabaseHandler extends SQLiteOpenHelper {
+    public static final String TAG = "DatabaseHandler";
+
     public static final String DBNAME = "sealnote.sqlite";
     public static final int VERSION = 1;
 
@@ -68,7 +70,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     public void update() {
         if (mDatabase == null || !mDatabase.isOpen()) {
             if (getPassword() == null || getPassword().equals("")) {
-                Log.w("DEBUG", "Password expired yet we are trying to access database");
+                Log.d(TAG, "Password expired yet we are trying to access database");
                 throw new IllegalArgumentException("Password null or not acceptable");
             }
             mDatabase = this.getWritableDatabase(getPassword());
@@ -119,7 +121,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
             note.setEditedDate(EasyDate.fromIsoString(cursor.getString(cursor.getColumnIndex(COL_EDITED))));
             note.setColor(cursor.getInt(cursor.getColumnIndex(COL_COLOR)));
         } catch (ParseException e) {
-            Log.e("DEBUG", "Error parsing date retrieved from database!");
+            Log.e(TAG, "Error parsing date retrieved from database!");
             return null;
         } catch (CursorIndexOutOfBoundsException e) {
             return null;

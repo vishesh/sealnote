@@ -18,6 +18,7 @@ import it.gmariotti.cardslib.library.internal.CardHeader;
  * Not using XML for API Level 14 compatibility
  */
 class SealnoteCardHeader extends CardHeader {
+    public static final String TAG = "SealnoteCardHeader";
     public SealnoteCardHeader(Context context) {
         super(context);
     }
@@ -40,6 +41,8 @@ class SealnoteCardHeader extends CardHeader {
  * and adds note background to Card.
  */
 public class SealnoteCard extends Card {
+    public static final String TAG = "SealnoteCard";
+
     protected Note mNote;
 
     public SealnoteCard(Context context) {

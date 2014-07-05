@@ -11,6 +11,8 @@ import com.twistedplane.sealnote.R;
  * Miscellaneous helper functions
  */
 public class Misc {
+    public static final String TAG = "Misc";
+
     private Misc() {}
 
     /**

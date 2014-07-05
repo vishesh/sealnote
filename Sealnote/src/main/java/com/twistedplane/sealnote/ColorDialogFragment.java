@@ -19,6 +19,8 @@ import com.twistedplane.sealnote.utils.Misc;
  * Dialog for selecting color for note.
  */
 public class ColorDialogFragment extends DialogFragment {
+    public final static String TAG = "ColorDialogFragment";
+
     private ColorChangedListener mListener;
 
     /**

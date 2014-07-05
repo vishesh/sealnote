@@ -25,6 +25,8 @@ import com.twistedplane.sealnote.views.SealnoteCardGridStaggeredView;
  * Main activity where all cards are listed in a staggered grid
  */
 public class SealnoteActivity extends Activity {
+    public final static String TAG = "SealnoteActivity";
+
     /**
      * Adapter used by Staggered Grid View to display note cards
      */

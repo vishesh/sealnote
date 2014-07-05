@@ -13,6 +13,8 @@ import com.twistedplane.sealnote.data.DatabaseHandler;
  * with its own Handler instance.
  */
 public class TimeoutHandler implements Runnable {
+    public final static String TAG = "TimeoutHandler";
+
     final private Handler mHandler = new Handler();
 
     /**

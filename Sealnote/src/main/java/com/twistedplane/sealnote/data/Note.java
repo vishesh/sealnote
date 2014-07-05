@@ -12,6 +12,8 @@ import java.text.ParseException;
  * note. Acts as a map between an entry in storage database and Java.
  */
 public class Note implements Parcelable{
+    public static final String TAG = "Note";
+
     private int mId;
     private int mPosition;
     private String mNoteTitle;
@@ -50,7 +52,7 @@ public class Note implements Parcelable{
         try {
             mEditedDate = EasyDate.fromIsoString(inParcel.readString());
         } catch (ParseException e) {
-            Log.e("DEBUG", "Error parsing date retrieved from database!");
+            Log.e(TAG, "Error parsing date retrieved from database!");
         }
         mColor = inParcel.readInt();
     }

@@ -20,6 +20,8 @@ import java.io.File;
  * or to ask for password during login
  */
 public class PasswordActivity extends Activity {
+    public final static String TAG = "PasswordActivity";
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
