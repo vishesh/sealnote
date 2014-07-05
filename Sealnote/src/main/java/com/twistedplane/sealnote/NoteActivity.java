@@ -88,12 +88,21 @@ public class NoteActivity extends Activity implements ColorDialogFragment.ColorC
         mBackgroundColor = 0;
         mAutoSaveEnabled = PreferenceHandler.isAutosaveEnabled(NoteActivity.this);
 
-        Bundle extras = getIntent().getExtras();
-        int id = extras.getInt("NOTE_ID");
+        // First try to get ID from save state bundle, and
+        int id = -1;
+        if (savedInstanceState != null) {
+            id = savedInstanceState.getInt("NOTE_ID", -1);
+        }
+        if (id == -1) {
+            Bundle extras = getIntent().getExtras();
+            id = extras.getInt("NOTE_ID", -1);
+        }
+
         if (id != -1) {
             // existing note. Start an async task to load from storage
             new NoteLoadTask().execute(id);
         } else {
+            Log.w("DEBUG", "Creating new note");
             init(); // new note simply setup views
             getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
             mLoadingNote = false;
@@ -181,6 +190,19 @@ public class NoteActivity extends Activity implements ColorDialogFragment.ColorC
         }
 
         TimeoutHandler.instance().pause(this);
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        // Update the intent so that if activity has to be created
+        // we know we don't have to create new note anymore.
+        // eg. orientation change
+        if (mNote == null || mNote.getId() == -1) {
+            //NOTE: This might be wrong thing to do. But feels much cleaner
+            saveNote();
+        }
+        outState.putInt("NOTE_ID", mNote.getId());
     }
 
     /**
@@ -285,7 +307,8 @@ public class NoteActivity extends Activity implements ColorDialogFragment.ColorC
 
         if (mNote.getId() == -1) {
             mNote.setPosition(-1);
-            handler.addNote(mNote);
+            int newNoteId = (int) handler.addNote(mNote);
+            mNote.setId(newNoteId);
         } else {
             handler.updateNote(mNote);
         }

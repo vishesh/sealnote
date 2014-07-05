@@ -149,7 +149,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     /**
      * Add a note to database
      */
-    public void addNote(Note note) {
+    public long addNote(Note note) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         EasyDate date = EasyDate.now();
@@ -160,7 +160,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         values.put(COL_COLOR, note.getColor());
         values.put(COL_CREATED, date.toString());
         values.put(COL_EDITED, date.toString());
-        db.insert(TABLE_NAME, null, values);
+        return db.insert(TABLE_NAME, null, values);
     }
 
     /**
