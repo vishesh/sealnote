@@ -99,11 +99,17 @@ public class SealnoteCard extends Card {
         // TODO: Make it not dumb
         int length = str.length();
 
-        if ( length > 50) {
+        if (length >= 300) {
+            return 16;
+        }
+        else if (length >= 200 && length < 300) {
+            return 16;
+        }
+        else if (length >= 50 && length < 200) {
             return 18;
-        } else if (length < 50 && length > 20) {
+        } else if (length >= 20 && length < 50) {
             return 24;
-        } else if (length < 20 && length > 15) {
+        } else if (length >= 15 && length < 20) {
             return 26;
         }
         return 30;
@@ -129,13 +135,8 @@ public class SealnoteCard extends Card {
         if (text != null && !text.equals("")) {
             textView.setVisibility(View.VISIBLE);
 
-            // Trim note and just show note content upto MAX_LENGTH characters
-            final int MAX_LENGTH = 400; //FIXME
-            String trimmedText = this.mNote.getNote().trim();
-            if (trimmedText.length() > MAX_LENGTH) {
-                trimmedText = trimmedText.substring(0, MAX_LENGTH) + "...";
-            }
-            textView.setText(trimmedText);
+            // Trim and set note
+            textView.setText(this.mNote.getNote().trim());
 
             // Dynamic Text Size
             if (PreferenceHandler.isDynamicFontSizeEnabled(getContext())) {

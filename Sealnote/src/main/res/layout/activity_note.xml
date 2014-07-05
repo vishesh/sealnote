@@ -30,6 +30,9 @@
                 android:textStyle="bold"
                 android:textSize="20sp"
                 android:textColor="@color/note_foreground"
+                android:inputType="textCapSentences"
+                android:imeOptions="actionNext"
+                android:autoText="false"
                 />
 
         <EditText
@@ -44,6 +47,8 @@
                 android:paddingBottom="@dimen/note_view_vertical_margin"
                 android:textSize="20sp"
                 android:textColor="@color/note_foreground"
+                android:inputType="textCapSentences|textMultiLine"
+                android:autoText="false"
                 />
 
         <View
