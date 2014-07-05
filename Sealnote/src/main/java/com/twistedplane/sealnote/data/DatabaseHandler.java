@@ -7,7 +7,9 @@ import android.util.Log;
 import com.twistedplane.sealnote.utils.EasyDate;
 import net.sqlcipher.database.SQLiteDatabase;
 import net.sqlcipher.database.SQLiteOpenHelper;
+import net.sqlcipher.CursorIndexOutOfBoundsException;
 
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -116,7 +118,10 @@ public class DatabaseHandler extends SQLiteOpenHelper {
             note.setNote(cursor.getString(cursor.getColumnIndex(COL_NOTE)));
             note.setEditedDate(EasyDate.fromIsoString(cursor.getString(cursor.getColumnIndex(COL_EDITED))));
             note.setColor(cursor.getInt(cursor.getColumnIndex(COL_COLOR)));
-        } catch (Exception e) {
+        } catch (ParseException e) {
+            Log.e("DEBUG", "Error parsing date retrieved from database!");
+            return null;
+        } catch (CursorIndexOutOfBoundsException e) {
             return null;
         }
         return note;

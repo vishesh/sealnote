@@ -28,6 +28,8 @@ import com.twistedplane.sealnote.utils.*;
  * NoteActivity implements activity to show and edit note in a full window view.
  */
 public class NoteActivity extends Activity implements ColorDialogFragment.ColorChangedListener{
+    public final static String TAG = "NoteActivity";
+
     private Note mNote;
     private Intent mShareIntent;
     private boolean mSaveButtonClicked = false;
@@ -84,41 +86,43 @@ public class NoteActivity extends Activity implements ColorDialogFragment.ColorC
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_note);
 
         mBackgroundColor = 0;
         mAutoSaveEnabled = PreferenceHandler.isAutosaveEnabled(NoteActivity.this);
 
-        // First try to get ID from save state bundle, and
         int id = -1;
+        Note bundledNote = null;
         if (savedInstanceState != null) {
             id = savedInstanceState.getInt("NOTE_ID", -1);
+            bundledNote = savedInstanceState.getParcelable("NOTE");
         }
+
         if (id == -1) {
             Bundle extras = getIntent().getExtras();
             id = extras.getInt("NOTE_ID", -1);
         }
 
-        if (id != -1) {
+        if (id != -1 && savedInstanceState != null && bundledNote != null) {
+            Log.d(TAG, "Unsaved existing note being retrieved from bundle");
+            init();
+            loadNote(bundledNote);
+            mLoadingNote = false;
+        } else if (id != -1) {
             // existing note. Start an async task to load from storage
             new NoteLoadTask().execute(id);
         } else {
-            Log.w("DEBUG", "Creating new note");
+            Log.d(TAG, "Creating new note");
             init(); // new note simply setup views
             getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
             mLoadingNote = false;
         }
-
-        //NOTE: For ICS
-        ActionBar actionBar = getActionBar();
-        actionBar.setHomeButtonEnabled(true);
-        actionBar.setDisplayHomeAsUpEnabled(true);
     }
 
     /**
      * Initialize views, listeners and update references
      */
     private void init() {
-        setContentView(R.layout.activity_note);
         Misc.secureWindow(NoteActivity.this);
 
         mTitleView = (EditText) findViewById(R.id.note_activity_title);
@@ -134,6 +138,11 @@ public class NoteActivity extends Activity implements ColorDialogFragment.ColorC
 
         // set focus to text view //TODO: Only if id=-1
         mTextView.requestFocus();
+
+        //NOTE: For ICS
+        ActionBar actionBar = getActionBar();
+        actionBar.setHomeButtonEnabled(true);
+        actionBar.setDisplayHomeAsUpEnabled(true);
     }
 
     /**
@@ -186,7 +195,7 @@ public class NoteActivity extends Activity implements ColorDialogFragment.ColorC
         // FIXME: This can be made simpler maybe by making better layout
         if (!mTimedOut && mAutoSaveEnabled && !mLoadingNote) {
             saveNote();
-            Log.w("DEBUG", "Note saved automatically due to activity pause.");
+            Log.d(TAG, "Note saved automatically due to activity pause.");
         }
 
         TimeoutHandler.instance().pause(this);
@@ -195,14 +204,27 @@ public class NoteActivity extends Activity implements ColorDialogFragment.ColorC
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        // Update the intent so that if activity has to be created
-        // we know we don't have to create new note anymore.
-        // eg. orientation change
-        if (mNote == null || mNote.getId() == -1) {
-            //NOTE: This might be wrong thing to do. But feels much cleaner
-            saveNote();
+        //TODO: These bundles can be persistent and hence security hole
+        if (mTimedOut || mLoadingNote) {
+            // FIXME: After timeout user should be able to continue from where
+            // they left off by giving password
+            return;
         }
-        outState.putInt("NOTE_ID", mNote.getId());
+
+        int noteId = -1;
+        if (mAutoSaveEnabled) {
+            saveNote();
+            noteId = mNote.getId();
+            Log.d(TAG, "Note saved automatically due to activity pause.");
+        } else {
+            if (mNote != null && mNote.getId() != -1) {
+                Log.d(TAG, "Save state in bundle for manual save");
+                noteId = mNote.getId();
+                outState.putParcelable("NOTE", mNote);
+            }
+        }
+
+        outState.putInt("NOTE_ID", noteId);
     }
 
     /**
