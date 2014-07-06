@@ -105,24 +105,24 @@ public class NoteActivity extends Activity implements ColorDialogFragment.ColorC
 
         if (id != -1 && savedInstanceState != null && bundledNote != null) {
             Log.d(TAG, "Unsaved existing note being retrieved from bundle");
-            init();
-            loadNote(bundledNote);
             mLoadingNote = false;
+            init(false);
+            loadNote(bundledNote);
         } else if (id != -1) {
             // existing note. Start an async task to load from storage
             new NoteLoadTask().execute(id);
         } else {
             Log.d(TAG, "Creating new note");
-            init(); // new note simply setup views
-            getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
             mLoadingNote = false;
+            init(true); // new note simply setup views
+            getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
         }
     }
 
     /**
      * Initialize views, listeners and update references
      */
-    private void init() {
+    private void init(boolean isNewNote) {
         Misc.secureWindow(NoteActivity.this);
 
         mTitleView = (EditText) findViewById(R.id.note_activity_title);
@@ -137,7 +137,11 @@ public class NoteActivity extends Activity implements ColorDialogFragment.ColorC
         mTextView.setTypeface(FontCache.getFont(this, "RobotoSlab-Regular.ttf"));
 
         // set focus to text view //TODO: Only if id=-1
-        mTextView.requestFocus();
+        if (isNewNote) {
+            mTextView.requestFocus();
+        } else {
+            mTitleView.requestFocus();
+        }
 
         //NOTE: For ICS
         ActionBar actionBar = getActionBar();
@@ -322,6 +326,11 @@ public class NoteActivity extends Activity implements ColorDialogFragment.ColorC
         if (mNote == null) {
             // this is a new note
             mNote = new Note();
+        } else if (mAutoSaveEnabled && title.equals(mNote.getTitle()) &&
+                text.equals(mNote.getNote()) && mBackgroundColor == mNote.getColor()) {
+            // Also avoid unnecessarily updating the edit timestamp of note
+            Log.d(TAG, "Note didn't change. No need to autosave");
+            return;
         }
         mNote.setTitle(title);
         mNote.setNote(text);
@@ -412,7 +421,7 @@ public class NoteActivity extends Activity implements ColorDialogFragment.ColorC
         protected void onPostExecute(Note note) {
             super.onPostExecute(note);
             mProgressDialog.dismiss();
-            init();
+            init(false);
             loadNote(note);
             mLoadingNote = false;
         }
