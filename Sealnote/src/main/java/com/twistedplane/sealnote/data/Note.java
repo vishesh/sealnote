@@ -14,16 +14,33 @@ import java.text.ParseException;
 public class Note implements Parcelable{
     public static final String TAG = "Note";
 
+    public static enum Folder {
+        FOLDER_LIVE,        /* Notes that are alive that are note deleted and archived */
+        FOLDER_ARCHIVE,     /* Archived and undeleted notes */
+        FOLDER_TRASH        /* Deleted notes */
+    };
+
+    public static enum FolderAction {
+        NOTE_ARCHIVE,
+        NOTE_UNARCHIVE,
+        NOTE_DELETE,
+        NOTE_RESTORE
+    };
+
     private int mId;
     private int mPosition;
     private String mNoteTitle;
     private String mNote;
     private EasyDate mEditedDate;
     private int mColor;
+    private boolean mArchived;
+    private boolean mDeleted;
 
     public Note() {
         this.mId = -1;
         this.mColor = 0;
+        this.mArchived = false;
+        this.mDeleted = false;
     }
 
     public Note(int id, int position, String title, String content) {
@@ -32,6 +49,8 @@ public class Note implements Parcelable{
         this.mNote = content;
         this.mNoteTitle = title;
         this.mColor = -1;
+        this.mArchived = false;
+        this.mDeleted = false;
     }
 
     /**
@@ -55,6 +74,8 @@ public class Note implements Parcelable{
             Log.e(TAG, "Error parsing date retrieved from database!");
         }
         mColor = inParcel.readInt();
+        mArchived = inParcel.readInt() > 0;
+        mDeleted = inParcel.readInt() > 0;
     }
 
     @Override
@@ -65,6 +86,8 @@ public class Note implements Parcelable{
         outParcel.writeString(mNote);
         outParcel.writeString(mEditedDate.toString());
         outParcel.writeInt(mColor);
+        outParcel.writeInt(mArchived ?1 :0);
+        outParcel.writeInt(mDeleted ?1 :0);
     }
 
     public int getId() {
@@ -113,6 +136,26 @@ public class Note implements Parcelable{
 
     public void setColor(int color) {
         this.mColor = color;
+    }
+
+    public void setIsArchived(boolean archived) {
+        this.mArchived = archived;
+    }
+
+    public boolean getIsArchived() {
+        return this.mArchived;
+    }
+
+    public void setIsDeleted(boolean deleted) {
+        this.mDeleted = deleted;
+    }
+
+    public boolean getIsDeleted() {
+        return this.mDeleted;
+    }
+
+    public boolean getIsLive() {
+        return !(this.mDeleted || mArchived);
     }
 
     @Override

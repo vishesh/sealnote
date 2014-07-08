@@ -11,6 +11,9 @@
     <item name="theme_background_pressed" type="color">#005b70</item>
     <item name="actionbar_item_pressed_background" type="color">#0089a8</item>
 
+    <item name="drawer_item_text" type="color">#ff666666</item>
+    <item name="drawer_item_text_checked" type="color">#ff005b70</item>
+
     <item name="transparent" type="color">#00000000</item>
     <item name="note_view_tint" type="color">#22ffffff</item>
     <item name="darkblue" type="color">#FF0099CC</item>
