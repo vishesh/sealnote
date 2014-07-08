@@ -136,6 +136,7 @@ public class SealnoteActivity extends Activity {
      * Set up drawer layout and listeners
      */
     private void initNavigationDrawer() {
+        final View drawerContent = findViewById(R.id.drawer_content);
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
         mDrawerToggle = new ActionBarDrawerToggle(
@@ -205,7 +206,7 @@ public class SealnoteActivity extends Activity {
                 drawerList.setItemChecked(pos, true);
                 getActionBar().setTitle(getResources().getStringArray(R.array.navigation_drawer)[pos]);
 
-                mDrawerLayout.closeDrawer(drawerList);
+                mDrawerLayout.closeDrawer(drawerContent);
                 ((NavigationDrawerAdapter) adapterView.getAdapter()).notifyDataSetChanged();
             }
         });

@@ -88,13 +88,19 @@
     </LinearLayout>
 
     <!-- The navigation drawer -->
-    <ListView android:id="@+id/drawer_list"
-              android:layout_width="280dp"
-              android:layout_height="match_parent"
-              android:layout_gravity="start"
-              android:choiceMode="singleChoice"
-              android:divider="@android:color/transparent"
-              android:dividerHeight="0dp"
-              android:background="@android:color/background_light"
-            />
+    <LinearLayout android:id="@+id/drawer_content"
+                  android:layout_width="280dp"
+                  android:layout_height="match_parent"
+                  android:layout_gravity="start"
+                  android:orientation="vertical"
+            >
+        <ListView android:id="@+id/drawer_list"
+                  android:layout_width="280dp"
+                  android:layout_height="match_parent"
+                  android:choiceMode="singleChoice"
+                  android:divider="@android:color/transparent"
+                  android:dividerHeight="0dp"
+                  android:background="@android:color/background_light"
+                />
+    </LinearLayout>
 </android.support.v4.widget.DrawerLayout>
