@@ -65,6 +65,7 @@
                 card:column_count_portrait="2"
                 card:column_count_landscape="3"
                 card:item_margin="8dp"
+                android:paddingTop="?android:actionBarSize"
                 android:layout_gravity="center_horizontal|bottom"/>
     </FrameLayout>
 </LinearLayout>

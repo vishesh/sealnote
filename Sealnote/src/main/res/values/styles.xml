@@ -13,7 +13,7 @@
     </style>
 
     <style name="Sealnote.Theme.Main.ActionBar" parent="@android:style/Widget.Holo.Light.ActionBar">
-        <item name="android:background">@color/theme_background</item>
+        <item name="android:background">@drawable/ab_background</item>
         <item name="android:titleTextStyle">@style/Sealnote.Theme.Main.ActionBar.Title</item>
     </style>
 
@@ -22,6 +22,18 @@
         <item name="android:textSize">22sp</item>
         <item name="android:fontFamily">sans-serif-condensed</item>
         <item name="android:textStyle">normal</item>
+    </style>
+
+    <!-- Sealnote Activity Theme -->
+    <style name="Sealnote.Theme.Sealnote" parent="android:Theme.Holo.Light">
+        <item name="android:actionBarStyle">@style/Sealnote.Theme.Sealnote.ActionBar</item>
+        <item name="android:actionBarItemBackground">@drawable/actionbar_item_selector</item>
+        <item name="android:windowActionBarOverlay">true</item>
+    </style>
+
+    <style name="Sealnote.Theme.Sealnote.ActionBar" parent="@android:style/Widget.Holo.Light.ActionBar">
+        <item name="android:background">@drawable/ab_background</item>
+        <item name="android:titleTextStyle">@style/Sealnote.Theme.Main.ActionBar.Title</item>
     </style>
 
     <!-- Note activity theme. -->
