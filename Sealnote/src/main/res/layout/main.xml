@@ -94,6 +94,14 @@
                   android:layout_gravity="start"
                   android:orientation="vertical"
             >
+        <ImageView
+                android:layout_width="fill_parent"
+                android:layout_height="100dp"
+                android:adjustViewBounds="true"
+                android:scaleType="centerCrop"
+                android:clickable="true"
+                android:src="@drawable/intelligence_gathering"
+                />
         <ListView android:id="@+id/drawer_list"
                   android:layout_width="280dp"
                   android:layout_height="match_parent"
