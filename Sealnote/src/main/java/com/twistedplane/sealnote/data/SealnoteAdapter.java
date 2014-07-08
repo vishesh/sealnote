@@ -23,6 +23,7 @@ public class SealnoteAdapter extends CardGridStaggeredCursorAdapter {
     public final static String TAG = "SealnoteAdapter";
 
     private ActionMode mActionMode;
+    private Note.Folder mCurrentFolder;
 
     /**
      * Array of all checked items in view for emulating multi-choice mode
@@ -124,6 +125,13 @@ public class SealnoteAdapter extends CardGridStaggeredCursorAdapter {
     }
 
     /**
+     * Sets current folder in view
+     */
+    public void setCurrentFolder(Note.Folder folder) {
+        mCurrentFolder = folder;
+    }
+
+    /**
      * Start action mode emulating multi-choice mode.
      */
     public void startActionMode() {
@@ -197,6 +205,29 @@ public class SealnoteAdapter extends CardGridStaggeredCursorAdapter {
         @Override
         public boolean onPrepareActionMode(ActionMode actionMode, Menu menu) {
             mActionMode.setTitle(Integer.toString(getSelectedItemCount()));
+
+            MenuItem archiveItem = menu.findItem(R.id.action_archive);
+            MenuItem unarchiveItem = menu.findItem(R.id.action_unarchive);
+            MenuItem deleteItem = menu.findItem(R.id.action_delete);
+            MenuItem restoreItem = menu.findItem(R.id.action_restore);
+
+            if (mCurrentFolder == Note.Folder.FOLDER_LIVE) {
+                archiveItem.setVisible(true);
+                unarchiveItem.setVisible(false);
+                deleteItem.setVisible(true);
+                restoreItem.setVisible(false);
+            } else if (mCurrentFolder == Note.Folder.FOLDER_ARCHIVE) {
+                archiveItem.setVisible(false);
+                unarchiveItem.setVisible(true);
+                deleteItem.setVisible(true);
+                restoreItem.setVisible(false);
+            } else if (mCurrentFolder == Note.Folder.FOLDER_TRASH) {
+                archiveItem.setVisible(false);
+                unarchiveItem.setVisible(false);
+                deleteItem.setVisible(true);
+                restoreItem.setVisible(true);
+            }
+
             return true;
         }
 
@@ -206,8 +237,17 @@ public class SealnoteAdapter extends CardGridStaggeredCursorAdapter {
         @Override
         public boolean onActionItemClicked(ActionMode actionMode, MenuItem menuItem) {
             switch (menuItem.getItemId()) {
-                case R.id.action_notes_delete:
-                    deleteSelectedNotes();
+                case R.id.action_delete:
+                    actionOnSelectedNotes(Note.FolderAction.NOTE_DELETE);
+                    break;
+                case R.id.action_restore:
+                    actionOnSelectedNotes(Note.FolderAction.NOTE_RESTORE);
+                    break;
+                case R.id.action_archive:
+                    actionOnSelectedNotes(Note.FolderAction.NOTE_ARCHIVE);
+                    break;
+                case R.id.action_unarchive:
+                    actionOnSelectedNotes(Note.FolderAction.NOTE_UNARCHIVE);
                     break;
                 default:
                     return false;
@@ -229,8 +269,8 @@ public class SealnoteAdapter extends CardGridStaggeredCursorAdapter {
         /**
          * Delete all selected notes. Done asynchronously with a dialog shown with progress.
          */
-        void deleteSelectedNotes() {
-            new AsyncTask<SparseBooleanArray, Integer, Cursor>() {
+        void actionOnSelectedNotes(final Note.FolderAction action) {
+            new AsyncTask<SparseBooleanArray, Integer, Void>() {
                 final ProgressDialog dialog = new ProgressDialog(getContext());
 
                 /**
@@ -256,18 +296,30 @@ public class SealnoteAdapter extends CardGridStaggeredCursorAdapter {
                  * @return                      Cursor to updated dataset after deletion
                  */
                 @Override
-                protected Cursor doInBackground(SparseBooleanArray... sparseBooleanArrays) {
+                protected Void doInBackground(SparseBooleanArray... sparseBooleanArrays) {
                     DatabaseHandler db = SealnoteApplication.getDatabase();
 
                     for (int i = 0; i < mCheckedIds.size(); i++) {
                         publishProgress(i);
                         int key = mCheckedIds.keyAt(i);
                         if (mCheckedIds.get(key)) {
-                            db.deleteNote(key);
+                            if (action == Note.FolderAction.NOTE_DELETE) {
+                                if (mCurrentFolder == Note.Folder.FOLDER_TRASH) {
+                                    db.deleteNote(key);
+                                } else {
+                                    db.trashNote(key, true);
+                                }
+                            } else if (action == Note.FolderAction.NOTE_ARCHIVE) {
+                                db.archiveNote(key, true);
+                            } else if (action == Note.FolderAction.NOTE_UNARCHIVE) {
+                                db.archiveNote(key, false);
+                            } else if (action == Note.FolderAction.NOTE_RESTORE) {
+                                db.archiveNote(key, false);
+                            }
                         }
                     }
 
-                    return db.getAllNotesCursor();
+                    return null;
                 }
 
                 @Override
@@ -277,23 +329,19 @@ public class SealnoteAdapter extends CardGridStaggeredCursorAdapter {
                 }
 
                 /**
-                 * After deleting notes, swap the cursor with the new cursor
-                 * received from the result of task and notify the adapter
-                 * of change.
+                 * After deleting notes, invalidate the dataset which
+                 * will notify to reload the dataset.
                  *
                  * Deletion leads to finish of actionmode.
-                 *
-                 * @param cursor    Cursor received as a result of background task.
                  */
                 @Override
-                protected void onPostExecute(Cursor cursor) {
-                    super.onPostExecute(cursor);
-                    SealnoteAdapter.this.swapCursor(cursor);
+                protected void onPostExecute(Void v) {
+                    super.onPostExecute(v);
                     mCheckedIds.clear();
-                    notifyDataSetChanged();
-
                     mActionMode.finish();
                     dialog.dismiss();
+
+                    clearCursor();
                 }
             }.execute(mCheckedIds);
         }

@@ -22,4 +22,17 @@
         <item>120000</item>
         <item>300000</item>
     </string-array>
+
+    <string-array name="navigation_drawer">
+        <item>Notes</item>
+        <item>Archive</item>
+        <item>Trash</item>
+    </string-array>
+
+    <array name="navigation_drawer_icons">
+        <item type="drawable">@drawable/ic_action_collection</item>
+        <item type="drawable">@drawable/ic_action_archive</item>
+        <item type="drawable">@drawable/ic_action_discard</item>
+    </array>
+
 </resources>

@@ -169,6 +169,12 @@ public class NoteActivity extends Activity implements ColorDialogFragment.ColorC
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
 
         updateShareIntent();
+
+
+        if (mNote.getIsDeleted()) {
+            mTitleView.setEnabled(false);
+            mTextView.setEnabled(false);
+        }
     }
 
     /**
@@ -239,22 +245,35 @@ public class NoteActivity extends Activity implements ColorDialogFragment.ColorC
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.note_activity_actionbar, menu);
 
+        MenuItem saveMenuItem = menu.findItem(R.id.action_save_note);
+        MenuItem deleteMenuItem = menu.findItem(R.id.action_note_delete);
+        MenuItem archiveMenuItem = menu.findItem(R.id.action_archive);
+        MenuItem unarchiveMenuItem = menu.findItem(R.id.action_unarchive);
+        MenuItem colorMenuItem = menu.findItem(R.id.action_color);
+        MenuItem restoreMenuItem = menu.findItem(R.id.action_restore);
+        MenuItem shareItem = menu.findItem(R.id.action_share);
+
         // check if autosave is enabled and set visibility of action
-        if (mAutoSaveEnabled) {
-            MenuItem saveMenuItem = menu.findItem(R.id.action_save_note);
-            saveMenuItem.setVisible(false);
-        }
+        saveMenuItem.setVisible(!mAutoSaveEnabled);
 
         // don't show delete action if note is newly created
         if (mNote == null || mNote.getId() == -1) {
-            MenuItem deleteMenuItem = menu.findItem(R.id.action_note_delete);
             deleteMenuItem.setVisible(false);
+            archiveMenuItem.setVisible(false);
+            restoreMenuItem.setVisible(false);
+            unarchiveMenuItem.setVisible(false);
+        } else {
+            saveMenuItem.setVisible(!mAutoSaveEnabled && !mNote.getIsDeleted());
+            deleteMenuItem.setVisible(!mNote.getIsDeleted());
+            archiveMenuItem.setVisible(mNote.getIsLive());
+            unarchiveMenuItem.setVisible(mNote.getIsArchived() && !mNote.getIsDeleted());
+            colorMenuItem.setVisible(!mNote.getIsDeleted());
+            shareItem.setVisible(!mNote.getIsDeleted());
+            restoreMenuItem.setVisible(mNote.getIsDeleted());
         }
 
         // Fetch and store ShareActionProvider
-        MenuItem item = menu.findItem(R.id.action_share);
-        ShareActionProvider shareActionProvider = (ShareActionProvider) item.getActionProvider();
-
+        ShareActionProvider shareActionProvider = (ShareActionProvider) shareItem.getActionProvider();
         mShareIntent = new Intent(Intent.ACTION_SEND);
         mShareIntent.setType("text/plain");
         shareActionProvider.setShareIntent(mShareIntent);
@@ -299,8 +318,17 @@ public class NoteActivity extends Activity implements ColorDialogFragment.ColorC
                 ColorDialogFragment cdf = new ColorDialogFragment();
                 cdf.show(getFragmentManager(), "ColorDialogFragment");
                 return true;
+            case R.id.action_archive:
+                doArchive();
+                return true;
             case R.id.action_note_delete:
                 doDelete();
+                return true;
+            case R.id.action_unarchive:
+                doUnarchive();
+                return true;
+            case R.id.action_restore:
+                doRestore();
                 return true;
             case android.R.id.home:
                 onBackPressed();
@@ -341,7 +369,7 @@ public class NoteActivity extends Activity implements ColorDialogFragment.ColorC
             int newNoteId = (int) handler.addNote(mNote);
             mNote.setId(newNoteId);
         } else {
-            handler.updateNote(mNote);
+            handler.updateNote(mNote, true);
         }
     }
 
@@ -350,9 +378,57 @@ public class NoteActivity extends Activity implements ColorDialogFragment.ColorC
      */
     public void doDelete() {
         final DatabaseHandler handler = SealnoteApplication.getDatabase();
-        handler.deleteNote(mNote.getId());
+        handler.trashNote(mNote.getId(), true);
         mNote = null;
         Toast.makeText(this, getResources().getString(R.string.note_deleted), Toast.LENGTH_SHORT).show();
+
+        // to disable saving when activity is finished when its
+        // done in onPause()
+        mAutoSaveEnabled = false;
+
+        finish();
+    }
+
+    /**
+     * Un-archive a note
+     */
+    public void doUnarchive() {
+        final DatabaseHandler handler = SealnoteApplication.getDatabase();
+        handler.archiveNote(mNote.getId(), false);
+        mNote = null;
+        Toast.makeText(this, getResources().getString(R.string.note_unarchived), Toast.LENGTH_SHORT).show();
+
+        // to disable saving when activity is finished when its
+        // done in onPause()
+        mAutoSaveEnabled = false;
+
+        finish();
+    }
+
+    /**
+     * Archive current note
+     */
+    public void doArchive() {
+        final DatabaseHandler handler = SealnoteApplication.getDatabase();
+        handler.archiveNote(mNote.getId(), true);
+        mNote = null;
+        Toast.makeText(this, getResources().getString(R.string.note_archived), Toast.LENGTH_SHORT).show();
+
+        // to disable saving when activity is finished when its
+        // done in onPause()
+        mAutoSaveEnabled = false;
+
+        finish();
+    }
+
+    /**
+     * Restores note from trash
+     */
+    public void doRestore() {
+        final DatabaseHandler handler = SealnoteApplication.getDatabase();
+        handler.trashNote(mNote.getId(), false);
+        mNote = null;
+        Toast.makeText(this, getResources().getString(R.string.note_restored), Toast.LENGTH_SHORT).show();
 
         // to disable saving when activity is finished when its
         // done in onPause()
