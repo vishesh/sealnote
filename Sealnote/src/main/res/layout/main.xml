@@ -93,6 +93,7 @@
                   android:layout_height="match_parent"
                   android:layout_gravity="start"
                   android:orientation="vertical"
+                  android:layout_marginTop="?android:actionBarSize"
             >
         <ImageView
                 android:layout_width="fill_parent"
