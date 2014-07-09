@@ -10,12 +10,12 @@
 
     <item android:id="@+id/action_share"
           android:title="@string/action_share"
-          android:showAsAction="ifRoom"
+          android:showAsAction="never"
           android:actionProviderClass="android.widget.ShareActionProvider"
           />
     <item android:id="@+id/action_color"
           android:title="@string/action_color"
-          android:showAsAction="always"
+          android:showAsAction="ifRoom"
           android:icon="@drawable/ic_menu_color"
           />
 
@@ -34,17 +34,18 @@
     <item android:id="@+id/action_note_delete"
           android:title="@string/action_delete"
           android:showAsAction="ifRoom"
-          android:icon="@android:drawable/ic_menu_delete"
+          android:icon="@drawable/ic_action_discard_light"
             />
 
     <item android:id="@+id/action_save_note"
           android:title="@string/action_save_note"
           android:showAsAction="always"
-          android:icon="@android:drawable/ic_menu_save"
+          android:icon="@drawable/ic_action_save"
           />
 
     <item android:id="@+id/action_restore"
           android:title="@string/action_restore"
-          android:showAsAction="always"
+          android:icon="@drawable/ic_action_refresh"
+          android:showAsAction="always|withText"
             />
 </menu>

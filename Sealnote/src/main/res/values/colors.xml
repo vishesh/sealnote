@@ -9,7 +9,7 @@
     <item name="light_gray" type="color">#ffececec</item>
     <item name="theme_background" type="color">#0099bb</item>
     <item name="theme_background_pressed" type="color">#005b70</item>
-    <item name="actionbar_item_pressed_background" type="color">#0089a8</item>
+    <item name="actionbar_item_pressed_background" type="color">#55000000</item>
 
     <item name="drawer_item_text" type="color">#ff666666</item>
     <item name="drawer_item_text_checked" type="color">#ff005b70</item>
