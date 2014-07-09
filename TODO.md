@@ -29,6 +29,11 @@ Sealnote TODO
 * [DONE] PreferenceManager helper class
 * [DONE] Drawable on grid when no cards are there
 * [DONE] Margin between cards
+
+8th July 2014 - 15th July 2014
+------------------------------
+* [DONE] ActionBar theming and icons
+* [DONE] Folders - All notes, Archive, Trash
 * Search notes
 * Import/Export notes
 * Backup database to server
