@@ -3,6 +3,7 @@ package com.twistedplane.sealnote.utils;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Handler;
+import android.util.Log;
 import com.twistedplane.sealnote.PasswordActivity;
 import com.twistedplane.sealnote.SealnoteApplication;
 import com.twistedplane.sealnote.data.DatabaseHandler;
@@ -28,6 +29,14 @@ public class TimeoutHandler implements Runnable {
     final private static TimeoutHandler mInstance = new TimeoutHandler();
 
     private TimeoutHandler() {}
+
+    /**
+     * Reinitalize the timeout handler
+     */
+    public void init() {
+        passwordTimeoutClear();
+        mTimedOut = true;
+    }
 
     /**
      * Get singleton instance.
@@ -75,10 +84,12 @@ public class TimeoutHandler implements Runnable {
      */
     public boolean resume(Activity activity) {
         if (mTimedOut) {
+            Log.d(TAG, "Timed out, starting password activity.");
             Intent intent = new Intent(activity, PasswordActivity.class);
             activity.startActivity(intent);
             activity.finish();
         } else {
+            Log.d(TAG, "Back on time. Resuming activity.");
             passwordTimeoutClear();
         }
         return mTimedOut;
