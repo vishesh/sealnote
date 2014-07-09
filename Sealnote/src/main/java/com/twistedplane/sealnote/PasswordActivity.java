@@ -27,6 +27,8 @@ public class PasswordActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_password);
 
+        TimeoutHandler.instance().init();
+
         if (checkExistingDatabase()) {
             createLoginScreen();
         } else {

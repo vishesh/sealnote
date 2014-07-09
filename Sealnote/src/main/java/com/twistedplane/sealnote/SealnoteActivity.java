@@ -79,6 +79,7 @@ public class SealnoteActivity extends Activity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.d(TAG, "Creating...");
 
         setContentView(R.layout.main);
         Misc.secureWindow(this);
@@ -90,6 +91,7 @@ public class SealnoteActivity extends Activity {
 
         if (SealnoteApplication.getDatabase().getPassword() == null) {
             // onResume will follow up which will start PasswordActivity and setup database password
+            Log.d(TAG, "Password can't be found while creating activity. Start PasswordActivity");
             return;
         }
 
