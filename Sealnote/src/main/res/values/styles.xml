@@ -45,12 +45,15 @@
     </style>
 
     <!-- Note activity theme. -->
-    <style name="Sealnote.Theme.Note" parent="@android:Theme.Holo.Light.DarkActionBar">
+    <style name="Sealnote.Theme.Note" parent="@android:Theme.Holo.Light">
         <item name="android:actionBarStyle">@style/Sealnote.Theme.Note.ActionBar</item>
+        <item name="android:actionBarItemBackground">@drawable/actionbar_item_selector</item>
+        <item name="android:actionOverflowButtonStyle">@style/Sealnote.Theme.Main.ActionBar.Overflow</item>
+        <item name="android:actionMenuTextColor">#bbffffff</item>
     </style>
 
     <style name="Sealnote.Theme.Note.ActionBar" parent="@android:style/Widget.Holo.Light.ActionBar">
-        <item name="android:background">#44000000</item>
+        <item name="android:background">#66000000</item>
         <item name="android:icon">@drawable/ic_home</item>
     </style>
 

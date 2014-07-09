@@ -314,7 +314,7 @@ public class SealnoteAdapter extends CardGridStaggeredCursorAdapter {
                             } else if (action == Note.FolderAction.NOTE_UNARCHIVE) {
                                 db.archiveNote(key, false);
                             } else if (action == Note.FolderAction.NOTE_RESTORE) {
-                                db.archiveNote(key, false);
+                                db.trashNote(key, false);
                             }
                         }
                     }
