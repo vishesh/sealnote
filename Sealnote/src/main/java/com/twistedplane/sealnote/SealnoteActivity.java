@@ -9,6 +9,7 @@ import android.content.res.TypedArray;
 import android.database.Cursor;
 import android.database.DataSetObserver;
 import android.graphics.Typeface;
+import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
@@ -142,7 +143,7 @@ public class SealnoteActivity extends Activity {
         mDrawerToggle = new ActionBarDrawerToggle(
                 this,                  /* host Activity */
                 mDrawerLayout,         /* DrawerLayout object */
-                R.drawable.ic_drawer,  /* nav drawer icon to replace 'Up' caret */
+                R.drawable.ic_navigation_drawer,  /* nav drawer icon to replace 'Up' caret */
                 R.string.drawer_open,  /* "open drawer" description */
                 R.string.drawer_close  /* "close drawer" description */
         ) {
@@ -395,6 +396,25 @@ public class SealnoteActivity extends Activity {
             mEmptyGeneric.setVisibility(View.VISIBLE);
             mEmptyGeneric.setText(getActionBar().getTitle() + " is empty!");
         }
+
+        final Drawable actionBarBg;
+
+        switch(mCurrentFolder) {
+            case FOLDER_LIVE:
+                actionBarBg = getResources().getDrawable(R.drawable.ab_background);
+                break;
+            case FOLDER_ARCHIVE:
+                actionBarBg = getResources().getDrawable(R.drawable.ab_background_archive);
+                break;
+            case FOLDER_TRASH:
+                actionBarBg = getResources().getDrawable(R.drawable.ab_background_trash);
+                break;
+            default:
+                actionBarBg = getResources().getDrawable(R.drawable.ab_background);
+                break;
+        }
+
+        getActionBar().setBackgroundDrawable(actionBarBg);
 
         // No cursor set reload
         if (mAdapter.getCursor() == null) {
