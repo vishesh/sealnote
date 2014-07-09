@@ -13,6 +13,8 @@
     <!-- Activities -->
     <string name="title_activity_note">" "</string>
     <string name="title_activity_settings">Settings</string>
+    <string name="drawer_open">Open</string>
+    <string name="drawer_close">Close</string>
 
     <!-- Actions -->
     <string name="action_settings">Settings</string>
@@ -20,6 +22,10 @@
     <string name="action_search">Search</string>
     <string name="action_new_note">Create New Note</string>
     <string name="action_save_note">Save</string>
+    <string name="action_archive">Archive</string>
+    <string name="action_unarchive">Unarchive</string>
+    <string name="action_restore">Restore</string>
+    <string name="action_empty_trash">Empty Trash</string>
     <string name="action_color">Color</string>
     <string name="action_logout">Logout</string>
     <string name="action_delete">Delete</string>
@@ -31,6 +37,9 @@
     <string name="empty_note">No point saving an empty note!</string>
     <string name="note_saved">Note saved.</string>
     <string name="note_deleted">Note deleted.</string>
+    <string name="note_restored">Note restored.</string>
+    <string name="note_archived">Note archived.</string>
+    <string name="note_unarchived">Note unarchived.</string>
     <string name="create_a_new_note">Create a New Note</string>
 
     <!-- color dialog -->

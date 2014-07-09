@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<FrameLayout
+<ScrollView
         xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
         >
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
                   xmlns:tools="http://schemas.android.com/tools"
@@ -47,8 +47,11 @@
                 android:paddingBottom="@dimen/note_view_vertical_margin"
                 android:textSize="20sp"
                 android:textColor="@color/note_foreground"
+                android:textColorLink="@color/note_foreground"
                 android:inputType="textCapSentences|textMultiLine"
                 android:autoText="false"
+                android:autoLink="all"
+                android:linksClickable="true"
                 />
 
         <View
@@ -70,4 +73,4 @@
                 android:background="@android:color/transparent"
                 />
     </LinearLayout>
-</FrameLayout>
+</ScrollView>

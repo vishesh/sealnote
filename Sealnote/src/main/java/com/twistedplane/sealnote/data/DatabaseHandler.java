@@ -5,9 +5,9 @@ import android.content.Context;
 import android.database.Cursor;
 import android.util.Log;
 import com.twistedplane.sealnote.utils.EasyDate;
+import net.sqlcipher.CursorIndexOutOfBoundsException;
 import net.sqlcipher.database.SQLiteDatabase;
 import net.sqlcipher.database.SQLiteOpenHelper;
-import net.sqlcipher.CursorIndexOutOfBoundsException;
 
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -20,7 +20,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     public static final String TAG = "DatabaseHandler";
 
     public static final String DBNAME = "sealnote.sqlite";
-    public static final int VERSION = 1;
+    public static final int VERSION = 2;
 
     // table and column names names
     public static final String TABLE_NAME = "notes";
@@ -31,6 +31,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     public static final String COL_COLOR = "color";
     public static final String COL_CREATED = "created";
     public static final String COL_EDITED = "edited";
+    public static final String COL_ARCHIVED = "archived";
+    public static final String COL_DELETED = "deleted";
 
     /**
      * Keep only one instance of database throughout application for performace
@@ -120,6 +122,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
             note.setNote(cursor.getString(cursor.getColumnIndex(COL_NOTE)));
             note.setEditedDate(EasyDate.fromIsoString(cursor.getString(cursor.getColumnIndex(COL_EDITED))));
             note.setColor(cursor.getInt(cursor.getColumnIndex(COL_COLOR)));
+            note.setIsArchived(cursor.getInt(cursor.getColumnIndex(COL_ARCHIVED)) > 0);
+            note.setIsDeleted(cursor.getInt(cursor.getColumnIndex(COL_DELETED)) > 0);
         } catch (ParseException e) {
             Log.e(TAG, "Error parsing date retrieved from database!");
             return null;
@@ -141,7 +145,10 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 COL_NOTE + " TEXT, " +
                 COL_COLOR + " INTEGER, " +
                 COL_CREATED + " TEXT, " +
-                COL_EDITED + " TEXT " + " ) ";
+                COL_EDITED + " TEXT, " +
+                COL_ARCHIVED + " INTEGER NOT NULL DEFAULT '0'," +
+                COL_DELETED + " INTEGER NOT NULL DEFAULT '0'" +
+                ") ";
         db.execSQL(query);
     }
 
@@ -150,7 +157,19 @@ public class DatabaseHandler extends SQLiteOpenHelper {
      */
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        // do nothing for now
+        // Version 1 to 2
+        // Added COL_FOLDER whose value can be only inbox, archive or trash
+
+        if (oldVersion == 1) {
+            Log.i(TAG, "Upgrading database from Version 1 to 2");
+            String query = "ALTER TABLE " + TABLE_NAME +
+                    " ADD " + COL_ARCHIVED + " INTEGER NOT NULL DEFAULT '0'";
+            db.execSQL(query);
+
+            query = "ALTER TABLE " + TABLE_NAME +
+                    " ADD " + COL_DELETED + " INTEGER NOT NULL DEFAULT '0'";
+            db.execSQL(query);
+        }
     }
 
     /**
@@ -167,13 +186,15 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         values.put(COL_COLOR, note.getColor());
         values.put(COL_CREATED, date.toString());
         values.put(COL_EDITED, date.toString());
+        values.put(COL_ARCHIVED, note.getIsArchived() ?1 :0);
+        values.put(COL_DELETED, note.getIsDeleted() ?1 :0);
         return db.insert(TABLE_NAME, null, values);
     }
 
     /**
      * Update given note. Note id is used to identify the database tuple.
      */
-    public void updateNote(Note note) {
+    public void updateNote(Note note, boolean updateTimestamp) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
 
@@ -182,7 +203,11 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         values.put(COL_TITLE, note.getTitle());
         values.put(COL_NOTE, note.getNote());
         values.put(COL_COLOR, note.getColor());
-        values.put(COL_EDITED, EasyDate.now().toString());
+        if (updateTimestamp) {
+            values.put(COL_EDITED, EasyDate.now().toString());
+        }
+        values.put(COL_ARCHIVED, note.getIsArchived() ?1 :0);
+        values.put(COL_DELETED, note.getIsDeleted() ?1 :0);
         db.update(TABLE_NAME, values, COL_ID + " = ?", new String[]{Integer.toString(note.getId())});
     }
 
@@ -204,6 +229,28 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         }
 
         return note;
+    }
+
+    /**
+     * Archive given note. Note id is used to identify the database tuple.
+     */
+    public void archiveNote(int id, boolean archive) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(COL_ARCHIVED, archive ?1 :0);
+        db.update(TABLE_NAME, values, COL_ID + " = ?", new String[]{Integer.toString(id)});
+    }
+
+    /**
+     * Trash given note. Note id is used to identify the database tuple.
+     * Note that Trash moves to Trash folder while deleteNote() below
+     * removes from database
+     */
+    public void trashNote(int id, boolean trash) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(COL_DELETED, trash ?1 :0);
+        db.update(TABLE_NAME, values, COL_ID + " = ?", new String[]{Integer.toString(id)});
     }
 
     /**
@@ -233,12 +280,40 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     }
 
     /**
-     * Get a cursor object pointing to all notes in database.
+     * Get a cursor object pointing to all live notes in database.
      */
-    public Cursor getAllNotesCursor() {
+    public Cursor getNotesCursor() {
         return getReadableDatabase().rawQuery(
-                "SELECT * FROM " + TABLE_NAME + " ORDER BY " + COL_CREATED + " DESC", null
+                "SELECT * FROM " + TABLE_NAME +
+                " WHERE " + COL_ARCHIVED + " = '0' AND " +
+                        COL_DELETED + " = '0'" +
+                " ORDER BY " + COL_CREATED + " DESC",
+                null
             );
     }
 
+    /**
+     * Get a cursor object pointing to all archived notes in database
+     */
+    public Cursor getArchivedNotesCursor() {
+        return getReadableDatabase().rawQuery(
+                "SELECT * FROM " + TABLE_NAME +
+                        " WHERE " + COL_ARCHIVED + " = '1' AND " +
+                        COL_DELETED + " = '0'" +
+                        " ORDER BY " + COL_CREATED + " DESC",
+                null
+        );
+    }
+
+    /**
+     * Get a cursor object pointing to all archived notes in database
+     */
+    public Cursor getDeletedNotesCursor() {
+        return getReadableDatabase().rawQuery(
+                "SELECT * FROM " + TABLE_NAME +
+                        " WHERE " + COL_DELETED + " = '1'" +
+                        " ORDER BY " + COL_CREATED + " DESC",
+                null
+        );
+    }
 }
