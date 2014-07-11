@@ -1,4 +1,4 @@
-package com.twistedplane.sealnote;
+package com.twistedplane.sealnote.fragment;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import com.twistedplane.sealnote.R;
 import com.twistedplane.sealnote.utils.Misc;
 
 
@@ -22,12 +23,23 @@ public class ColorDialogFragment extends DialogFragment {
     public final static String TAG = "ColorDialogFragment";
 
     private ColorChangedListener mListener;
+    private int mCurrentBackground;
 
     /**
      * Callback dispatched when color is changed
      */
     public interface ColorChangedListener {
         public void onColorChanged(int color);
+    }
+
+    /**
+     * Constructor
+     *
+     * @param currentBackground    Current background will be ticked in view
+     */
+    public ColorDialogFragment(int currentBackground) {
+        super();
+        mCurrentBackground = currentBackground;
     }
 
     /**
@@ -79,9 +91,8 @@ public class ColorDialogFragment extends DialogFragment {
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         String[] colorNames = getResources().getStringArray(R.array.note_colors_name);
-        NoteActivity activity = (NoteActivity) getActivity();
 
-        ColorAdapter colorAdapter = new ColorAdapter(activity, activity.mBackgroundColor,
+        ColorAdapter colorAdapter = new ColorAdapter(getActivity(), mCurrentBackground,
                 R.layout.color_choose_list_item, colorNames);
 
         builder.setTitle(R.string.msg_pick_color)

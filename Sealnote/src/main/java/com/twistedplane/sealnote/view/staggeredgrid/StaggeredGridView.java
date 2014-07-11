@@ -1,4 +1,4 @@
-package com.twistedplane.sealnote.views;
+package com.twistedplane.sealnote.view.staggeredgrid;
 
 import android.content.Context;
 import android.content.res.Configuration;
@@ -17,21 +17,24 @@ import it.gmariotti.cardslib.library.extra.staggeredgrid.view.CardGridStaggeredV
  *   + Changes to make column mode change as per latest Sealnote settings
  *     preferences
  */
-public class SealnoteCardGridStaggeredView extends CardGridStaggeredView {
-    public final static String TAG = "SealnoteCardGridStaggeredView";
+public class StaggeredGridView extends CardGridStaggeredView {
+    public final static String TAG = "StaggeredGridView";
 
     protected CardGridStaggeredCursorAdapter mCursorAdapter;
 
-    public SealnoteCardGridStaggeredView(Context context) {
+    public StaggeredGridView(Context context) {
         super(context);
+        updateGridColumnCount();
     }
 
-    public SealnoteCardGridStaggeredView(Context context, AttributeSet attrs) {
+    public StaggeredGridView(Context context, AttributeSet attrs) {
         super(context, attrs);
+        updateGridColumnCount();
     }
 
-    public SealnoteCardGridStaggeredView(Context context, AttributeSet attrs, int defStyle) {
+    public StaggeredGridView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
+        updateGridColumnCount();
     }
 
     /**
@@ -72,16 +75,6 @@ public class SealnoteCardGridStaggeredView extends CardGridStaggeredView {
             Log.w(TAG, "You are using a generic adapter. Pay attention: your adapter has to call cardGridArrayAdapter#getView method.");
             super.setAdapter(adapter);
         }
-    }
-
-    /**
-     * Apart from usual behaviour, update latest column count from SealNote
-     * preference value.
-     */
-    @Override
-    protected void onLayout(boolean changed, int l, int t, int r, int b) {
-        updateGridColumnCount();
-        super.onLayout(changed, l, t, r, b);
     }
 
     /**

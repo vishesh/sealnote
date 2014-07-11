@@ -20,6 +20,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import com.twistedplane.sealnote.data.DatabaseHandler;
 import com.twistedplane.sealnote.data.Note;
+import com.twistedplane.sealnote.fragment.ColorDialogFragment;
 import com.twistedplane.sealnote.utils.*;
 
 //FIXME: Clean up code and update flag on settings changed.
@@ -315,7 +316,7 @@ public class NoteActivity extends Activity implements ColorDialogFragment.ColorC
                 doSave();
                 return true;
             case R.id.action_color:
-                ColorDialogFragment cdf = new ColorDialogFragment();
+                ColorDialogFragment cdf = new ColorDialogFragment(mBackgroundColor);
                 cdf.show(getFragmentManager(), "ColorDialogFragment");
                 return true;
             case R.id.action_archive:

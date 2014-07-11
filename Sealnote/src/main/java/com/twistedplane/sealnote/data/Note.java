@@ -15,6 +15,7 @@ public class Note implements Parcelable{
     public static final String TAG = "Note";
 
     public static enum Folder {
+        FOLDER_NONE,        /* No folder selected */
         FOLDER_LIVE,        /* Notes that are alive that are note deleted and archived */
         FOLDER_ARCHIVE,     /* Archived and undeleted notes */
         FOLDER_TRASH        /* Deleted notes */

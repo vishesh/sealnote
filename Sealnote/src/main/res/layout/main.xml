@@ -6,86 +6,13 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
     <!-- The main content view -->
-    <LinearLayout
-                  android:orientation="vertical"
-                  android:layout_width="fill_parent"
-                  android:layout_height="fill_parent"
-                  android:paddingTop="@dimen/sealnote_activity_vertical_margin"
-                  android:paddingBottom="@dimen/sealnote_activity_vertical_margin"
-                  android:paddingLeft="@dimen/sealnote_activity_horizontal_margin"
-                  android:paddingRight="@dimen/sealnote_activity_horizontal_margin"
-                  android:background="@color/light_gray"
-            >
-        <!-- Progress View -->
-        <LinearLayout
-                android:id="@+id/layoutHeaderProgress"
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:gravity="center"
-                android:orientation="vertical"
-                android:visibility="gone" >
 
-            <ProgressBar
-                    android:id="@+id/pbHeaderProgress"
-                    style="?android:attr/progressBarStyleLarge"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" >
-            </ProgressBar>
-        </LinearLayout>
-
-        <FrameLayout android:layout_width="match_parent" android:layout_height="match_parent">
-            <!-- Shown when there are no notes available in All Notes window-->
-            <LinearLayout
-                    android:id="@+id/layout_empty_grid"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="0dip"
-                    android:layout_margin="0dip"
-                    android:layout_gravity="center_vertical|center_horizontal"
-                    android:visibility="gone"
-                    >
-                <ImageView
-                        android:layout_width="fill_parent"
-                        android:layout_height="196dip"
-                        android:src="@drawable/no_card_background"
-                        />
-                <Button
-                        android:id="@+id/create_note_button"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/create_a_new_note"
-                        android:layout_marginTop="15dip"
-                        android:layout_gravity="center_horizontal"
-                        android:onClick="onCreateNoteClick"
-                        style="@style/CreateNoteButton"
-                        />
-            </LinearLayout>
-
-            <TextView
-                    android:id="@+id/empty_folder_generic"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="center_vertical|center_horizontal"
-                    android:gravity="center_vertical|center_horizontal"
-                    android:textSize="30sp"
-                    android:fontFamily="sans-serif-light"
-                    android:textColor="@android:color/darker_gray"
-                    android:visibility="gone"
-                    />
-
-            <!-- Card Grid Staggered View -->
-            <com.twistedplane.sealnote.views.SealnoteCardGridStaggeredView
-                    xmlns:card="http://schemas.android.com/apk/res-auto"
-                    android:id="@+id/main_note_grid"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    card:column_count_portrait="2"
-                    card:column_count_landscape="3"
-                    card:item_margin="8dp"
-                    android:layout_gravity="center_horizontal|bottom"/>
-        </FrameLayout>
-    </LinearLayout>
+    <fragment
+            android:id="@+id/fragment_sealnote"
+            class="com.twistedplane.sealnote.view.staggeredgrid.StaggeredGridFragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            />
 
     <!-- The navigation drawer -->
     <LinearLayout android:id="@+id/drawer_content"

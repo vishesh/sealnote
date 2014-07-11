@@ -6,11 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.content.res.TypedArray;
-import android.database.Cursor;
-import android.database.DataSetObserver;
 import android.graphics.Typeface;
-import android.graphics.drawable.Drawable;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.view.GravityCompat;
@@ -18,17 +14,12 @@ import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
 import android.view.*;
 import android.widget.*;
-import com.nhaarman.listviewanimations.swinginadapters.AnimationAdapter;
-import com.nhaarman.listviewanimations.swinginadapters.prepared.ScaleInAnimationAdapter;
-import com.twistedplane.sealnote.data.DatabaseHandler;
 import com.twistedplane.sealnote.data.Note;
-import com.twistedplane.sealnote.data.SealnoteAdapter;
+import com.twistedplane.sealnote.fragment.SealnoteFragment;
 import com.twistedplane.sealnote.utils.FontCache;
 import com.twistedplane.sealnote.utils.Misc;
 import com.twistedplane.sealnote.utils.TimeoutHandler;
-import com.twistedplane.sealnote.views.SealnoteCardGridStaggeredView;
 
-//FIXME: Clean up code and update flag on settings changed.
 
 /**
  * Main activity where all cards are listed in a staggered grid
@@ -36,42 +27,11 @@ import com.twistedplane.sealnote.views.SealnoteCardGridStaggeredView;
 public class SealnoteActivity extends Activity {
     public final static String TAG = "SealnoteActivity";
 
-
-    /**
-     * Adapter used by Staggered Grid View to display note cards
-     */
-    private SealnoteAdapter mAdapter = new SealnoteAdapter(this, null);
-    private SealnoteCardGridStaggeredView mNoteListView;
     private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mDrawerToggle;
     private Note.Folder mCurrentFolder;
-
-    /**
-     * FIXME: Hacks
-     */
-    private Note.Folder mLastFolder;
-    private boolean mRefreshRequired = false;
-
-    /**
-     * View to show when AdapterLoadTask is running. Show activity
-     * progress circle
-     */
-    private View layoutProgressHeader;
-
-    /**
-     * View shown where is no cards available.
-     */
-    private View mEmptyGridLayout;
-
-    /**
-     * TextView show when no cards is available in Trash or Archive
-     */
-    private TextView mEmptyGeneric;
-
-    /**
-     * If a task is already executing to load adapter
-     */
-    private boolean mAdapterLoading = false;
+    private Note.Folder mLastFolder = Note.Folder.FOLDER_NONE;
+    SealnoteFragment mSealnoteFragment;
 
     /**
      * Called when the activity is first created.
@@ -79,15 +39,7 @@ public class SealnoteActivity extends Activity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.d(TAG, "Creating...");
-
-        setContentView(R.layout.main);
-        Misc.secureWindow(this);
-
-        mNoteListView = (SealnoteCardGridStaggeredView) findViewById(R.id.main_note_grid);
-        mEmptyGridLayout = findViewById(R.id.layout_empty_grid);
-        mEmptyGeneric = (TextView) findViewById(R.id.empty_folder_generic);
-        layoutProgressHeader = findViewById(R.id.layoutHeaderProgress);
+        Log.d(TAG, "Creating main activity...");
 
         if (SealnoteApplication.getDatabase().getPassword() == null) {
             // onResume will follow up which will start PasswordActivity and setup database password
@@ -95,44 +47,24 @@ public class SealnoteActivity extends Activity {
             return;
         }
 
-        /**
-         * Called whenever there is change in dataset. Any future changes
-         * will call this
-         */
-        mAdapter.registerDataSetObserver(new DataSetObserver() {
-            @Override
-            public void onChanged() {
-                super.onChanged();
-                onAdapterDataSetChanged();
-            }
-        });
-
-        int currentFolderInt = 0;
+        setContentView(R.layout.main);
+        Misc.secureWindow(this);
 
         if (savedInstanceState != null) {
-            currentFolderInt = savedInstanceState.getInt("FOLDER", 0);
+            int currentFolderOrdinal = savedInstanceState.getInt("FOLDER",
+                    Note.Folder.FOLDER_LIVE.ordinal());
+            mLastFolder = mCurrentFolder = Note.Folder.values()[currentFolderOrdinal];
+        } else {
+            mLastFolder = mCurrentFolder = Note.Folder.FOLDER_LIVE;
         }
 
-        switch (currentFolderInt) {
-            case 0:
-                mCurrentFolder = Note.Folder.FOLDER_LIVE;
-                break;
-            case 1:
-                mCurrentFolder = Note.Folder.FOLDER_ARCHIVE;
-                break;
-            case 2:
-                mCurrentFolder = Note.Folder.FOLDER_TRASH;
-                break;
-            default:
-                mCurrentFolder = Note.Folder.FOLDER_LIVE;
-                break;
-        }
-        mRefreshRequired = true;
+        mSealnoteFragment = (SealnoteFragment) getFragmentManager().findFragmentById(R.id.fragment_sealnote);
 
         initNavigationDrawer();
         getActionBar().setDisplayHomeAsUpEnabled(true);
         getActionBar().setHomeButtonEnabled(true);
-        getActionBar().setTitle(getResources().getStringArray(R.array.navigation_drawer)[currentFolderInt]);
+        //FIXME
+        getActionBar().setTitle(getResources().getStringArray(R.array.navigation_drawer)[mCurrentFolder.ordinal() - 1]);
     }
 
     /**
@@ -142,26 +74,20 @@ public class SealnoteActivity extends Activity {
         final View drawerContent = findViewById(R.id.drawer_content);
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
-        mDrawerToggle = new ActionBarDrawerToggle(
-                this,                  /* host Activity */
-                mDrawerLayout,         /* DrawerLayout object */
-                R.drawable.ic_navigation_drawer,  /* nav drawer icon to replace 'Up' caret */
-                R.string.drawer_open,  /* "open drawer" description */
-                R.string.drawer_close  /* "close drawer" description */
-        ) {
-
-            /** Called when a drawer has settled in a completely closed state. */
+        mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout,
+                R.drawable.ic_navigation_drawer, R.string.drawer_open, R.string.drawer_close)
+        {
+            /** Called when a drawer has settled in a completely closed state. **/
             public void onDrawerClosed(View view) {
                 super.onDrawerClosed(view);
-                invalidateOptionsMenu();
-
-                if (!mAdapterLoading && mRefreshRequired) {
-                    new AdapterLoadTask(mCurrentFolder).execute();
-                    mRefreshRequired = false;
+                if (mLastFolder != mCurrentFolder) {
+                    mSealnoteFragment.setFolder(mCurrentFolder);
+                    mLastFolder = mCurrentFolder;
                 }
+                invalidateOptionsMenu();
             }
 
-            /** Called when a drawer has settled in a completely open state. */
+            /** Called when a drawer has settled in a completely open state. **/
             public void onDrawerOpened(View drawerView) {
                 super.onDrawerOpened(drawerView);
                 invalidateOptionsMenu();
@@ -187,25 +113,10 @@ public class SealnoteActivity extends Activity {
         drawerList.setItemChecked(0, true);
 
         drawerList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            int oldChecked = 0;
-
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int pos, long id) {
-                if (pos == 0) {
-                    // FOLDER_LIVE
-                    mCurrentFolder = Note.Folder.FOLDER_LIVE;
-                } else if (pos == 1) {
-                    // FOLDER_ARCHIVE
-                    mCurrentFolder = Note.Folder.FOLDER_ARCHIVE;
-                } else if (pos == 2) {
-                    // FOLDER_TRASH
-                    mCurrentFolder = Note.Folder.FOLDER_TRASH;
-                }
-
-                // FIXME: Hack used to check if we should refresh when drawer is closed
-                mRefreshRequired = (mCurrentFolder != mLastFolder);
-                mLastFolder = mCurrentFolder;
-
+                //FIXME
+                mCurrentFolder = Note.Folder.values()[pos + 1];
                 drawerList.setItemChecked(pos, true);
                 getActionBar().setTitle(getResources().getStringArray(R.array.navigation_drawer)[pos]);
 
@@ -243,10 +154,6 @@ public class SealnoteActivity extends Activity {
             return;
         }
 
-        if (!mAdapterLoading) {
-            new AdapterLoadTask(mCurrentFolder).execute();
-        }
-
         // preference may have changed, so do it again. Happens when coming
         // back from settings activity
         Misc.secureWindow(this);
@@ -258,13 +165,7 @@ public class SealnoteActivity extends Activity {
     @Override
     public void onPause() {
         super.onPause();
-        mAdapter.clearCursor();
         TimeoutHandler.instance().pause(this);
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
     }
 
     /**
@@ -275,17 +176,7 @@ public class SealnoteActivity extends Activity {
         super.onSaveInstanceState(outState);
 
         // Save current folder in use
-        switch (mCurrentFolder) {
-            case FOLDER_LIVE:
-                outState.putInt("FOLDER", 0);
-                break;
-            case FOLDER_ARCHIVE:
-                outState.putInt("FOLDER", 1);
-                break;
-            case FOLDER_TRASH:
-                outState.putInt("FOLDER", 2);
-                break;
-        }
+        outState.putInt("FOLDER", mCurrentFolder.ordinal());
     }
 
     /**
@@ -299,6 +190,9 @@ public class SealnoteActivity extends Activity {
         return super.onCreateOptionsMenu(menu);
     }
 
+    /**
+     * Update actionbar when invalidated
+     */
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
         boolean result = super.onPrepareOptionsMenu(menu);
@@ -338,30 +232,6 @@ public class SealnoteActivity extends Activity {
     }
 
     /**
-     * Load adapter to card grid view. Reload data from database. Also setup animations.
-     */
-    private void loadAdapter() {
-        setAnimationAdapter();
-
-        // get fresh data and swap
-        mNoteListView.requestLayout();
-        mNoteListView.invalidate();
-    }
-
-    /**
-     * Set animation adapter for card grid view and make it card grid's external adapter.
-     */
-    private void setAnimationAdapter() {
-        AnimationAdapter animCardArrayAdapter = new ScaleInAnimationAdapter(mAdapter);
-
-        animCardArrayAdapter.setAnimationDurationMillis(1000);
-        animCardArrayAdapter.setAnimationDelayMillis(500);
-
-        animCardArrayAdapter.setAbsListView(mNoteListView);
-        mNoteListView.setExternalAdapter(animCardArrayAdapter, mAdapter);
-    }
-
-    /**
      * Create and show about dialog
      */
     private void showAboutDialog() {
@@ -384,48 +254,6 @@ public class SealnoteActivity extends Activity {
     }
 
     /**
-     * Callback when dataset in card grid's adapter is changed.
-     */
-    private void onAdapterDataSetChanged() {
-        if (mAdapter.getCount() > 0) {
-            mEmptyGridLayout.setVisibility(View.GONE);
-            mEmptyGeneric.setVisibility(View.GONE);
-        } else if (mCurrentFolder == Note.Folder.FOLDER_LIVE) {
-            mEmptyGridLayout.setVisibility(View.VISIBLE);
-            mEmptyGeneric.setVisibility(View.GONE);
-        } else {
-            mEmptyGridLayout.setVisibility(View.GONE);
-            mEmptyGeneric.setVisibility(View.VISIBLE);
-            mEmptyGeneric.setText(getActionBar().getTitle() + " is empty!");
-        }
-
-        final Drawable actionBarBg;
-
-        switch(mCurrentFolder) {
-            case FOLDER_LIVE:
-                actionBarBg = getResources().getDrawable(R.drawable.ab_background);
-                break;
-            case FOLDER_ARCHIVE:
-                actionBarBg = getResources().getDrawable(R.drawable.ab_background_archive);
-                break;
-            case FOLDER_TRASH:
-                actionBarBg = getResources().getDrawable(R.drawable.ab_background_trash);
-                break;
-            default:
-                actionBarBg = getResources().getDrawable(R.drawable.ab_background);
-                break;
-        }
-
-        getActionBar().setBackgroundDrawable(actionBarBg);
-
-        // No cursor set reload
-        if (mAdapter.getCursor() == null) {
-            new AdapterLoadTask(mCurrentFolder).execute();
-        }
-
-    }
-
-    /**
      * Called when any create new button/action is clicked.
      */
     public void onCreateNoteClick(View view) {
@@ -433,74 +261,7 @@ public class SealnoteActivity extends Activity {
     }
 
     /**
-     * Asynchronous Task to load adapter.
-     *
-     * Hide the grid view in activity and shows layoutProgressHeader.
-     */
-    private class AdapterLoadTask extends AsyncTask<Void, Void, Cursor> {
-        private Note.Folder currentFolder;
-
-        AdapterLoadTask(Note.Folder currentFolder) {
-            super();
-            this.currentFolder =  currentFolder;
-        }
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            mAdapterLoading = true;
-            mAdapter.clearCursor();
-            mAdapter.setCurrentFolder(currentFolder);
-
-            // Before starting background task, update visibility of views
-            layoutProgressHeader.setVisibility(View.VISIBLE);
-        }
-
-        /**
-         * Loads database, get cursor to all notes given folder in database
-         * and return a new cursor
-         *
-         * @return  Adapter object containing all notes
-         */
-        @Override
-        protected Cursor doInBackground(Void... voids) {
-            final DatabaseHandler db = SealnoteApplication.getDatabase();
-            final Cursor cursor;
-
-            if (currentFolder == Note.Folder.FOLDER_LIVE) {
-                cursor = db.getNotesCursor();
-            } else if (currentFolder == Note.Folder.FOLDER_ARCHIVE) {
-                cursor = db.getArchivedNotesCursor();
-            } else if (currentFolder == Note.Folder.FOLDER_TRASH) {
-                cursor = db.getDeletedNotesCursor();
-            } else {
-                cursor = null;
-            }
-
-            return cursor;
-        }
-
-        /**
-         * Takes the result of task ie. adapter and load it to the view.
-         * Revert back the visibilities of views.
-         *
-         * @param cursor   Result containing cursor to notes
-         */
-        @Override
-        protected void onPostExecute(Cursor cursor) {
-            super.onPostExecute(cursor);
-            mAdapter.changeCursor(cursor);
-
-            // Make the progress view gone and card grid visible
-            layoutProgressHeader.setVisibility(View.GONE);
-
-            SealnoteActivity.this.loadAdapter();
-            mAdapterLoading = false;
-        }
-    }
-
-    /**
-     * Adapter for Navigation Drawer list containing folder names
+     * Adapter to show list of folders in drawer
      */
     private class NavigationDrawerAdapter extends ArrayAdapter<String> {
         private LayoutInflater mInflater;
