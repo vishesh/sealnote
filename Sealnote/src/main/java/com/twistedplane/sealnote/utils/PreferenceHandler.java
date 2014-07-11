@@ -12,26 +12,26 @@ public class PreferenceHandler {
 
     public static boolean isSecureWindowEnabled(Context c) {
         SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(c);
-        return sharedPrefs.getBoolean("pref_secureWindow", false);
+        return sharedPrefs.getBoolean("SecureWindow", false);
     }
 
     public static int getPasswordTimeout(Context c) {
         SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(c);
-        return Integer.parseInt(sharedPrefs.getString("pref_passwordTimeout", "10000")); //FIXME: Get integer
+        return Integer.parseInt(sharedPrefs.getString("PasswordTimeout", "10000")); //FIXME: Get integer
     }
 
     public static boolean isDynamicFontSizeEnabled(Context c) {
         SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(c);
-        return sharedPrefs.getBoolean("pref_dynamicFontSize", true);
+        return sharedPrefs.getBoolean("DynamicFontSize", true);
     }
 
     public static boolean isMultiColumnGridEnabled(Context c) {
         SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(c);
-        return sharedPrefs.getBoolean("pref_multiColumnGrid", true);
+        return sharedPrefs.getBoolean("MultiColumnGrid", true);
     }
 
     public static boolean isAutosaveEnabled(Context c) {
         SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(c);
-        return sharedPrefs.getBoolean("pref_autoSave", false);
+        return sharedPrefs.getBoolean("AutoSave", false);
     }
 }
