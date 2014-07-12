@@ -287,7 +287,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 "SELECT * FROM " + TABLE_NAME +
                 " WHERE " + COL_ARCHIVED + " = '0' AND " +
                         COL_DELETED + " = '0'" +
-                " ORDER BY " + COL_CREATED + " DESC",
+                " ORDER BY " + COL_EDITED + " DESC",
                 null
             );
     }
@@ -300,7 +300,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 "SELECT * FROM " + TABLE_NAME +
                         " WHERE " + COL_ARCHIVED + " = '1' AND " +
                         COL_DELETED + " = '0'" +
-                        " ORDER BY " + COL_CREATED + " DESC",
+                        " ORDER BY " + COL_EDITED + " DESC",
                 null
         );
     }
@@ -312,7 +312,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         return getReadableDatabase().rawQuery(
                 "SELECT * FROM " + TABLE_NAME +
                         " WHERE " + COL_DELETED + " = '1'" +
-                        " ORDER BY " + COL_CREATED + " DESC",
+                        " ORDER BY " + COL_EDITED + " DESC",
                 null
         );
     }
