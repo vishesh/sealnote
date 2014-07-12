@@ -19,29 +19,37 @@ public class Note implements Parcelable{
         FOLDER_LIVE,        /* Notes that are alive that are note deleted and archived */
         FOLDER_ARCHIVE,     /* Archived and undeleted notes */
         FOLDER_TRASH        /* Deleted notes */
-    };
+    }
 
     public static enum FolderAction {
-        NOTE_ARCHIVE,
-        NOTE_UNARCHIVE,
-        NOTE_DELETE,
-        NOTE_RESTORE
-    };
+        NOTE_ARCHIVE,       /* Move note to Archive folder */
+        NOTE_UNARCHIVE,     /* Move note from Archive to its previous folder */
+        NOTE_DELETE,        /* Move note to Trash, or delete permanently if already in Trash */
+        NOTE_RESTORE        /* Move note from Trash to its original folder */
+    }
 
-    private int mId;
-    private int mPosition;
-    private String mNoteTitle;
-    private String mNote;
-    private EasyDate mEditedDate;
-    private int mColor;
-    private boolean mArchived;
-    private boolean mDeleted;
+    public static enum Type {
+        TYPE_GENERIC,
+        TYPE_PASSWORD,
+        TYPE_CREDIT_CARD,
+    }
+
+    private int         mId;            /* Unique note id */
+    private int         mPosition;      /* Position of note */
+    private String      mNoteTitle;     /* Note title */
+    private String      mNote;          /* Note content */
+    private EasyDate    mEditedDate;    /* Last write date */
+    private int         mColor;         /* Note color code, 0-7 */
+    private boolean     mArchived;      /* Is note archived */
+    private boolean     mDeleted;       /* Is note in Trash folder */
+    private Type        mType;          /* Type of note eg. Credit Card, Password, Text */
 
     public Note() {
         this.mId = -1;
         this.mColor = 0;
         this.mArchived = false;
         this.mDeleted = false;
+        this.mType = Type.TYPE_GENERIC;
     }
 
     public Note(int id, int position, String title, String content) {
@@ -49,9 +57,11 @@ public class Note implements Parcelable{
         this.mPosition = position;
         this.mNote = content;
         this.mNoteTitle = title;
+
         this.mColor = -1;
         this.mArchived = false;
         this.mDeleted = false;
+        this.mType = Type.TYPE_GENERIC;
     }
 
     /**
@@ -77,6 +87,7 @@ public class Note implements Parcelable{
         mColor = inParcel.readInt();
         mArchived = inParcel.readInt() > 0;
         mDeleted = inParcel.readInt() > 0;
+        mType = Type.valueOf(inParcel.readString());
     }
 
     @Override
@@ -89,6 +100,7 @@ public class Note implements Parcelable{
         outParcel.writeInt(mColor);
         outParcel.writeInt(mArchived ?1 :0);
         outParcel.writeInt(mDeleted ?1 :0);
+        outParcel.writeString(mType.name());
     }
 
     public int getId() {
@@ -157,6 +169,14 @@ public class Note implements Parcelable{
 
     public boolean getIsLive() {
         return !(this.mDeleted || mArchived);
+    }
+
+    public Type getType() {
+        return mType;
+    }
+
+    public void setType(Type type) {
+        mType = type;
     }
 
     @Override
