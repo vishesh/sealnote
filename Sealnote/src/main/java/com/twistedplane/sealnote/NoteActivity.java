@@ -352,15 +352,18 @@ public class NoteActivity extends Activity implements ColorDialogFragment.ColorC
             return;
         }
 
+        final boolean noteContentChanged = title.equals(mNote.getTitle()) && text.equals(mNote.getNote());
+        final boolean onlyBackgroundChanged = (noteContentChanged && mBackgroundColor != mNote.getColor());
+
         if (mNote == null) {
             // this is a new note
             mNote = new Note();
-        } else if (mAutoSaveEnabled && title.equals(mNote.getTitle()) &&
-                text.equals(mNote.getNote()) && mBackgroundColor == mNote.getColor()) {
+        } else if (mAutoSaveEnabled && noteContentChanged && mBackgroundColor == mNote.getColor()) {
             // Also avoid unnecessarily updating the edit timestamp of note
             Log.d(TAG, "Note didn't change. No need to autosave");
             return;
         }
+
         mNote.setTitle(title);
         mNote.setNote(text);
         mNote.setColor(mBackgroundColor);
@@ -370,7 +373,8 @@ public class NoteActivity extends Activity implements ColorDialogFragment.ColorC
             int newNoteId = (int) handler.addNote(mNote);
             mNote.setId(newNoteId);
         } else {
-            handler.updateNote(mNote, true);
+            // don't update timestamp when only background has changed
+            handler.updateNote(mNote, !onlyBackgroundChanged);
         }
     }
 
