@@ -33,6 +33,7 @@ abstract public class SealnoteFragment extends Fragment implements SharedPrefere
     protected SealnoteAdapter mAdapter;
     protected AdapterView mAdapterView;
     protected Note.Folder mCurrentFolder;
+    private boolean mIsPausing = false;
 
     /**
      * View to show when AdapterLoadTask is running. Show activity
@@ -93,7 +94,24 @@ abstract public class SealnoteFragment extends Fragment implements SharedPrefere
             @Override
             public void onChanged() {
                 super.onChanged();
+                if (mIsPausing) {
+                    mIsPausing = false;
+                    return;
+                }
                 onAdapterDataSetChanged();
+            }
+
+            @Override
+            public void onInvalidated() {
+                super.onInvalidated();
+                Log.d(TAG, "Data set invalidated");
+                if (mIsPausing) {
+                    mIsPausing = false;
+                    return;
+                }
+                if (!mAdapterLoading) {
+                    new AdapterLoadTask(mCurrentFolder).execute();
+                }
             }
         });
 
@@ -141,6 +159,7 @@ abstract public class SealnoteFragment extends Fragment implements SharedPrefere
     @Override
     public void onPause() {
         super.onPause();
+        mIsPausing = true;
         mAdapter.clearCursor();
     }
 

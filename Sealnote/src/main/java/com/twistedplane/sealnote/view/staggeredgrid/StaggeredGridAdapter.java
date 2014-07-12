@@ -286,7 +286,6 @@ public class StaggeredGridAdapter extends CardGridStaggeredCursorAdapter impleme
                 @Override
                 protected void onPreExecute() {
                     super.onPreExecute();
-                    clearCursor();
                     dialog.setMax(mCheckedIds.size());
                     dialog.setTitle("Deleting notes.");
                     dialog.setProgress(0);
@@ -348,7 +347,7 @@ public class StaggeredGridAdapter extends CardGridStaggeredCursorAdapter impleme
                     mActionMode.finish();
                     dialog.dismiss();
 
-                    clearCursor();
+                    notifyDataSetInvalidated();
                 }
             }.execute(mCheckedIds);
         }
