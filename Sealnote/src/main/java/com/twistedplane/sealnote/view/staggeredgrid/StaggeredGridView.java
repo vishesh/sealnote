@@ -2,6 +2,7 @@ package com.twistedplane.sealnote.view.staggeredgrid;
 
 import android.content.Context;
 import android.content.res.Configuration;
+import android.os.Parcelable;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.widget.ListAdapter;
@@ -20,20 +21,26 @@ import it.gmariotti.cardslib.library.extra.staggeredgrid.view.CardGridStaggeredV
 public class StaggeredGridView extends CardGridStaggeredView {
     public final static String TAG = "StaggeredGridView";
 
-    protected CardGridStaggeredCursorAdapter mCursorAdapter;
-
     public StaggeredGridView(Context context) {
         super(context);
-        updateGridColumnCount();
     }
 
     public StaggeredGridView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        updateGridColumnCount();
     }
 
     public StaggeredGridView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
+    }
+
+    /**
+     * NOTE:
+     * Also restore the column counts. Somehow seems to fix the bug
+     * where the items tend have same x values while different columns
+     */
+    @Override
+    public void onRestoreInstanceState(Parcelable state) {
+        super.onRestoreInstanceState(state);
         updateGridColumnCount();
     }
 
@@ -46,7 +53,6 @@ public class StaggeredGridView extends CardGridStaggeredView {
         super.setAdapter(adapter);
         adapter.setRowLayoutId(list_card_layout_resourceID);
         adapter.setCardGridView(this);
-        mCursorAdapter = adapter;
     }
 
     /**
@@ -56,10 +62,8 @@ public class StaggeredGridView extends CardGridStaggeredView {
      */
     public void setExternalAdapter(ListAdapter adapter, CardGridStaggeredCursorAdapter cardCursorAdapter) {
         setAdapter(adapter);
-
-        mCursorAdapter = cardCursorAdapter;
-        mCursorAdapter.setCardGridView(this);
-        mCursorAdapter.setRowLayoutId(list_card_layout_resourceID);
+        cardCursorAdapter.setCardGridView(this);
+        cardCursorAdapter.setRowLayoutId(list_card_layout_resourceID);
     }
 
     /**
