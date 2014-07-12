@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewStub;
 import android.widget.AdapterView;
 import android.widget.TextView;
 import com.twistedplane.sealnote.R;
@@ -66,6 +67,14 @@ abstract public class SealnoteFragment extends Fragment implements SharedPrefere
     abstract protected void loadAdapter(Cursor cursor);
 
     /**
+     * Inflate ViewStub with the adapter view.
+     *
+     * @param stub  ViewStub to be replaced with adapter view
+     * @return      AdapterView that replaced the stub
+     */
+    abstract protected AdapterView inflateAdapterView(ViewStub stub);
+
+    /**
      * Called when the fragment is first created.
      */
     @Override
@@ -103,7 +112,7 @@ abstract public class SealnoteFragment extends Fragment implements SharedPrefere
         mEmptyGridLayout = fragmentView.findViewById(R.id.layout_empty_grid);
         mEmptyGeneric = (TextView) fragmentView.findViewById(R.id.empty_folder_generic);
         layoutProgressHeader = fragmentView.findViewById(R.id.layoutHeaderProgress);
-        mAdapterView = (AdapterView) fragmentView.findViewById(R.id.notes_view);
+        mAdapterView = inflateAdapterView((ViewStub) fragmentView.findViewById(R.id.notes_view));
 
         return fragmentView;
     }

@@ -7,8 +7,11 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewStub;
+import android.widget.AdapterView;
 import com.nhaarman.listviewanimations.swinginadapters.AnimationAdapter;
 import com.nhaarman.listviewanimations.swinginadapters.prepared.ScaleInAnimationAdapter;
+import com.twistedplane.sealnote.R;
 import com.twistedplane.sealnote.data.SealnoteAdapter;
 import com.twistedplane.sealnote.fragment.SealnoteFragment;
 
@@ -33,6 +36,18 @@ public class StaggeredGridFragment extends SealnoteFragment {
             mAdapter = new StaggeredGridAdapter(getActivity(), null);
         }
         return mAdapter;
+    }
+
+    /**
+     * Inflate ViewStub with Staggered Grid View
+     *
+     * @param stub  ViewStub to be replaced with adapter view
+     * @return      StaggeredGridView
+     */
+    @Override
+    protected AdapterView inflateAdapterView(ViewStub stub) {
+        stub.setLayoutResource(R.layout.staggeredgrid);
+        return (AdapterView) stub.inflate();
     }
 
     /**

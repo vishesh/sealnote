@@ -69,16 +69,10 @@
                 android:visibility="gone"
                 />
 
-        <!-- Card Grid Staggered View -->
-        <com.twistedplane.sealnote.view.staggeredgrid.StaggeredGridView
-                xmlns:card="http://schemas.android.com/apk/res-auto"
-                android:id="@+id/notes_view"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                card:column_count_portrait="2"
-                card:column_count_landscape="3"
-                card:item_margin="8dp"
-                android:paddingTop="?android:actionBarSize"
-                android:layout_gravity="center_horizontal|bottom"/>
+        <!-- View inflated at runtime to show notes -->
+        <ViewStub android:id="@+id/notes_view"
+                  android:layout_width="match_parent"
+                  android:layout_height="wrap_content"
+                />
     </FrameLayout>
 </LinearLayout>
