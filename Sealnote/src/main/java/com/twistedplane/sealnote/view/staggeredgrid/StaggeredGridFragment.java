@@ -2,11 +2,7 @@ package com.twistedplane.sealnote.view.staggeredgrid;
 
 import android.content.SharedPreferences;
 import android.database.Cursor;
-import android.os.Bundle;
 import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 import android.view.ViewStub;
 import android.widget.AdapterView;
 import com.nhaarman.listviewanimations.swinginadapters.AnimationAdapter;
@@ -20,12 +16,6 @@ import com.twistedplane.sealnote.fragment.SealnoteFragment;
  */
 public class StaggeredGridFragment extends SealnoteFragment {
     public final static String TAG = "StaggeredGridFragment";
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = super.onCreateView(inflater, container, savedInstanceState);
-        return view;
-    }
 
     /**
      * Create and return adapter
