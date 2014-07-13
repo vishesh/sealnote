@@ -27,31 +27,19 @@
                 android:paddingLeft="@dimen/note_view_horizontal_margin"
                 android:paddingRight="@dimen/note_view_horizontal_margin"
                 android:paddingTop="@dimen/note_view_vertical_margin"
-                android:textStyle="bold"
-                android:textSize="20sp"
+                android:textStyle="normal"
+                android:textSize="28sp"
                 android:textColor="@color/note_foreground"
-                android:inputType="textCapSentences"
+                android:inputType="textCapWords"
                 android:imeOptions="actionNext"
                 android:autoText="false"
+                android:gravity="center"
                 />
 
-        <EditText
-                android:id="@+id/note_activity_note"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="@string/note_note"
-                android:background="@android:color/transparent"
-                android:paddingLeft="@dimen/note_view_horizontal_margin"
-                android:paddingRight="@dimen/note_view_horizontal_margin"
-                android:paddingTop="@dimen/note_view_vertical_margin"
-                android:paddingBottom="@dimen/note_view_vertical_margin"
-                android:textSize="20sp"
-                android:textColor="@color/note_foreground"
-                android:textColorLink="@color/note_foreground"
-                android:inputType="textCapSentences|textMultiLine"
-                android:autoText="false"
-                android:autoLink="all"
-                android:linksClickable="true"
+        <!-- View inflated at runtime to show notes -->
+        <ViewStub android:id="@+id/notes_view_stub"
+                  android:layout_width="match_parent"
+                  android:layout_height="wrap_content"
                 />
 
         <View

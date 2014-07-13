@@ -38,6 +38,19 @@
     <string name="note_unarchived">Note unarchived.</string>
     <string name="create_a_new_note">Create a New Note</string>
 
+    <!-- Bank Card editor -->
+    <string name="note_card_name">Name on Card</string>
+    <string name="note_card_number">Card Number</string>
+    <string name="note_card_valid_from">Valid From</string>
+    <string name="note_card_valid_upto">Valid Upto</string>
+    <string name="note_card_cvv">&#160;&#160;&#160;&#160;&#160;&#160;&#160;CVV</string>
+    <string name="note_additional_notes">Additional Notes</string>
+
+    <!-- login editor -->
+    <string name="note_login_url">Url</string>
+    <string name="note_login_name">&#160;&#160;&#160;Login</string>
+    <string name="note_login_password">Password</string>
+
     <!-- color dialog -->
     <string name="msg_pick_color">Pick a color</string>
 

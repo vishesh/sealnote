@@ -96,7 +96,7 @@ public class StaggeredGridAdapter extends CardGridStaggeredCursorAdapter impleme
             public void onClick(Card card, View view) {
                 SealnoteCard sCard = (SealnoteCard) card;
                 if (mActionMode == null) {
-                    NoteActivity.startForNoteId(getContext(), sCard.getNote().getId());
+                    NoteActivity.startForNoteId(getContext(), sCard.getNote().getId(), null);
                 } else {
                     // Currently in action mode. Set the toggle current items checked state.
                     setItemChecked((CardView) view, !getItemChecked((CardView) view));

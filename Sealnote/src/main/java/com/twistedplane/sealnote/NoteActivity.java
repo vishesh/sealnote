@@ -10,20 +10,18 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.View;
-import android.view.WindowManager;
+import android.view.*;
 import android.widget.EditText;
 import android.widget.ShareActionProvider;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.twistedplane.sealnote.data.DatabaseHandler;
 import com.twistedplane.sealnote.data.Note;
+import com.twistedplane.sealnote.data.NoteContent;
 import com.twistedplane.sealnote.fragment.ColorDialogFragment;
 import com.twistedplane.sealnote.utils.*;
+import com.twistedplane.sealnote.view.NoteView;
 
-//FIXME: Clean up code and update flag on settings changed.
 
 /**
  * NoteActivity implements activity to show and edit note in a full window view.
@@ -31,18 +29,27 @@ import com.twistedplane.sealnote.utils.*;
 public class NoteActivity extends Activity implements ColorDialogFragment.ColorChangedListener{
     public final static String TAG = "NoteActivity";
 
-    private Note mNote;
-    private Intent mShareIntent;
-    private boolean mSaveButtonClicked = false;
-    private boolean mAutoSaveEnabled;
-    private boolean mLoadingNote = true;
-    private boolean mTimedOut = false;
+    private Note        mNote;
+    private Note.Type   mNoteType;
+    private Intent      mShareIntent;
+    private boolean     mSaveButtonClicked = false; /* To avoid action on reclicking  */
+    private boolean     mAutoSaveEnabled;
+    private boolean     mLoadingNote = true;    /* Is note loaded from database? */
 
-    private EditText mTitleView;
-    private EditText mTextView;
-    private TextView mEditedView;
+    /**
+     * Timeout finishes current activity, and hence executes onPause() and saveInstanceState().
+     * Since state has already been saved with previous pause which started the timer, this variable
+     * helps to avoids saving note again unnecessarily.
+     */
+    private boolean     mTimedOut = false;
 
-    int mBackgroundColor;
+    // Views in activity
+    private EditText    mTitleView;
+    private ViewStub    mContentStub;   /* Inflated by appropriate view to edit given note type */
+    private TextView    mEditedView;    /* Show last edited date/time */
+    private NoteView    mNoteView;
+
+    private int         mBackgroundColor;
 
     /**
      * Start a new NoteActivity with given note id.
@@ -52,9 +59,18 @@ public class NoteActivity extends Activity implements ColorDialogFragment.ColorC
      * @param context   Context to use
      * @param id        Id of note. -1 for new note.
      */
-    public static void startForNoteId(Context context, int id) {
+    public static void startForNoteId(Context context, int id, Note.Type type) {
+        if (id != -1 && type != null) {
+            throw new IllegalArgumentException("We don't need Note.Type when given an id");
+        }
+
         Intent intent = new Intent(context, NoteActivity.class);
         intent.putExtra("NOTE_ID", id);
+
+        if (type != null) {
+            intent.putExtra("NOTE_TYPE", type.ordinal());
+        }
+
         context.startActivity(intent);
     }
 
@@ -95,7 +111,9 @@ public class NoteActivity extends Activity implements ColorDialogFragment.ColorC
         mAutoSaveEnabled = PreferenceHandler.isAutosaveEnabled(NoteActivity.this);
 
         int id = -1;
+        int typeInt = -1;
         Note bundledNote = null;
+
         if (savedInstanceState != null) {
             id = savedInstanceState.getInt("NOTE_ID", -1);
             bundledNote = savedInstanceState.getParcelable("NOTE");
@@ -104,12 +122,19 @@ public class NoteActivity extends Activity implements ColorDialogFragment.ColorC
         if (id == -1) {
             Bundle extras = getIntent().getExtras();
             id = extras.getInt("NOTE_ID", -1);
+            typeInt = extras.getInt("NOTE_TYPE", -1);
+        }
+
+        if (typeInt == -1) {
+            mNoteType = Note.Type.TYPE_GENERIC;
+        } else {
+            mNoteType = Note.Type.values()[typeInt];
         }
 
         if (id != -1 && savedInstanceState != null && bundledNote != null) {
             Log.d(TAG, "Unsaved existing note being retrieved from bundle");
             mLoadingNote = false;
-            init(false);
+            init(false, bundledNote.getType());
             loadNote(bundledNote);
         } else if (id != -1) {
             // existing note. Start an async task to load from storage
@@ -117,7 +142,7 @@ public class NoteActivity extends Activity implements ColorDialogFragment.ColorC
         } else {
             Log.d(TAG, "Creating new note");
             mLoadingNote = false;
-            init(true); // new note simply setup views
+            init(true, mNoteType); // new note simply setup views
             getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
         }
     }
@@ -125,23 +150,23 @@ public class NoteActivity extends Activity implements ColorDialogFragment.ColorC
     /**
      * Initialize views, listeners and update references
      */
-    private void init(boolean isNewNote) {
+    private void init(boolean isNewNote, Note.Type type) {
         Misc.secureWindow(NoteActivity.this);
 
         mTitleView = (EditText) findViewById(R.id.note_activity_title);
-        mTextView = (EditText) findViewById(R.id.note_activity_note);
         mEditedView = (TextView) findViewById(R.id.note_activity_edited);
+        mNoteView = inflateNoteContentView(type);
+        mNoteType = type;
 
         // TextWatcher to update share intent
-        mTextView.addTextChangedListener(mNoteTextWatcher);
+        mNoteView.addTextChangedListener(mNoteTextWatcher); //LOOK
         mTitleView.addTextChangedListener(mNoteTextWatcher);
 
-        mTitleView.setTypeface(FontCache.getFont(this, "RobotoSlab-Bold.ttf"));
-        mTextView.setTypeface(FontCache.getFont(this, "RobotoSlab-Regular.ttf"));
+        mTitleView.setTypeface(FontCache.getFont(this, "RobotoSlab-Regular.ttf"));
 
         // set focus to text view //TODO: Only if id=-1
         if (isNewNote) {
-            mTextView.requestFocus();
+            ((View) mNoteView).requestFocus();
         } else {
             mTitleView.requestFocus();
         }
@@ -153,12 +178,35 @@ public class NoteActivity extends Activity implements ColorDialogFragment.ColorC
     }
 
     /**
+     * Inflate the content view stub
+     */
+    private NoteView inflateNoteContentView(Note.Type type) {
+        mContentStub = (ViewStub) findViewById(R.id.notes_view_stub);
+        switch (type) {
+            case TYPE_GENERIC:
+                mContentStub.setLayoutResource(R.layout.note_type_generic);
+                break;
+            case TYPE_CREDIT_CARD:
+                mContentStub.setLayoutResource(R.layout.note_type_card);
+                break;
+            case TYPE_LOGIN:
+                mContentStub.setLayoutResource(R.layout.note_type_login);
+                break;
+            default:
+                mContentStub.setLayoutResource(R.layout.note_type_generic);
+                break;
+        }
+        return (NoteView) mContentStub.inflate();
+    }
+
+
+    /**
      * Update views with given note values
      */
     private void loadNote(Note note) {
         mNote = note;
         mTitleView.setText(mNote.getTitle());
-        mTextView.setText(mNote.getNote());
+        mNoteView.setNoteContent(mNote.getNote());
 
         EasyDate date = mNote.getEditedDate();
         if (date == null) {
@@ -176,7 +224,7 @@ public class NoteActivity extends Activity implements ColorDialogFragment.ColorC
 
         if (mNote.getIsDeleted()) {
             mTitleView.setEnabled(false);
-            mTextView.setEnabled(false);
+            ((View) mNoteView).setEnabled(false);
         }
     }
 
@@ -227,7 +275,7 @@ public class NoteActivity extends Activity implements ColorDialogFragment.ColorC
         int noteId = -1;
         if (mAutoSaveEnabled) {
             saveNote();
-            noteId = mNote.getId();
+            noteId = (mNote == null) ?-1 :mNote.getId(); // No changes made to new note
             Log.d(TAG, "Note saved automatically due to activity pause.");
         } else {
             if (mNote != null && mNote.getId() != -1) {
@@ -295,11 +343,10 @@ public class NoteActivity extends Activity implements ColorDialogFragment.ColorC
         }
 
         final EditText titleView = (EditText) findViewById(R.id.note_activity_title);
-        final EditText textView = (EditText) findViewById(R.id.note_activity_note);
         String shareText;
 
-        if (textView != null && titleView != null) {
-            shareText = titleView.getText().toString() + "\n\n" + textView.getText().toString();
+        if (mNoteView != null && titleView != null) {
+            shareText = titleView.getText().toString() + "\n\n" + mNoteView.getNoteContent().toString();
         } else {
             shareText = "";
         }
@@ -347,28 +394,31 @@ public class NoteActivity extends Activity implements ColorDialogFragment.ColorC
     public void saveNote() {
         final DatabaseHandler handler = SealnoteApplication.getDatabase();
         final String title = mTitleView.getText().toString();
-        final String text = mTextView.getText().toString();
+        final NoteContent noteContent = mNoteView.getNoteContent();
+        final String text = noteContent.toString();
 
         if (title.equals("") && text.equals("")) {
             Toast.makeText(this, getResources().getString(R.string.empty_note), Toast.LENGTH_SHORT).show();
             return;
         }
 
-        final boolean noteContentChanged = title.equals(mNote.getTitle()) && text.equals(mNote.getNote());
-        final boolean onlyBackgroundChanged = (noteContentChanged && mBackgroundColor != mNote.getColor());
+        final boolean noteContentNotChanged = mNote != null && title.equals(mNote.getTitle()) &&
+                text.equals(mNote.getNote().toString());
+        final boolean onlyBackgroundChanged = (noteContentNotChanged && mBackgroundColor != mNote.getColor());
 
         if (mNote == null) {
             // this is a new note
             mNote = new Note();
-        } else if (mAutoSaveEnabled && noteContentChanged && mBackgroundColor == mNote.getColor()) {
+        } else if (mAutoSaveEnabled && noteContentNotChanged && mBackgroundColor == mNote.getColor()) {
             // Also avoid unnecessarily updating the edit timestamp of note
             Log.d(TAG, "Note didn't change. No need to autosave");
             return;
         }
 
         mNote.setTitle(title);
-        mNote.setNote(text);
+        mNote.setNote(noteContent);
         mNote.setColor(mBackgroundColor);
+        mNote.setType(mNoteType);
 
         if (mNote.getId() == -1) {
             mNote.setPosition(-1);
@@ -504,7 +554,7 @@ public class NoteActivity extends Activity implements ColorDialogFragment.ColorC
         protected void onPostExecute(Note note) {
             super.onPostExecute(note);
             mProgressDialog.dismiss();
-            init(false);
+            init(false, note.getType());
             loadNote(note);
             mLoadingNote = false;
         }

@@ -30,14 +30,14 @@ public class Note implements Parcelable{
 
     public static enum Type {
         TYPE_GENERIC,
-        TYPE_PASSWORD,
+        TYPE_LOGIN,
         TYPE_CREDIT_CARD,
     }
 
     private int         mId;            /* Unique note id */
     private int         mPosition;      /* Position of note */
     private String      mNoteTitle;     /* Note title */
-    private String      mNote;          /* Note content */
+    private NoteContent mNote;          /* Note content */
     private EasyDate    mEditedDate;    /* Last write date */
     private int         mColor;         /* Note color code, 0-7 */
     private boolean     mArchived;      /* Is note archived */
@@ -52,10 +52,10 @@ public class Note implements Parcelable{
         this.mType = Type.TYPE_GENERIC;
     }
 
-    public Note(int id, int position, String title, String content) {
+    public Note(int id, int position, String title, String content, Type type) {
         this.mId = id;
         this.mPosition = position;
-        this.mNote = content;
+        this.mNote = NoteContent.fromString(type, content);
         this.mNoteTitle = title;
 
         this.mColor = -1;
@@ -78,7 +78,7 @@ public class Note implements Parcelable{
         mId = inParcel.readInt();
         mPosition = inParcel.readInt();
         mNoteTitle = inParcel.readString();
-        mNote = inParcel.readString();
+        String note = inParcel.readString();
         try {
             mEditedDate = EasyDate.fromIsoString(inParcel.readString());
         } catch (ParseException e) {
@@ -88,6 +88,7 @@ public class Note implements Parcelable{
         mArchived = inParcel.readInt() > 0;
         mDeleted = inParcel.readInt() > 0;
         mType = Type.valueOf(inParcel.readString());
+        mNote = NoteContent.fromString(mType, inParcel.readString());
     }
 
     @Override
@@ -95,7 +96,7 @@ public class Note implements Parcelable{
         outParcel.writeInt(mId);
         outParcel.writeInt(mPosition);
         outParcel.writeString(mNoteTitle);
-        outParcel.writeString(mNote);
+        outParcel.writeString(mNote.toString());
         outParcel.writeString(mEditedDate.toString());
         outParcel.writeInt(mColor);
         outParcel.writeInt(mArchived ?1 :0);
@@ -127,11 +128,11 @@ public class Note implements Parcelable{
         this.mNoteTitle = title;
     }
 
-    public String getNote() {
+    public NoteContent getNote() {
         return this.mNote;
     }
 
-    public void setNote(String content) {
+    public void setNote(NoteContent content) {
         this.mNote = content;
     }
 

@@ -120,12 +120,13 @@ public class DatabaseHandler extends SQLiteOpenHelper {
             note.setId(Integer.parseInt(cursor.getString(cursor.getColumnIndex(COL_ID))));
             note.setPosition(Integer.parseInt(cursor.getString(cursor.getColumnIndex(COL_POSITION))));
             note.setTitle(cursor.getString(cursor.getColumnIndex(COL_TITLE)));
-            note.setNote(cursor.getString(cursor.getColumnIndex(COL_NOTE)));
             note.setEditedDate(EasyDate.fromIsoString(cursor.getString(cursor.getColumnIndex(COL_EDITED))));
             note.setColor(cursor.getInt(cursor.getColumnIndex(COL_COLOR)));
             note.setIsArchived(cursor.getInt(cursor.getColumnIndex(COL_ARCHIVED)) > 0);
             note.setIsDeleted(cursor.getInt(cursor.getColumnIndex(COL_DELETED)) > 0);
             note.setType(Note.Type.valueOf(cursor.getString(cursor.getColumnIndex(COL_TYPE))));
+            note.setNote(NoteContent.fromString(note.getType(),
+                    cursor.getString(cursor.getColumnIndex(COL_NOTE))));
         } catch (ParseException e) {
             Log.e(TAG, "Error parsing date retrieved from database!");
             return null;
@@ -198,7 +199,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
         values.put(COL_POSITION, note.getPosition());
         values.put(COL_TITLE, note.getTitle());
-        values.put(COL_NOTE, note.getNote());
+        values.put(COL_NOTE, note.getNote().toString());
         values.put(COL_COLOR, note.getColor());
         values.put(COL_CREATED, date.toString());
         values.put(COL_EDITED, date.toString());
@@ -218,7 +219,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         values.put(COL_ID, note.getId());
         values.put(COL_POSITION, note.getPosition());
         values.put(COL_TITLE, note.getTitle());
-        values.put(COL_NOTE, note.getNote());
+        values.put(COL_NOTE, note.getNote().toString());
         values.put(COL_COLOR, note.getColor());
         if (updateTimestamp) {
             values.put(COL_EDITED, EasyDate.now().toString());

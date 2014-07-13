@@ -226,6 +226,9 @@ public class SealnoteActivity extends Activity {
             case R.id.action_logout:
                 TimeoutHandler.instance().expire(this);
                 return true;
+            case R.id.action_new_card_note:
+                NoteActivity.startForNoteId(SealnoteActivity.this, -1, Note.Type.TYPE_LOGIN);
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -257,7 +260,7 @@ public class SealnoteActivity extends Activity {
      * Called when any create new button/action is clicked.
      */
     public void onCreateNoteClick(View view) {
-        NoteActivity.startForNoteId(SealnoteActivity.this, -1);
+        NoteActivity.startForNoteId(SealnoteActivity.this, -1, null);
     }
 
     /**

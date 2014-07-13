@@ -129,7 +129,7 @@ public class SealnoteCard extends Card {
         super.setupInnerViewElements(parent, view);
 
         TextView textView = (TextView) view.findViewById(R.id.cardcontent_note);
-        String text = this.mNote.getNote();
+        String text = this.mNote.getNote().getCardString();
 
         textView.setTypeface(FontCache.getFont(getContext(), "RobotoSlab-Light.ttf"));
 
@@ -139,10 +139,11 @@ public class SealnoteCard extends Card {
             textView.setVisibility(View.VISIBLE);
 
             // Trim and set note
-            textView.setText(this.mNote.getNote().trim());
+            textView.setText(this.mNote.getNote().getCardString().trim());
 
             // Dynamic Text Size
-            if (PreferenceHandler.isDynamicFontSizeEnabled(getContext())) {
+            if (PreferenceHandler.isDynamicFontSizeEnabled(getContext()) &&
+                    mNote.getType() == Note.Type.TYPE_GENERIC) {
                 textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, getBigFontSize(text));
             }
         } else {
