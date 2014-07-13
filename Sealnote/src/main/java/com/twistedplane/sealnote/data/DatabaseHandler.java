@@ -20,7 +20,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     public static final String TAG = "DatabaseHandler";
 
     public static final String DBNAME = "sealnote.sqlite";
-    public static final int VERSION = 2;
+    public static final int VERSION = 3;
 
     // table and column names names
     public static final String TABLE_NAME = "notes";
@@ -33,6 +33,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     public static final String COL_EDITED = "edited";
     public static final String COL_ARCHIVED = "archived";
     public static final String COL_DELETED = "deleted";
+    public static final String COL_TYPE = "type";
 
     /**
      * Keep only one instance of database throughout application for performace
@@ -124,6 +125,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
             note.setColor(cursor.getInt(cursor.getColumnIndex(COL_COLOR)));
             note.setIsArchived(cursor.getInt(cursor.getColumnIndex(COL_ARCHIVED)) > 0);
             note.setIsDeleted(cursor.getInt(cursor.getColumnIndex(COL_DELETED)) > 0);
+            note.setType(Note.Type.valueOf(cursor.getString(cursor.getColumnIndex(COL_TYPE))));
         } catch (ParseException e) {
             Log.e(TAG, "Error parsing date retrieved from database!");
             return null;
@@ -147,7 +149,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 COL_CREATED + " TEXT, " +
                 COL_EDITED + " TEXT, " +
                 COL_ARCHIVED + " INTEGER NOT NULL DEFAULT '0'," +
-                COL_DELETED + " INTEGER NOT NULL DEFAULT '0'" +
+                COL_DELETED + " INTEGER NOT NULL DEFAULT '0'," +
+                COL_TYPE + " TEXT NOT NULL DEFAULT '" + Note.Type.TYPE_GENERIC.name() + "'" +
                 ") ";
         db.execSQL(query);
     }
@@ -157,9 +160,10 @@ public class DatabaseHandler extends SQLiteOpenHelper {
      */
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        // Version 1 to 2
-        // Added COL_FOLDER whose value can be only inbox, archive or trash
-
+        /**
+         * Version 1 to 2
+         *     + Add archived and deleted column for notes
+         */
         if (oldVersion == 1) {
             Log.i(TAG, "Upgrading database from Version 1 to 2");
             String query = "ALTER TABLE " + TABLE_NAME +
@@ -168,6 +172,18 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
             query = "ALTER TABLE " + TABLE_NAME +
                     " ADD " + COL_DELETED + " INTEGER NOT NULL DEFAULT '0'";
+            db.execSQL(query);
+        }
+
+        /**
+         * Version 2 to 3
+         *     + Add COL_TYPE which maps to Note.Type
+         */
+        if (oldVersion == 2) {
+            Log.i(TAG, "Upgrading database from Version 2 to 3");
+            String query = "ALTER TABLE " + TABLE_NAME +
+                    " ADD " + COL_TYPE + " TEXT NOT NULL DEFAULT '" +
+                    Note.Type.TYPE_GENERIC.name() + "'";
             db.execSQL(query);
         }
     }
@@ -188,6 +204,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         values.put(COL_EDITED, date.toString());
         values.put(COL_ARCHIVED, note.getIsArchived() ?1 :0);
         values.put(COL_DELETED, note.getIsDeleted() ?1 :0);
+        values.put(COL_TYPE, note.getType().name());
         return db.insert(TABLE_NAME, null, values);
     }
 
