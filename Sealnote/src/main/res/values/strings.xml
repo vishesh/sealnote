@@ -27,6 +27,10 @@
     <string name="action_delete">Delete</string>
     <string name="action_share">Share</string>
 
+    <string name="action_new_generic_note">Plain Text</string>
+    <string name="action_new_login_note">Login Details</string>
+    <string name="action_new_card_note">Card Details</string>
+
     <!-- Note Activity -->
     <string name="note_title">Title</string>
     <string name="note_note">Note</string>

@@ -214,9 +214,6 @@ public class SealnoteActivity extends Activity {
 
         // Handle presses on the action bar items
         switch (item.getItemId()) {
-            case R.id.action_new_note:
-                onCreateNoteClick(null);
-                return true;
             case R.id.action_about:
                 showAboutDialog();
                 return true;
@@ -226,7 +223,13 @@ public class SealnoteActivity extends Activity {
             case R.id.action_logout:
                 TimeoutHandler.instance().expire(this);
                 return true;
-            case R.id.action_new_card_note:
+            case R.id.action_new_note_generic:
+                onCreateNoteClick(null);
+                return true;
+            case R.id.action_new_note_card:
+                NoteActivity.startForNoteId(SealnoteActivity.this, -1, Note.Type.TYPE_CARD);
+                return true;
+            case R.id.action_new_note_login:
                 NoteActivity.startForNoteId(SealnoteActivity.this, -1, Note.Type.TYPE_LOGIN);
                 return true;
             default:

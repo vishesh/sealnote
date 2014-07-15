@@ -31,7 +31,7 @@ public class Note implements Parcelable{
     public static enum Type {
         TYPE_GENERIC,
         TYPE_LOGIN,
-        TYPE_CREDIT_CARD,
+        TYPE_CARD,
     }
 
     private int         mId;            /* Unique note id */

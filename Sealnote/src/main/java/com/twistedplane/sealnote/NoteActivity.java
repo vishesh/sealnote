@@ -186,7 +186,7 @@ public class NoteActivity extends Activity implements ColorDialogFragment.ColorC
             case TYPE_GENERIC:
                 mContentStub.setLayoutResource(R.layout.note_type_generic);
                 break;
-            case TYPE_CREDIT_CARD:
+            case TYPE_CARD:
                 mContentStub.setLayoutResource(R.layout.note_type_card);
                 break;
             case TYPE_LOGIN:

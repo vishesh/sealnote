@@ -21,7 +21,7 @@ public abstract class NoteContent {
         switch (type) {
             case TYPE_GENERIC:
                 return new NoteContentGeneric(content);
-            case TYPE_CREDIT_CARD:
+            case TYPE_CARD:
                 return new NoteContentCard(content);
             case TYPE_LOGIN:
                 return new NoteContentLogin(content);
