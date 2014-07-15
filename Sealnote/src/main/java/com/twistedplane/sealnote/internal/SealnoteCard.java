@@ -140,7 +140,7 @@ public class SealnoteCard extends Card {
             textView.setVisibility(View.VISIBLE);
 
             // Trim and set note
-            if (mNote.getType() == Note.Type.TYPE_LOGIN) {
+            if (mNote.getType() != Note.Type.TYPE_GENERIC) {
                 //FIXME: Clean this shit up
                 // Since only TYPE_LOGIN gives HTML content. For rest it would eat the
                 // newlines and show everything together, which sucks.

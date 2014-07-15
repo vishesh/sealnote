@@ -62,20 +62,36 @@ public class NoteContentCard extends NoteContent {
         mAdditionalNote = additionalNote;
     }
 
+    /**
+     * Masks card number with '*' showing only last group of digits.
+     */
+    private String maskCardNumber(String cardNumber) {
+        int lastGroupStart = cardNumber.lastIndexOf('-');
+        if (lastGroupStart < 0) {
+            return cardNumber;
+        }
+
+        String lastGroup = cardNumber.substring(lastGroupStart, cardNumber.length());
+        String prefixGroup = cardNumber.substring(0, lastGroupStart).replaceAll("\\d", "*");
+        return prefixGroup + "<b>" + lastGroup + "</b>";
+    }
+
     @Override
     public String getCardString() {
         if (!mUpdated) {
             update();
         }
-        if (mNumber.equals("")) {
+        if (mNumber.equals("") && mName.equals("")) {
             return "Card details";
+        } else if (mNumber.equals("")) {
+            return "CARD/" + mName;
         }
 
-        String result = "";
-        result += getBrand(mNumber) + "\n****-****-****-";
-        if (mNumber.length() > 4) {
-            result += mNumber.substring(mNumber.length() - 4, mNumber.length());
-        }
+        String result = mName;
+        result += result.equals("") ?"" :"<br/>";
+
+        String brand = getBrand(mNumber);
+        result += "<b>" + (brand.equals("UNKNOWN") ?"CARD" :brand) + "</b>/" + maskCardNumber(mNumber);
         return result;
     }
 
