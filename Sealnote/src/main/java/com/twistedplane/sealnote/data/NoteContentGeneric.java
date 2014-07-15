@@ -1,5 +1,8 @@
 package com.twistedplane.sealnote.data;
 
+/**
+ * Note Content for plain text notes
+ */
 public class NoteContentGeneric extends NoteContent {
     public final static String TAG = "NoteContentGeneric";
 
@@ -16,6 +19,7 @@ public class NoteContentGeneric extends NoteContent {
 
     @Override
     public String getCardStringCached() {
+        // Cache not required here as we use whole note to show
         return mContent;
     }
 

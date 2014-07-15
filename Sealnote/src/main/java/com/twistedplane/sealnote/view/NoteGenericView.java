@@ -30,11 +30,17 @@ public class NoteGenericView extends EditText implements NoteView {
         setTypeface(FontCache.getFont(getContext(), "RobotoSlab-Regular.ttf")); //LOOK
     }
 
+    /**
+     * Returns NoteContent object with latest valuess
+     */
     @Override
     public NoteContent getNoteContent() {
         return NoteContent.fromString(Note.Type.TYPE_GENERIC, getText().toString());
     }
 
+    /**
+     * Load values into View from given NoteContent object
+     */
     @Override
     public void setNoteContent(NoteContent noteContent) {
         setText(noteContent.toString());

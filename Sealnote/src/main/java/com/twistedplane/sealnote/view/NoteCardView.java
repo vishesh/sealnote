@@ -15,7 +15,7 @@ import com.twistedplane.sealnote.data.NoteContentCard;
 import com.twistedplane.sealnote.utils.FontCache;
 
 /**
- * View for Note.Type = CARD
+ * View for editing content of Note.Type = CARD
  */
 public class NoteCardView extends LinearLayout implements NoteView {
     private EditText mCardName;
@@ -41,6 +41,9 @@ public class NoteCardView extends LinearLayout implements NoteView {
         init();
     }
 
+    /**
+     * Initialize references to views within, configure them and add listeners
+     */
     private void init() {
         LayoutInflater.from(getContext()).inflate(R.layout.note_type_card_layout, this);
 
@@ -56,6 +59,9 @@ public class NoteCardView extends LinearLayout implements NoteView {
         mCardNumber.addTextChangedListener(new FourDigitCardFormatWatcher());
     }
 
+    /**
+     * Returns NoteContent object with latest values from view
+     */
     @Override
     public NoteContent getNoteContent() {
         return new NoteContentCard(
@@ -68,6 +74,9 @@ public class NoteCardView extends LinearLayout implements NoteView {
         );
     }
 
+    /**
+     * Load values into views from given NoteContent object.
+     */
     @Override
     public void setNoteContent(NoteContent noteContent) {
        NoteContentCard noteContentCard = (NoteContentCard) noteContent;
@@ -80,6 +89,9 @@ public class NoteCardView extends LinearLayout implements NoteView {
         mCardNote.setText(noteContentCard.getAdditionalNote());
     }
 
+    /**
+     * Set enable attribute for each input component inside
+     */
     @Override
     public void setEnabled(boolean enabled) {
         super.setEnabled(enabled);
@@ -91,6 +103,9 @@ public class NoteCardView extends LinearLayout implements NoteView {
         mCardNote.setEnabled(enabled);
     }
 
+    /**
+     * Add text listener to each input component inside
+     */
     @Override
     public void addTextChangedListener(TextWatcher textWatcher) {
         mCardName.addTextChangedListener(textWatcher);

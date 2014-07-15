@@ -12,7 +12,7 @@ import com.twistedplane.sealnote.data.NoteContentLogin;
 import com.twistedplane.sealnote.utils.FontCache;
 
 /**
- * View for Note.Type = Login
+ * View for editing note content of Note.Type = Login
  */
 public class NoteLoginView extends LinearLayout implements NoteView {
     private EditText mUrl;

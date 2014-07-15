@@ -9,9 +9,15 @@ import java.util.Scanner;
 import java.util.regex.Pattern;
 
 
+/**
+ * Implementation of NoteContent for Note.Type = CARD.
+ */
 public class NoteContentCard extends NoteContent {
     public final static String TAG = "NoteContentCard";
 
+    /**
+     * Card Brands
+     */
     private final static HashMap<String, Pattern> sCardBrands = new HashMap<String, Pattern>();
     static {
         sCardBrands.put("VISA", Pattern.compile("^4[0-9]{6,}$"));
@@ -32,8 +38,6 @@ public class NoteContentCard extends NoteContent {
         sCardDrawables.put("JCB", R.drawable.card_brand_jcb);
         sCardDrawables.put("UNKNOWN", R.drawable.card_brand_unknown);
     }
-
-    private String mBrand;
 
     private String mName;
     private String mNumber;
@@ -105,6 +109,10 @@ public class NoteContentCard extends NoteContent {
         );
     }
 
+    /**
+     * Detect card brand from given card number
+     * @return  Card brand code string, or UNKNOWN if nothing found
+     */
     public static String getBrand(String cardNumber) {
         String cleanedCardNumber = cardNumber.replace(" ", "").replace("-", "");
 
@@ -116,6 +124,11 @@ public class NoteContentCard extends NoteContent {
         return "UNKNOWN";
     }
 
+    /**
+     * Get card brand logo drawable
+     * @param brandName Brand name code of card
+     * @return          Resource id of drawble
+     */
     public static int getBrandDrawableId(String brandName) {
         return sCardDrawables.get(brandName);
     }

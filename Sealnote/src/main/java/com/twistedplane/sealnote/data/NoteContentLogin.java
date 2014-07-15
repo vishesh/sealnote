@@ -5,6 +5,9 @@ import java.util.NoSuchElementException;
 import java.util.Scanner;
 
 
+/**
+ * Implementation of NoteContent for Note.Type = LOGIN.
+ */
 public class NoteContentLogin extends NoteContent {
     public final static String TAG = "NoteContentLogin";
 
