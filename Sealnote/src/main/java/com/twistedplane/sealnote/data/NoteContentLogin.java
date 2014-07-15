@@ -29,7 +29,17 @@ public class NoteContentLogin extends NoteContent {
     @Override
     public String getCardString() {
         //TODO: Make it more sensible
-        return "Login details";
+        if (!mUpdated) {
+            update();
+        }
+        String result = "";
+        if (!mUrl.equals("")) {
+            result += mUrl;
+        }
+        if (!mPassword.equals("")) {
+            result += result.equals("") ? mLogin : String.format("\nLogin: <b>%s</b>", mLogin);
+        }
+        return result;
     }
 
     @Override

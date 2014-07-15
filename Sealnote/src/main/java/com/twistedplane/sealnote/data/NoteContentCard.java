@@ -56,24 +56,23 @@ public class NoteContentCard extends NoteContent {
         mValidUpto = validUpto;
         mCvv = cvv;
         mAdditionalNote = additionalNote;
-
     }
 
     @Override
     public String getCardString() {
-        /*
-        if (!number.equals("")) {
-            String result = "";
-            result += getBrand(number) + "/*-";
-            if (number.length() > 4) {
-                result += number.substring(number.length() - 4, number.length());
-            }
-            return result;
+        if (!mUpdated) {
+            update();
         }
-        */
+        if (mNumber.equals("")) {
+            return "Card details";
+        }
 
-        //TODO: Make it more sensible
-        return "Card details";
+        String result = "";
+        result += getBrand(mNumber) + "\n****-****-****-";
+        if (mNumber.length() > 4) {
+            result += mNumber.substring(mNumber.length() - 4, mNumber.length());
+        }
+        return result;
     }
 
     @Override

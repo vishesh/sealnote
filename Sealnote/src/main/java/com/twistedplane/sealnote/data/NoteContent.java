@@ -2,6 +2,7 @@ package com.twistedplane.sealnote.data;
 
 public abstract class NoteContent {
     protected String mContent;
+    protected String mCardString;
     protected boolean mUpdated = false;
 
     protected NoteContent() {
@@ -16,6 +17,14 @@ public abstract class NoteContent {
     abstract public String  getCardString();
     abstract public void    update();
     abstract public String  toString();
+
+    public void setCardString(String cardString) {
+        mCardString = cardString;
+    }
+
+    public String getCardStringCached() {
+        return mCardString;
+    }
 
     public static NoteContent fromString(Note.Type type, String content) {
         switch (type) {

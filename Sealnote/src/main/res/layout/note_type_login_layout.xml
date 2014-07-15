@@ -25,7 +25,7 @@
                 android:layout_height="wrap_content"
                 android:hint="@string/note_login_url"
                 android:typeface="monospace"
-                android:inputType="textUri|textShortMessage"
+                android:inputType="textNoSuggestions"
                 android:singleLine="true"
                 android:textAllCaps="true"
                 android:textSize="22sp"

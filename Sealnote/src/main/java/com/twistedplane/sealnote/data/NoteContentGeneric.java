@@ -15,6 +15,16 @@ public class NoteContentGeneric extends NoteContent {
     }
 
     @Override
+    public String getCardStringCached() {
+        return mContent;
+    }
+
+    @Override
+    public void setCardString(String string) {
+        // no implementation required
+    }
+
+    @Override
     public void update() {
         // no implementation required
     }

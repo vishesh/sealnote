@@ -20,7 +20,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     public static final String TAG = "DatabaseHandler";
 
     public static final String DBNAME = "sealnote.sqlite";
-    public static final int VERSION = 3;
+    public static final int VERSION = 4;
 
     // table and column names names
     public static final String TABLE_NAME = "notes";
@@ -28,6 +28,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     public static final String COL_POSITION = "position";
     public static final String COL_TITLE = "title";
     public static final String COL_NOTE = "content";
+    public static final String COL_NOTE_EXTRA = "content_extra";
     public static final String COL_COLOR = "color";
     public static final String COL_CREATED = "created";
     public static final String COL_EDITED = "edited";
@@ -127,6 +128,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
             note.setType(Note.Type.valueOf(cursor.getString(cursor.getColumnIndex(COL_TYPE))));
             note.setNote(NoteContent.fromString(note.getType(),
                     cursor.getString(cursor.getColumnIndex(COL_NOTE))));
+            note.getNote().setCardString(cursor.getString(cursor.getColumnIndex(COL_NOTE_EXTRA)));
         } catch (ParseException e) {
             Log.e(TAG, "Error parsing date retrieved from database!");
             return null;
@@ -146,6 +148,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 COL_POSITION + " INTEGER, " +
                 COL_TITLE + " TEXT, " +
                 COL_NOTE + " TEXT, " +
+                COL_NOTE_EXTRA + " TEXT, " +
                 COL_COLOR + " INTEGER, " +
                 COL_CREATED + " TEXT, " +
                 COL_EDITED + " TEXT, " +
@@ -179,12 +182,18 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         /**
          * Version 2 to 3
          *     + Add COL_TYPE which maps to Note.Type
+         *     + Add COL_NOTE_EXTRA which keeps content to shown on CardView
+         *       for non-generic notes
          */
         if (oldVersion == 2) {
             Log.i(TAG, "Upgrading database from Version 2 to 3");
             String query = "ALTER TABLE " + TABLE_NAME +
                     " ADD " + COL_TYPE + " TEXT NOT NULL DEFAULT '" +
                     Note.Type.TYPE_GENERIC.name() + "'";
+            db.execSQL(query);
+
+            query = "ALTER TABLE " + TABLE_NAME +
+                    " ADD " + COL_NOTE_EXTRA + " TEXT ";
             db.execSQL(query);
         }
     }
@@ -206,6 +215,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         values.put(COL_ARCHIVED, note.getIsArchived() ?1 :0);
         values.put(COL_DELETED, note.getIsDeleted() ?1 :0);
         values.put(COL_TYPE, note.getType().name());
+        values.put(COL_NOTE_EXTRA, note.getNote().getCardString());
         return db.insert(TABLE_NAME, null, values);
     }
 
@@ -226,6 +236,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         }
         values.put(COL_ARCHIVED, note.getIsArchived() ?1 :0);
         values.put(COL_DELETED, note.getIsDeleted() ?1 :0);
+        values.put(COL_NOTE_EXTRA, note.getNote().getCardString());
         db.update(TABLE_NAME, values, COL_ID + " = ?", new String[]{Integer.toString(note.getId())});
     }
 

@@ -1,6 +1,7 @@
 package com.twistedplane.sealnote.internal;
 
 import android.content.Context;
+import android.text.Html;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
@@ -129,7 +130,7 @@ public class SealnoteCard extends Card {
         super.setupInnerViewElements(parent, view);
 
         TextView textView = (TextView) view.findViewById(R.id.cardcontent_note);
-        String text = this.mNote.getNote().getCardString();
+        String text = this.mNote.getNote().getCardStringCached();
 
         textView.setTypeface(FontCache.getFont(getContext(), "RobotoSlab-Light.ttf"));
 
@@ -139,11 +140,10 @@ public class SealnoteCard extends Card {
             textView.setVisibility(View.VISIBLE);
 
             // Trim and set note
-            textView.setText(this.mNote.getNote().getCardString().trim());
+            textView.setText(Html.fromHtml(text.trim()));
 
             // Dynamic Text Size
-            if (PreferenceHandler.isDynamicFontSizeEnabled(getContext()) &&
-                    mNote.getType() == Note.Type.TYPE_GENERIC) {
+            if (PreferenceHandler.isDynamicFontSizeEnabled(getContext())) {
                 textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, getBigFontSize(text));
             }
         } else {
