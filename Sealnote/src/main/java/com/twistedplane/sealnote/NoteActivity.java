@@ -395,9 +395,9 @@ public class NoteActivity extends Activity implements ColorDialogFragment.ColorC
         final DatabaseHandler handler = SealnoteApplication.getDatabase();
         final String title = mTitleView.getText().toString();
         final NoteContent noteContent = mNoteView.getNoteContent();
-        final String text = noteContent.toString().trim();
+        final String text = noteContent.toString();
 
-        if (title.equals("") && text.equals("")) {
+        if (title.equals("") && text.trim().equals("")) {
             Toast.makeText(this, getResources().getString(R.string.empty_note), Toast.LENGTH_SHORT).show();
             return;
         }
