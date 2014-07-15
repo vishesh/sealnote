@@ -140,7 +140,15 @@ public class SealnoteCard extends Card {
             textView.setVisibility(View.VISIBLE);
 
             // Trim and set note
-            textView.setText(Html.fromHtml(text.trim()));
+            if (mNote.getType() == Note.Type.TYPE_LOGIN) {
+                //FIXME: Clean this shit up
+                // Since only TYPE_LOGIN gives HTML content. For rest it would eat the
+                // newlines and show everything together, which sucks.
+                textView.setText(Html.fromHtml(text.trim()));
+            } else {
+                //
+                textView.setText(text.trim());
+            }
 
             // Dynamic Text Size
             if (PreferenceHandler.isDynamicFontSizeEnabled(getContext())) {
