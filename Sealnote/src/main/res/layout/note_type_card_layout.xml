@@ -25,7 +25,7 @@
                 android:layout_height="wrap_content"
                 android:hint="@string/note_card_name"
                 android:typeface="monospace"
-                android:inputType="textPersonName|textCapCharacters"
+                android:inputType="textPersonName"
                 android:singleLine="true"
                 android:textAllCaps="true"
                 android:textSize="22sp"
