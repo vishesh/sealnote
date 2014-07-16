@@ -10,6 +10,7 @@ import android.view.*;
 import android.widget.*;
 import com.nhaarman.listviewanimations.swinginadapters.AnimationAdapter;
 import com.nhaarman.listviewanimations.swinginadapters.prepared.ScaleInAnimationAdapter;
+import com.twistedplane.sealnote.NoteActivity;
 import com.twistedplane.sealnote.R;
 import com.twistedplane.sealnote.data.Note;
 import com.twistedplane.sealnote.data.SealnoteAdapter;
@@ -18,8 +19,9 @@ import com.twistedplane.sealnote.fragment.SealnoteFragment;
 /**
  * Fragment where all cards are listed in a simple List View
  */
-public class SimpleListFragment extends SealnoteFragment {
+public class SimpleListFragment extends SealnoteFragment implements AdapterView.OnItemClickListener {
     public final static String TAG = "SimpleListFragment";
+    private final MultiChoiceCallback mMultiChoiceCallback = new MultiChoiceCallback();
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
@@ -30,7 +32,15 @@ public class SimpleListFragment extends SealnoteFragment {
     private void initListItemListeners() {
         final ListView listView = (ListView) mAdapterView;
         listView.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE_MODAL);
-        listView.setMultiChoiceModeListener(new MultiChoiceCallback());
+        listView.setOnItemClickListener(this);
+        listView.setMultiChoiceModeListener(mMultiChoiceCallback);
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
+        if (!mMultiChoiceCallback.isActionModeActive()) {
+            NoteActivity.startForNoteId(getActivity(), (int) id, null);
+        }
     }
 
     /**

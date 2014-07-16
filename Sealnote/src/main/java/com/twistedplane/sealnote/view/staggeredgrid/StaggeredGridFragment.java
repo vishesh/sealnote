@@ -2,6 +2,7 @@ package com.twistedplane.sealnote.view.staggeredgrid;
 
 import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.os.Bundle;
 import android.util.Log;
 import android.view.ViewStub;
 import android.widget.AdapterView;

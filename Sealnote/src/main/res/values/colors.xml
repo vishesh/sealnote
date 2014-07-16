@@ -22,7 +22,7 @@
     <color name="card_text_color_header">#ff494949</color>
 
     <!-- simple list view -->
-    <color name="simplelistview_activated" type="color">@color/light_gray</color>
+    <color name="simplelistview_activated" type="color">#ffe0e0e0</color>
     <color name="simplelistview_pressed" type="color">#fff4f4f4</color>
     <color name="simplelistview_selected" type="color">#fff4f4f4</color>
 

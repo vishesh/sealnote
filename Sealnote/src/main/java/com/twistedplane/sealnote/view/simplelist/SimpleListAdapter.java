@@ -23,8 +23,6 @@ import java.text.ParseException;
 public class SimpleListAdapter extends SimpleCursorAdapter implements SealnoteAdapter {
     public final static String TAG = "SimpleListAdapter";
 
-    private Note.Folder mCurrentFolder = Note.Folder.FOLDER_LIVE;
-
     public SimpleListAdapter(Context context, Cursor cursor) {
         super(
                 context,
@@ -93,13 +91,12 @@ public class SimpleListAdapter extends SimpleCursorAdapter implements SealnoteAd
      */
     @Override
     public void setCurrentFolder(Note.Folder folder) {
-        mCurrentFolder = folder;
+        // no implementation required
     }
 
     @Override
     public void startActionMode() {
         // no implementation required
-        Log.d(TAG, "Action mode started.");
     }
 }
 
