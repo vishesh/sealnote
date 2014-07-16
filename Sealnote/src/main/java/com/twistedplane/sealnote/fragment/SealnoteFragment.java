@@ -68,6 +68,8 @@ abstract public class SealnoteFragment extends Fragment implements SharedPrefere
     abstract protected void loadAdapter(Cursor cursor);
 
     /**
+     * The master layout has a View Stub to show all notes which is lazily
+     * inflated to view depending upon the currently selected view mode.
      * Inflate ViewStub with the adapter view.
      *
      * @param stub  ViewStub to be replaced with adapter view
