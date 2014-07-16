@@ -78,8 +78,10 @@ abstract public class SealnoteFragment extends Fragment implements
         super.onCreate(savedInstanceState);
         Log.d(TAG, "Creating SealNote fragment...");
 
-        mCurrentFolder = Note.Folder.FOLDER_NONE;
-        mCurrentFolder = Note.Folder.FOLDER_LIVE;
+        // Get folder active in activity
+        String folder = getArguments().getString("FOLDER", Note.Folder.FOLDER_LIVE.name());
+        mCurrentFolder = Note.Folder.valueOf(folder);
+
         mAdapter = createAdapter();
 
         /**

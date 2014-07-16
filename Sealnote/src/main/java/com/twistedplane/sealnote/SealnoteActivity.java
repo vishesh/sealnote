@@ -93,6 +93,10 @@ public class SealnoteActivity extends Activity implements SharedPreferences.OnSh
                 break;
         }
 
+        Bundle bundle = new Bundle();
+        bundle.putString("FOLDER", mCurrentFolder.name());
+        mSealnoteFragment.setArguments(bundle);
+
         FragmentTransaction transaction = getFragmentManager().beginTransaction();
         transaction.replace(R.id.fragment_container, mSealnoteFragment);
         transaction.commit();
