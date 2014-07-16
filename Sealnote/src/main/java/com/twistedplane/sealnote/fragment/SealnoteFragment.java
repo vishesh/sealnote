@@ -97,6 +97,7 @@ abstract public class SealnoteFragment extends Fragment implements
             public void onInvalidated() {
                 super.onInvalidated();
                 Log.d(TAG, "Data set invalidated");
+                setFolder(mCurrentFolder);
             }
         });
     }
@@ -125,6 +126,10 @@ abstract public class SealnoteFragment extends Fragment implements
     @Override
     public void onResume() {
         super.onResume();
+
+        if (getActivity().isFinishing()) {
+            return;
+        }
 
         Log.d(TAG, "Reloading adapter during fragment resume. folder = " + mCurrentFolder);
         if (mCurrentFolder == Note.Folder.FOLDER_NONE) {
