@@ -1,6 +1,5 @@
 package com.twistedplane.sealnote.view.staggeredgrid;
 
-import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.util.Log;
 import android.view.ViewStub;
@@ -10,6 +9,7 @@ import com.nhaarman.listviewanimations.swinginadapters.prepared.ScaleInAnimation
 import com.twistedplane.sealnote.R;
 import com.twistedplane.sealnote.data.SealnoteAdapter;
 import com.twistedplane.sealnote.fragment.SealnoteFragment;
+import com.twistedplane.sealnote.utils.PreferenceHandler;
 
 /**
  * Fragment where all cards are listed in a staggered grid
@@ -29,14 +29,20 @@ public class StaggeredGridFragment extends SealnoteFragment {
     }
 
     /**
-     * Inflate ViewStub with Staggered Grid View
+     * Inflate ViewStub with Staggered Grid View. If user has selected
+     * VIEW_COLUMN mode, then we load singlecolumn view.
      *
      * @param stub  ViewStub to be replaced with adapter view
      * @return      StaggeredGridView
      */
     @Override
     protected AdapterView inflateAdapterView(ViewStub stub) {
-        stub.setLayoutResource(R.layout.staggeredgrid);
+        if (PreferenceHandler.getNoteListViewType(getActivity()) ==
+                PreferenceHandler.NoteListViewType.VIEW_COLUMN) {
+            stub.setLayoutResource(R.layout.singlecolumnview);
+        } else {
+            stub.setLayoutResource(R.layout.staggeredgrid);
+        }
         return (AdapterView) stub.inflate();
     }
 
@@ -44,6 +50,7 @@ public class StaggeredGridFragment extends SealnoteFragment {
      * Load adapter to card grid view. Reload data from database. Also setup animations.
      */
     protected void loadAdapter(Cursor cursor) {
+        Log.d(TAG, "Loading adapter into view");
         setAnimationAdapter();
         mAdapter.changeCursor(cursor);
     }

@@ -23,28 +23,14 @@ public class StaggeredGridView extends CardGridStaggeredView {
 
     public StaggeredGridView(Context context) {
         super(context);
-        updateGridColumnCount();
     }
 
     public StaggeredGridView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        updateGridColumnCount();
     }
 
     public StaggeredGridView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
-        updateGridColumnCount();
-    }
-
-    /**
-     * NOTE:
-     * Also restore the column counts. Somehow seems to fix the bug
-     * where the items tend have same x values while different columns
-     */
-    @Override
-    public void onRestoreInstanceState(Parcelable state) {
-        super.onRestoreInstanceState(state);
-        updateGridColumnCount();
     }
 
     /**
@@ -81,28 +67,6 @@ public class StaggeredGridView extends CardGridStaggeredView {
         } else {
             Log.w(TAG, "You are using a generic adapter. Pay attention: your adapter has to call cardGridArrayAdapter#getView method.");
             super.setAdapter(adapter);
-        }
-    }
-
-    /**
-     * Update column count as per current orientation of device and SealNote
-     * NoteListTypeView preference value.
-     *
-     * Currently this class serves for both Tiles and Single Column view.
-     */
-    public void updateGridColumnCount() {
-        if (PreferenceHandler.getNoteListViewType(getContext()) ==
-                PreferenceHandler.NoteListViewType.VIEW_COLUMN) {
-            // Single-column mode is enabled
-            setColumnCount(1);
-        } else {
-            if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
-                setColumnCountPortrait(2);
-                setColumnCountLandscape(3);
-            } else {
-                setColumnCountLandscape(3);
-                setColumnCountPortrait(2);
-            }
         }
     }
 }

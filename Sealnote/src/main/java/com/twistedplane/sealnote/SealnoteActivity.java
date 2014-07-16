@@ -175,6 +175,7 @@ public class SealnoteActivity extends Activity implements SharedPreferences.OnSh
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         if (key.equals("NoteListViewType") || key.equals("DynamicFontSize")) {
+            Log.d(TAG, "NoteListView type changed!");
             mReloadFragment = true;
         }
     }

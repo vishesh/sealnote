@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<com.twistedplane.sealnote.view.staggeredgrid.StaggeredGridView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:card="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/notes_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        card:column_count_portrait="1"
+        card:column_count_landscape="1"
+        card:item_margin="8dp"
+        android:layout_gravity="center_horizontal|bottom"
+        android:paddingTop="?android:actionBarSize"
+        />

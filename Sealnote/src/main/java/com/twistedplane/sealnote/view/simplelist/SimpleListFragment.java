@@ -1,7 +1,6 @@
 package com.twistedplane.sealnote.view.simplelist;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.util.Log;
@@ -75,6 +74,7 @@ public class SimpleListFragment extends SealnoteFragment implements AdapterView.
      * Load adapter to card grid view. Reload data from database. Also setup animations.
      */
     protected void loadAdapter(Cursor cursor) {
+        Log.d(TAG, "Loading adapter into view");
         setAnimationAdapter();
 //        if (mAdapterView.getAdapter() == null) {
 //            mAdapterView.setAdapter(mAdapter);
