@@ -7,12 +7,10 @@
         android:layout_height="match_parent">
     <!-- The main content view -->
 
-    <fragment
-            android:id="@+id/fragment_sealnote"
-            class="com.twistedplane.sealnote.view.simplelist.SimpleListFragment"
+    <FrameLayout
+            android:id="@+id/fragment_container"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            />
+            android:layout_height="wrap_content" />
 
     <!-- The navigation drawer -->
     <LinearLayout android:id="@+id/drawer_content"

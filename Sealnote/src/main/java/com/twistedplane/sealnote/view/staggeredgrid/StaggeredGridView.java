@@ -23,14 +23,17 @@ public class StaggeredGridView extends CardGridStaggeredView {
 
     public StaggeredGridView(Context context) {
         super(context);
+        updateGridColumnCount();
     }
 
     public StaggeredGridView(Context context, AttributeSet attrs) {
         super(context, attrs);
+        updateGridColumnCount();
     }
 
     public StaggeredGridView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
+        updateGridColumnCount();
     }
 
     /**
@@ -83,10 +86,13 @@ public class StaggeredGridView extends CardGridStaggeredView {
 
     /**
      * Update column count as per current orientation of device and SealNote
-     * multi-column/single-column preference value.
+     * NoteListTypeView preference value.
+     *
+     * Currently this class serves for both Tiles and Single Column view.
      */
     public void updateGridColumnCount() {
-        if (!PreferenceHandler.isMultiColumnGridEnabled(getContext())) {
+        if (PreferenceHandler.getNoteListViewType(getContext()) ==
+                PreferenceHandler.NoteListViewType.VIEW_COLUMN) {
             // Single-column mode is enabled
             setColumnCount(1);
         } else {

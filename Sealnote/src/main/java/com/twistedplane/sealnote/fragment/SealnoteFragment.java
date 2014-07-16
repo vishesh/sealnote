@@ -1,13 +1,11 @@
 package com.twistedplane.sealnote.fragment;
 
 import android.app.Fragment;
-import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.DataSetObserver;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,7 +22,7 @@ import com.twistedplane.sealnote.data.SealnoteAdapter;
 /**
  * Main fragment where all cards are listed in a staggered grid
  */
-abstract public class SealnoteFragment extends Fragment implements SharedPreferences.OnSharedPreferenceChangeListener {
+abstract public class SealnoteFragment extends Fragment {
     public final static String TAG = "SealnoteFragment";
 
     /**
@@ -116,10 +114,6 @@ abstract public class SealnoteFragment extends Fragment implements SharedPrefere
                 }
             }
         });
-
-        SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
-        sharedPrefs.registerOnSharedPreferenceChangeListener(this);
-
     }
 
     /**

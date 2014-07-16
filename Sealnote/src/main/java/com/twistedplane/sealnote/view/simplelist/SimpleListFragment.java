@@ -98,11 +98,6 @@ public class SimpleListFragment extends SealnoteFragment implements AdapterView.
         adapterView.setAdapter(animAdapter);
     }
 
-    @Override
-    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-        Log.d(TAG, "Shared preferences changed - " + key);
-    }
-
     /**
      * MultiChoice callback for SimpleListView.
      */

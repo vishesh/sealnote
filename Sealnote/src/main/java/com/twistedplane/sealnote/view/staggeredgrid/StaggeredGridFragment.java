@@ -63,10 +63,4 @@ public class StaggeredGridFragment extends SealnoteFragment {
         animCardArrayAdapter.setAbsListView(adapterView);
         adapterView.setExternalAdapter(animCardArrayAdapter, dataAdapter);
     }
-
-    @Override
-    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-        Log.d(TAG, "Shared preferences changed - " + key);
-        ((StaggeredGridView) mAdapterView).updateGridColumnCount();
-    }
 }
