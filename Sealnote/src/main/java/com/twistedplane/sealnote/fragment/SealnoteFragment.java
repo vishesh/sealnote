@@ -147,6 +147,7 @@ abstract public class SealnoteFragment extends Fragment implements
     public void setFolder(Note.Folder folder) {
         Log.d(TAG, "Switching folder to " + folder);
         mCurrentFolder = folder;
+        mAdapter.setFolder(folder);
         getLoaderManager().restartLoader(0, null, this);
     }
 

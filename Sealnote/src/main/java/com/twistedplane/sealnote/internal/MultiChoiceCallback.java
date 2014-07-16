@@ -55,6 +55,13 @@ abstract public class MultiChoiceCallback implements ActionMode.Callback {
         return mActionMode != null;
     }
 
+    /**
+     * Get active ActionMode object
+     */
+    public ActionMode getActionMode() {
+        return mActionMode;
+    }
+
     @Override
     public boolean onCreateActionMode(ActionMode actionMode, Menu menu) {
         MenuInflater inflater = actionMode.getMenuInflater();
