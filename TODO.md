@@ -34,6 +34,15 @@ Sealnote TODO
 ------------------------------
 * [DONE] ActionBar theming and icons
 * [DONE] Folders - All notes, Archive, Trash
+* [DONE] Note Types - Password, Card
+* [DONE] Switch SealnoteActivty to Fragment
+* [DONE] NoteType and NoteView abstraction
+
+15th July 2014 - 22nd July 2014
+-------------------------------
+* [DONE] Note Views - SingleColumn, Grid, Tiles and preferences
+* [DONE] AdapterLoader to Loader Task
+* Note View - Grid
 * Search notes
 * Import/Export notes
 * Backup database to server
