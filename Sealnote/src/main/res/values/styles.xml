@@ -45,7 +45,7 @@
     </style>
 
     <!-- Note activity theme. -->
-    <style name="Sealnote.Theme.Note" parent="@android:Theme.Holo.Light">
+    <style name="Sealnote.Theme.Note" parent="android:Theme.Holo.Light">
         <item name="android:actionBarStyle">@style/Sealnote.Theme.Note.ActionBar</item>
         <item name="android:actionBarItemBackground">@drawable/actionbar_item_selector</item>
         <item name="android:actionOverflowButtonStyle">@style/Sealnote.Theme.Main.ActionBar.Overflow</item>
@@ -87,6 +87,12 @@
         <item name="android:paddingLeft">25dip</item>
         <item name="android:textColor">@drawable/button_text_color_selector</item>
         <item name="android:fontFamily">sans-serif-condensed</item>
+    </style>
+
+
+    <!-- Simple List View Item -->
+    <style name="Sealnote.Theme.Main.SimpleListView" parent="android:Widget.Holo.Light.ListView">
+        <item name="android:listSelector">@drawable/simple_list_view_item_background</item>
     </style>
 
 </resources>

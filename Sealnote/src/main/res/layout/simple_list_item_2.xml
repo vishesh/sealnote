@@ -14,13 +14,15 @@
      limitations under the License.
 -->
 
-<TwoLineListItem xmlns:android="http://schemas.android.com/apk/res/android"
-                 android:layout_width="match_parent"
-                 android:layout_height="wrap_content"
-                 android:minHeight="?android:attr/listPreferredItemHeight"
-                 android:mode="twoLine"
-                 android:paddingLeft="20dp"
-                 android:paddingRight="20dp"
+<RelativeLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="?android:attr/listPreferredItemHeight"
+        android:mode="twoLine"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        android:background="@drawable/simple_list_view_item_background"
         >
 
     <LinearLayout
@@ -62,4 +64,4 @@
               android:textSize="17sp"
             />
 
-</TwoLineListItem>
+</RelativeLayout>

@@ -8,4 +8,6 @@
           android:paddingTop="?android:actionBarSize"
           android:paddingLeft="0dp"
           android:paddingRight="0dp"
+          android:choiceMode="multipleChoiceModal"
+          android:background="@android:color/white"
         />

@@ -98,7 +98,8 @@ public class SimpleListAdapter extends SimpleCursorAdapter implements SealnoteAd
 
     @Override
     public void startActionMode() {
-        //TODO
+        // no implementation required
+        Log.d(TAG, "Action mode started.");
     }
 }
 
