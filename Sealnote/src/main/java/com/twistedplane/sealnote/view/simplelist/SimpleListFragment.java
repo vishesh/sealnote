@@ -5,6 +5,7 @@ import android.database.Cursor;
 import android.util.Log;
 import android.view.ViewStub;
 import android.widget.AdapterView;
+import android.widget.ListView;
 import com.nhaarman.listviewanimations.swinginadapters.AnimationAdapter;
 import com.nhaarman.listviewanimations.swinginadapters.prepared.ScaleInAnimationAdapter;
 import com.twistedplane.sealnote.R;
@@ -12,10 +13,10 @@ import com.twistedplane.sealnote.data.SealnoteAdapter;
 import com.twistedplane.sealnote.fragment.SealnoteFragment;
 
 /**
- * Fragment where all cards are listed in a staggered grid
+ * Fragment where all cards are listed in a simple List View
  */
 public class SimpleListFragment extends SealnoteFragment {
-    public final static String TAG = "StaggeredGridFragment";
+    public final static String TAG = "SimpleListFragment";
 
     /**
      * Create and return adapter
@@ -29,10 +30,10 @@ public class SimpleListFragment extends SealnoteFragment {
     }
 
     /**
-     * Inflate ViewStub with Staggered Grid View. See super docstring.
+     * Inflate ViewStub with Simple List View. See super docstring.
      *
      * @param stub  ViewStub to be replaced with adapter view
-     * @return      StaggeredGridView
+     * @return      ListView
      */
     @Override
     protected AdapterView inflateAdapterView(ViewStub stub) {
@@ -44,25 +45,28 @@ public class SimpleListFragment extends SealnoteFragment {
      * Load adapter to card grid view. Reload data from database. Also setup animations.
      */
     protected void loadAdapter(Cursor cursor) {
-//        setAnimationAdapter();
+        setAnimationAdapter();
+//        if (mAdapterView.getAdapter() == null) {
+//            mAdapterView.setAdapter(mAdapter);
+//        }
         mAdapter.changeCursor(cursor);
     }
 
     /**
-     * Set animation adapter for card grid view and make it card grid's external adapter.
+     * Set animation adapter for ListView and make its external adapter.
      */
-//    private void setAnimationAdapter() {
-//        StaggeredGridAdapter dataAdapter = (StaggeredGridAdapter) mAdapter;
-//        StaggeredGridView adapterView = (StaggeredGridView) mAdapterView;
-//
-//        AnimationAdapter animCardArrayAdapter = new ScaleInAnimationAdapter(dataAdapter);
-//
-//        animCardArrayAdapter.setAnimationDurationMillis(1000);
-//        animCardArrayAdapter.setAnimationDelayMillis(500);
-//
-//        animCardArrayAdapter.setAbsListView(adapterView);
-//        adapterView.setExternalAdapter(animCardArrayAdapter, dataAdapter);
-//    }
+    private void setAnimationAdapter() {
+        SimpleListAdapter dataAdapter = (SimpleListAdapter) mAdapter;
+        ListView adapterView = (ListView) mAdapterView;
+
+        AnimationAdapter animAdapter = new ScaleInAnimationAdapter(dataAdapter);
+
+        animAdapter.setAnimationDurationMillis(1000);
+        animAdapter.setAnimationDelayMillis(500);
+
+        animAdapter.setAbsListView(adapterView);
+        adapterView.setAdapter(animAdapter);
+    }
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {

@@ -6,4 +6,6 @@
           android:id="@+id/notes_view"
           android:layout_gravity="center_horizontal|bottom"
           android:paddingTop="?android:actionBarSize"
+          android:paddingLeft="0dp"
+          android:paddingRight="0dp"
         />

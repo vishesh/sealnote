@@ -9,7 +9,7 @@
 
     <fragment
             android:id="@+id/fragment_sealnote"
-            class="com.twistedplane.sealnote.view.staggeredgrid.StaggeredGridFragment"
+            class="com.twistedplane.sealnote.view.simplelist.SimpleListFragment"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             />

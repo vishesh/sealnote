@@ -2,36 +2,44 @@ package com.twistedplane.sealnote.view.simplelist;
 
 import android.content.Context;
 import android.database.Cursor;
-import android.view.ActionMode;
+import android.text.Html;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.SimpleCursorAdapter;
+import android.widget.TextView;
+import com.twistedplane.sealnote.R;
 import com.twistedplane.sealnote.data.DatabaseHandler;
 import com.twistedplane.sealnote.data.Note;
 import com.twistedplane.sealnote.data.SealnoteAdapter;
+import com.twistedplane.sealnote.utils.EasyDate;
+import com.twistedplane.sealnote.utils.FontCache;
+
+import java.text.ParseException;
 
 /**
- * Adapter for SealnoteStaggeredGrid. Initialized cards and their event listeners. Since
- * StaggeredGrid doesn't have multi-choice mode enabled, we emulate this by adding
- * appropriate listeners to card and maintaining the CAB multi-choice state.
+ * Adapter for SimpleListView.
  */
 public class SimpleListAdapter extends SimpleCursorAdapter implements SealnoteAdapter {
-    public final static String TAG = "SealnoteAdapter";
+    public final static String TAG = "SimpleListAdapter";
 
-    private ActionMode mActionMode;
-    private Note.Folder mCurrentFolder;
-
-    /**
-     * Array of all checked items in view for emulating multi-choice mode
-     */
+    private Note.Folder mCurrentFolder = Note.Folder.FOLDER_LIVE;
 
     public SimpleListAdapter(Context context, Cursor cursor) {
         super(
                 context,
-                android.R.layout.simple_list_item_1,
+                R.layout.simple_list_item_2,
                 cursor,
-                new String[] {DatabaseHandler.COL_TITLE},  /* From columns */
-                new int[] {android.R.id.text1}             /* Mapped resource ids in layout to columns */
+                new String[] {          /* From columns to pick from cursor */
+                        DatabaseHandler.COL_TITLE,
+                        DatabaseHandler.COL_NOTE_EXTRA,
+                        DatabaseHandler.COL_EDITED
+                },
+                new int[] {             /* Mapped resource ids in layout to columns */
+                        R.id.text1,
+                        R.id.text2,
+                        R.id.text3
+                }
         );
     }
 
@@ -47,12 +55,37 @@ public class SimpleListAdapter extends SimpleCursorAdapter implements SealnoteAd
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
-        //TODO: Check the implementation in array version of this adapter
-        View result = super.getView(position, convertView, parent);
-//        CardView cardView = (CardView) result;
-//        setItemChecked(cardView, getItemChecked(cardView));
-        return result;
+    public View newView(Context context, Cursor cursor, ViewGroup parent) {
+        View view = super.newView(context, cursor, parent);
+
+        TextView text1 = (TextView) view.findViewById(R.id.text1);
+        TextView text2 = (TextView) view.findViewById(R.id.text2);
+        TextView text3 = (TextView) view.findViewById(R.id.text3);
+
+        text1.setTypeface(FontCache.getFont(context, "RobotoSlab-Regular.ttf"));
+        text2.setTypeface(FontCache.getFont(context, "RobotoSlab-Regular.ttf"));
+        text3.setTypeface(FontCache.getFont(context, "RobotoSlab-Regular.ttf"));
+
+        return view;
+    }
+
+    @Override
+    public void setViewText(TextView v, String text) {
+        if (v.getId() == R.id.text3) {
+            // Edited data
+            try {
+                v.setText(EasyDate.fromIsoString(text).friendly());
+            } catch (ParseException e) {
+                Log.e(TAG, "Error parsing edited date from database.");
+                v.setText("");
+            }
+        } else if (v.getId() == R.id.text2) {
+            // Note content
+            v.setText(Html.fromHtml(text).toString());
+        } else {
+            // Title
+            v.setText(text);
+        }
     }
 
     /**
@@ -65,7 +98,7 @@ public class SimpleListAdapter extends SimpleCursorAdapter implements SealnoteAd
 
     @Override
     public void startActionMode() {
-        //
+        //TODO
     }
 }
 
