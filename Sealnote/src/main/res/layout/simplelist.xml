@@ -10,4 +10,5 @@
           android:paddingRight="0dp"
           android:choiceMode="multipleChoiceModal"
           android:background="@android:color/white"
+          style="@style/Sealnote.Theme.Main.SimpleListView"
         />

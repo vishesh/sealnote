@@ -93,6 +93,8 @@
     <!-- Simple List View Item -->
     <style name="Sealnote.Theme.Main.SimpleListView" parent="android:Widget.Holo.Light.ListView">
         <item name="android:listSelector">@drawable/simple_list_view_item_background</item>
+        <item name="android:divider">@drawable/simple_list_view_divider</item>
+        <item name="android:dividerHeight">1px</item>
     </style>
 
 </resources>
