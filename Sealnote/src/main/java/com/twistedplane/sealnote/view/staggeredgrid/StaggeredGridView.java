@@ -34,17 +34,6 @@ public class StaggeredGridView extends CardGridStaggeredView {
     }
 
     /**
-     * NOTE:
-     * Also restore the column counts. Somehow seems to fix the bug
-     * where the items tend have same x values while different columns
-     */
-    @Override
-    public void onRestoreInstanceState(Parcelable state) {
-        super.onRestoreInstanceState(state);
-        updateGridColumnCount();
-    }
-
-    /**
      * Uses CardGridStaggeredCursorAdapter to avoid dispatch to generic
      * ListAdapter version of this function which doesn't support this
      * kind of adapter.
@@ -78,25 +67,6 @@ public class StaggeredGridView extends CardGridStaggeredView {
         } else {
             Log.w(TAG, "You are using a generic adapter. Pay attention: your adapter has to call cardGridArrayAdapter#getView method.");
             super.setAdapter(adapter);
-        }
-    }
-
-    /**
-     * Update column count as per current orientation of device and SealNote
-     * multi-column/single-column preference value.
-     */
-    public void updateGridColumnCount() {
-        if (!PreferenceHandler.isMultiColumnGridEnabled(getContext())) {
-            // Single-column mode is enabled
-            setColumnCount(1);
-        } else {
-            if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
-                setColumnCountPortrait(2);
-                setColumnCountLandscape(3);
-            } else {
-                setColumnCountLandscape(3);
-                setColumnCountPortrait(2);
-            }
         }
     }
 }

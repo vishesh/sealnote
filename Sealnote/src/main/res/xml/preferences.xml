@@ -44,11 +44,15 @@
                 android:defaultValue="true"
                 android:summary="@string/pref_dynamicFontSizeSummary"
                 />
-        <CheckBoxPreference
-                android:key="MultiColumnGrid"
-                android:title="@string/pref_multiColumnGrid"
-                android:defaultValue="true"
-                android:summary="@string/pref_multiColumnGridSummary"
+
+        <ListPreference
+                android:key="NoteListViewType"
+                android:title="@string/pref_noteListViewType"
+                android:dialogTitle="@string/pref_noteListViewType"
+                android:entries="@array/pref_noteListViewTypeNames"
+                android:entryValues="@array/pref_noteListViewTypeValues"
+                android:defaultValue="tiles"
+                android:summary="@string/pref_noteListViewTypeSummary"
                 />
     </PreferenceCategory>
 </PreferenceScreen>

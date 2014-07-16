@@ -2,12 +2,15 @@ package com.twistedplane.sealnote;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.content.res.TypedArray;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -18,13 +21,16 @@ import com.twistedplane.sealnote.data.Note;
 import com.twistedplane.sealnote.fragment.SealnoteFragment;
 import com.twistedplane.sealnote.utils.FontCache;
 import com.twistedplane.sealnote.utils.Misc;
+import com.twistedplane.sealnote.utils.PreferenceHandler;
 import com.twistedplane.sealnote.utils.TimeoutHandler;
+import com.twistedplane.sealnote.view.simplelist.SimpleListFragment;
+import com.twistedplane.sealnote.view.staggeredgrid.StaggeredGridFragment;
 
 
 /**
  * Main activity where all cards are listed in a staggered grid
  */
-public class SealnoteActivity extends Activity {
+public class SealnoteActivity extends Activity implements SharedPreferences.OnSharedPreferenceChangeListener {
     public final static String TAG = "SealnoteActivity";
 
     private DrawerLayout mDrawerLayout;
@@ -32,6 +38,8 @@ public class SealnoteActivity extends Activity {
     private Note.Folder mCurrentFolder;
     private Note.Folder mLastFolder = Note.Folder.FOLDER_NONE;
     SealnoteFragment mSealnoteFragment;
+
+    private boolean mReloadFragment = false;
 
     /**
      * Called when the activity is first created.
@@ -58,13 +66,36 @@ public class SealnoteActivity extends Activity {
             mLastFolder = mCurrentFolder = Note.Folder.FOLDER_LIVE;
         }
 
-        mSealnoteFragment = (SealnoteFragment) getFragmentManager().findFragmentById(R.id.fragment_sealnote);
-
+        loadNotesView();
         initNavigationDrawer();
+
+        SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
+        sharedPrefs.registerOnSharedPreferenceChangeListener(this);
+
         getActionBar().setDisplayHomeAsUpEnabled(true);
         getActionBar().setHomeButtonEnabled(true);
         //FIXME
         getActionBar().setTitle(getResources().getStringArray(R.array.navigation_drawer)[mCurrentFolder.ordinal() - 1]);
+    }
+
+    private void loadNotesView() {
+        final PreferenceHandler.NoteListViewType type = PreferenceHandler.getNoteListViewType(this);
+
+        switch (type) {
+            case VIEW_TILES:
+                mSealnoteFragment = new StaggeredGridFragment();
+                break;
+            case VIEW_COLUMN:
+                mSealnoteFragment = new StaggeredGridFragment();
+                break;
+            case VIEW_SIMPLE_LIST:
+                mSealnoteFragment = new SimpleListFragment();
+                break;
+        }
+
+        FragmentTransaction transaction = getFragmentManager().beginTransaction();
+        transaction.replace(R.id.fragment_container, mSealnoteFragment);
+        transaction.commit();
     }
 
     /**
@@ -141,6 +172,14 @@ public class SealnoteActivity extends Activity {
         mDrawerToggle.onConfigurationChanged(newConfig);
     }
 
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+        if (key.equals("NoteListViewType") || key.equals("DynamicFontSize")) {
+            Log.d(TAG, "NoteListView type changed!");
+            mReloadFragment = true;
+        }
+    }
+
     /**
      * When coming back from foreground check if timeout has expired and if
      * so load logout to password activity. Otherwise reset the timeout status.
@@ -152,6 +191,11 @@ public class SealnoteActivity extends Activity {
         if (TimeoutHandler.instance().resume(this)) {
             Log.d(TAG, "Timed out! Going to password activity");
             return;
+        }
+
+        if (mReloadFragment) {
+            loadNotesView();
+            mReloadFragment = false;
         }
 
         // preference may have changed, so do it again. Happens when coming

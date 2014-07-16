@@ -5,6 +5,7 @@
 -->
 
 <resources>
+    <!-- Timeout values -->
     <string-array name="pref_passwordTimeoutValueNames">
         <item>10 seconds</item>
         <item>30 seconds</item>
@@ -23,6 +24,20 @@
         <item>300000</item>
     </string-array>
 
+    <!-- Note List View layouts -->
+    <string-array name="pref_noteListViewTypeNames">
+        <item>Tiles</item>
+        <item>Single Column</item>
+        <item>Simple List</item>
+    </string-array>
+
+    <string-array name="pref_noteListViewTypeValues">
+        <item>tiles</item>
+        <item>column</item>
+        <item>simplelist</item>
+    </string-array>
+
+    <!-- Navigation drawer values -->
     <string-array name="navigation_drawer">
         <item>Notes</item>
         <item>Archive</item>

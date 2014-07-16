@@ -78,11 +78,11 @@
     <string name="pref_secureWindowSummary">Prevent window content from appearing in screenshots, switcher or other non-secure displays.</string>
     <string name="pref_dynamicFontSize">Dynamic Font Size in Cards</string>
     <string name="pref_dynamicFontSizeSummary">Card font size is calculated dynamically as per note content. Requires re-login.</string>
-    <string name="pref_multiColumnGrid">Multi-column view</string>
-    <string name="pref_multiColumnGridSummary">Use single or multiple columns in notes grid view</string>
     <string name="pref_autoSave">Autosave notes</string>
     <string name="pref_autoSaveSummary">Automatically save notes. No need to click on save button</string>
     <string name="pref_changePassword">Change Password</string>
+    <string name="pref_noteListViewType">Notes View Layout</string>
+    <string name="pref_noteListViewTypeSummary">Select layout used to show all notes in main screen</string>
 
     <!-- change password -->
     <string name="incorrect_old_password">Incorrect old password!</string>

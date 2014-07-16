@@ -1,13 +1,12 @@
 package com.twistedplane.sealnote.fragment;
 
 import android.app.Fragment;
-import android.content.SharedPreferences;
+import android.app.LoaderManager;
+import android.content.Loader;
 import android.database.Cursor;
 import android.database.DataSetObserver;
 import android.graphics.drawable.Drawable;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,15 +15,15 @@ import android.view.ViewStub;
 import android.widget.AdapterView;
 import android.widget.TextView;
 import com.twistedplane.sealnote.R;
-import com.twistedplane.sealnote.SealnoteApplication;
-import com.twistedplane.sealnote.data.DatabaseHandler;
+import com.twistedplane.sealnote.data.AdapterLoader;
 import com.twistedplane.sealnote.data.Note;
 import com.twistedplane.sealnote.data.SealnoteAdapter;
 
 /**
  * Main fragment where all cards are listed in a staggered grid
  */
-abstract public class SealnoteFragment extends Fragment implements SharedPreferences.OnSharedPreferenceChangeListener {
+abstract public class SealnoteFragment extends Fragment implements
+        LoaderManager.LoaderCallbacks<Cursor> {
     public final static String TAG = "SealnoteFragment";
 
     /**
@@ -33,7 +32,6 @@ abstract public class SealnoteFragment extends Fragment implements SharedPrefere
     protected SealnoteAdapter mAdapter;
     protected AdapterView mAdapterView;
     protected Note.Folder mCurrentFolder;
-    private boolean mIsPausing = false;
 
     /**
      * View to show when AdapterLoadTask is running. Show activity
@@ -52,11 +50,6 @@ abstract public class SealnoteFragment extends Fragment implements SharedPrefere
     private TextView mEmptyGeneric;
 
     /**
-     * If a task is already executing to load adapter
-     */
-    private boolean mAdapterLoading = false;
-
-    /**
      * Abstract method that should return the adapter for the view
      */
     abstract protected SealnoteAdapter createAdapter();
@@ -68,10 +61,12 @@ abstract public class SealnoteFragment extends Fragment implements SharedPrefere
     abstract protected void loadAdapter(Cursor cursor);
 
     /**
+     * The master layout has a View Stub to show all notes which is lazily
+     * inflated to view depending upon the currently selected view mode.
      * Inflate ViewStub with the adapter view.
      *
-     * @param stub  ViewStub to be replaced with adapter view
-     * @return      AdapterView that replaced the stub
+     * @param stub ViewStub to be replaced with adapter view
+     * @return AdapterView that replaced the stub
      */
     abstract protected AdapterView inflateAdapterView(ViewStub stub);
 
@@ -84,6 +79,7 @@ abstract public class SealnoteFragment extends Fragment implements SharedPrefere
         Log.d(TAG, "Creating SealNote fragment...");
 
         mCurrentFolder = Note.Folder.FOLDER_NONE;
+        mCurrentFolder = Note.Folder.FOLDER_LIVE;
         mAdapter = createAdapter();
 
         /**
@@ -94,10 +90,6 @@ abstract public class SealnoteFragment extends Fragment implements SharedPrefere
             @Override
             public void onChanged() {
                 super.onChanged();
-                if (mIsPausing) {
-                    mIsPausing = false;
-                    return;
-                }
                 onAdapterDataSetChanged();
             }
 
@@ -105,19 +97,8 @@ abstract public class SealnoteFragment extends Fragment implements SharedPrefere
             public void onInvalidated() {
                 super.onInvalidated();
                 Log.d(TAG, "Data set invalidated");
-                if (mIsPausing) {
-                    mIsPausing = false;
-                    return;
-                }
-                if (!mAdapterLoading) {
-                    new AdapterLoadTask(mCurrentFolder).execute();
-                }
             }
         });
-
-        SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
-        sharedPrefs.registerOnSharedPreferenceChangeListener(this);
-
     }
 
     /**
@@ -132,6 +113,8 @@ abstract public class SealnoteFragment extends Fragment implements SharedPrefere
         layoutProgressHeader = fragmentView.findViewById(R.id.layoutHeaderProgress);
         mAdapterView = inflateAdapterView((ViewStub) fragmentView.findViewById(R.id.notes_view));
 
+        getLoaderManager().initLoader(0, null, this);
+
         return fragmentView;
     }
 
@@ -143,24 +126,12 @@ abstract public class SealnoteFragment extends Fragment implements SharedPrefere
     public void onResume() {
         super.onResume();
 
-        if (!mAdapterLoading && !getActivity().isFinishing()) {
-            Log.d(TAG, "Reloading adapter during fragment resume. folder = " + mCurrentFolder);
-            if (mCurrentFolder == Note.Folder.FOLDER_NONE) {
-                setFolder(Note.Folder.FOLDER_LIVE);
-            } else {
-                setFolder(mCurrentFolder);
-            }
+        Log.d(TAG, "Reloading adapter during fragment resume. folder = " + mCurrentFolder);
+        if (mCurrentFolder == Note.Folder.FOLDER_NONE) {
+            setFolder(Note.Folder.FOLDER_LIVE);
+        } else {
+            setFolder(mCurrentFolder);
         }
-    }
-
-    /**
-     * Fragment going background.
-     */
-    @Override
-    public void onPause() {
-        super.onPause();
-        mIsPausing = true;
-        mAdapter.clearCursor();
     }
 
     /**
@@ -168,11 +139,8 @@ abstract public class SealnoteFragment extends Fragment implements SharedPrefere
      */
     public void setFolder(Note.Folder folder) {
         Log.d(TAG, "Switching folder to " + folder);
-
         mCurrentFolder = folder;
-        if (!mAdapterLoading) {
-            new AdapterLoadTask(mCurrentFolder).execute();
-        }
+        getLoaderManager().restartLoader(0, null, this);
     }
 
     /**
@@ -194,7 +162,7 @@ abstract public class SealnoteFragment extends Fragment implements SharedPrefere
         }
 
         final Drawable actionBarBg;
-        switch(mCurrentFolder) {
+        switch (mCurrentFolder) {
             case FOLDER_LIVE:
                 actionBarBg = getResources().getDrawable(R.drawable.ab_background);
                 break;
@@ -212,69 +180,22 @@ abstract public class SealnoteFragment extends Fragment implements SharedPrefere
         getActivity().getActionBar().setBackgroundDrawable(actionBarBg);
     }
 
-    /**
-     * Asynchronous Task to load adapter.
-     *
-     * Hide the grid view in fragment and shows layoutProgressHeader.
-     */
-    private class AdapterLoadTask extends AsyncTask<Void, Void, Cursor> {
-        private Note.Folder currentFolder;
+    @Override
+    public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
+        layoutProgressHeader.setVisibility(View.VISIBLE);
+        return new AdapterLoader(getActivity(), mCurrentFolder);
+    }
 
-        AdapterLoadTask(Note.Folder currentFolder) {
-            super();
-            this.currentFolder = currentFolder;
-        }
+    @Override
+    public void onLoadFinished(Loader<Cursor> cursorLoader, Cursor cursor) {
+        Log.d(TAG, "Got result form loader : " + cursor.getCount());
+        loadAdapter(cursor);
+        layoutProgressHeader.setVisibility(View.GONE);
+    }
 
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            mAdapterLoading = true;
-            mAdapter.clearCursor();
-            mAdapter.setCurrentFolder(currentFolder);
-
-            // Before starting background task, update visibility of views
-            layoutProgressHeader.setVisibility(View.VISIBLE);
-        }
-
-        /**
-         * Loads database, get cursor to all notes given folder in database
-         */
-        @Override
-        protected Cursor doInBackground(Void... voids) {
-            final DatabaseHandler db = SealnoteApplication.getDatabase();
-            final Cursor cursor;
-
-            switch(currentFolder) {
-                case FOLDER_LIVE:
-                    cursor = db.getNotesCursor();
-                    break;
-                case FOLDER_ARCHIVE:
-                    cursor = db.getArchivedNotesCursor();
-                    break;
-                case FOLDER_TRASH:
-                    cursor = db.getDeletedNotesCursor();
-                    break;
-                default:
-                    cursor = null;
-            }
-
-            return cursor;
-        }
-
-        /**
-         * Takes the result of task ie. adapter and load it to the view.
-         * Revert back the visibilities of views.
-         *
-         * @param cursor   Result containing cursor to notes
-         */
-        @Override
-        protected void onPostExecute(Cursor cursor) {
-            super.onPostExecute(cursor);
-
-            // Make the progress view gone and card grid visible
-            layoutProgressHeader.setVisibility(View.GONE);
-            loadAdapter(cursor);
-            mAdapterLoading = false;
-        }
+    @Override
+    public void onLoaderReset(Loader<Cursor> cursorLoader) {
+        mAdapter.clearCursor();
+        layoutProgressHeader.setVisibility(View.VISIBLE);
     }
 }
