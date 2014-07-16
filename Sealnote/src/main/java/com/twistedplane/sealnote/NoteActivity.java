@@ -294,8 +294,16 @@ public class NoteActivity extends Activity implements ColorDialogFragment.ColorC
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
+        super.onCreateOptionsMenu(menu);
         getMenuInflater().inflate(R.menu.note_activity_actionbar, menu);
+        return true;
+    }
 
+    /**
+     * Prepare action menu as per current folder
+     */
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
         MenuItem saveMenuItem = menu.findItem(R.id.action_save_note);
         MenuItem deleteMenuItem = menu.findItem(R.id.action_note_delete);
         MenuItem archiveMenuItem = menu.findItem(R.id.action_archive);
@@ -330,7 +338,7 @@ public class NoteActivity extends Activity implements ColorDialogFragment.ColorC
         shareActionProvider.setShareIntent(mShareIntent);
         updateShareIntent();
 
-        return true;
+        return super.onPrepareOptionsMenu(menu);
     }
 
     /**
@@ -557,6 +565,11 @@ public class NoteActivity extends Activity implements ColorDialogFragment.ColorC
             init(false, note.getType());
             loadNote(note);
             mLoadingNote = false;
+
+            // Update action bar icons again as now we have loaded a
+            // a note asynchronously and the previous set of icons
+            // will probably be not correct due to delay
+            invalidateOptionsMenu();
         }
     }
 }
