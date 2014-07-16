@@ -14,7 +14,7 @@ import com.twistedplane.sealnote.data.DatabaseHandler;
 import com.twistedplane.sealnote.data.Note;
 
 /**
- * ActionMode callback used by mActionMode for emulating  multi-choice.
+ * ActionMode callback base used by notes view types for multi-choice.
  * Handles the events related to actionbar such as creation, actionbar
  * icon clicks.
  */
@@ -24,14 +24,33 @@ abstract public class MultiChoiceCallback implements ActionMode.Callback {
      */
     protected ActionMode mActionMode;
 
+    /**
+     * Returns number of selected item in adapter view
+     */
     protected abstract int                  getSelectedItemCount();
+
+    /**
+     * Returns current folder of data in Adapter
+     */
     protected abstract Note.Folder          getCurrentFolder();
+
+    /**
+     * Returns ids of selected items
+     */
     protected abstract SparseBooleanArray   getSelectedItems();
+
+    /**
+     * Cleanup tasks when destroying actionmode
+     */
     protected abstract void                 done();
+
     protected abstract void                 notifyDataSetInvalidated();
     protected abstract void                 notifyDataSetChanged();
     protected abstract Context              getContext();
 
+    /**
+     * Is ActionMode active or dead?
+     */
     public boolean isActionModeActive() {
         return mActionMode != null;
     }

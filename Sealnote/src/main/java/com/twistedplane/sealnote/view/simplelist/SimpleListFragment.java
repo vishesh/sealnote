@@ -6,8 +6,13 @@ import android.database.Cursor;
 import android.os.Bundle;
 import android.util.Log;
 import android.util.SparseBooleanArray;
-import android.view.*;
-import android.widget.*;
+import android.view.ActionMode;
+import android.view.View;
+import android.view.ViewStub;
+import android.widget.AbsListView;
+import android.widget.AdapterView;
+import android.widget.ListView;
+import android.widget.SimpleCursorAdapter;
 import com.nhaarman.listviewanimations.swinginadapters.AnimationAdapter;
 import com.nhaarman.listviewanimations.swinginadapters.prepared.ScaleInAnimationAdapter;
 import com.twistedplane.sealnote.NoteActivity;
@@ -98,6 +103,9 @@ public class SimpleListFragment extends SealnoteFragment implements AdapterView.
         Log.d(TAG, "Shared preferences changed - " + key);
     }
 
+    /**
+     * MultiChoice callback for SimpleListView.
+     */
     private class MultiChoiceCallback extends com.twistedplane.sealnote.internal.MultiChoiceCallback
             implements AbsListView.MultiChoiceModeListener {
         @Override
