@@ -14,6 +14,7 @@ import com.twistedplane.sealnote.data.Note;
 import com.twistedplane.sealnote.data.SealnoteAdapter;
 import com.twistedplane.sealnote.utils.EasyDate;
 import com.twistedplane.sealnote.utils.FontCache;
+import com.twistedplane.sealnote.utils.Misc;
 
 import java.text.ParseException;
 
@@ -50,6 +51,16 @@ public class SimpleListAdapter extends SimpleCursorAdapter implements SealnoteAd
         if (cursor != null) {
             cursor.close();
         }
+    }
+
+    @Override
+    public void bindView(View view, Context context, Cursor cursor) {
+        super.bindView(view, context, cursor);
+
+        // Set strip color
+        View colorStrip = view.findViewById(R.id.list_item_color);
+        colorStrip.setBackgroundColor(Misc.getColorForCode(context,
+                cursor.getInt(cursor.getColumnIndex(DatabaseHandler.COL_COLOR))));
     }
 
     @Override
