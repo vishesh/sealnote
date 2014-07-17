@@ -1,5 +1,6 @@
 package com.twistedplane.sealnote.view.simplelist;
 
+import android.app.ActionBar;
 import android.content.Context;
 import android.database.Cursor;
 import android.text.Html;
@@ -58,9 +59,14 @@ public class SimpleListAdapter extends SimpleCursorAdapter implements SealnoteAd
         super.bindView(view, context, cursor);
 
         // Set strip color
+        int color = cursor.getInt(cursor.getColumnIndex(DatabaseHandler.COL_COLOR));
         View colorStrip = view.findViewById(R.id.list_item_color);
-        colorStrip.setBackgroundColor(Misc.getColorForCode(context,
-                cursor.getInt(cursor.getColumnIndex(DatabaseHandler.COL_COLOR))));
+        colorStrip.setBackgroundColor(Misc.getColorForCode(context, color));
+        if (color == 0) {
+            colorStrip.setVisibility(View.GONE);
+        } else {
+            colorStrip.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override
