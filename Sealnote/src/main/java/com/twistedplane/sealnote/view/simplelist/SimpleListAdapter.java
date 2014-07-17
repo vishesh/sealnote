@@ -1,6 +1,5 @@
 package com.twistedplane.sealnote.view.simplelist;
 
-import android.app.ActionBar;
 import android.content.Context;
 import android.database.Cursor;
 import android.text.Html;

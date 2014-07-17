@@ -7,7 +7,6 @@ import android.widget.AdapterView;
 import com.nhaarman.listviewanimations.swinginadapters.AnimationAdapter;
 import com.nhaarman.listviewanimations.swinginadapters.prepared.ScaleInAnimationAdapter;
 import com.twistedplane.sealnote.R;
-import com.twistedplane.sealnote.data.Note;
 import com.twistedplane.sealnote.data.SealnoteAdapter;
 import com.twistedplane.sealnote.fragment.SealnoteFragment;
 import com.twistedplane.sealnote.utils.PreferenceHandler;

@@ -1,13 +1,10 @@
 package com.twistedplane.sealnote.view.staggeredgrid;
 
 import android.content.Context;
-import android.content.res.Configuration;
-import android.os.Parcelable;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.widget.ListAdapter;
 import com.twistedplane.sealnote.data.CardGridStaggeredCursorAdapter;
-import com.twistedplane.sealnote.utils.PreferenceHandler;
 import it.gmariotti.cardslib.library.extra.staggeredgrid.internal.CardGridStaggeredArrayAdapter;
 import it.gmariotti.cardslib.library.extra.staggeredgrid.view.CardGridStaggeredView;
 
