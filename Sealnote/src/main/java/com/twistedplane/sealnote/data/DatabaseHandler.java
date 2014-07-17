@@ -168,7 +168,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
          * Version 1 to 2
          *     + Add archived and deleted column for notes
          */
-        if (oldVersion == 1) {
+        if (oldVersion <= 1) {
             Log.i(TAG, "Upgrading database from Version 1 to 2");
             String query = "ALTER TABLE " + TABLE_NAME +
                     " ADD " + COL_ARCHIVED + " INTEGER NOT NULL DEFAULT '0'";
@@ -185,7 +185,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
          *     + Add COL_NOTE_EXTRA which keeps content to shown on CardView
          *       for non-generic notes
          */
-        if (oldVersion == 2) {
+        if (oldVersion <= 2) {
             Log.i(TAG, "Upgrading database from Version 2 to 3");
             String query = "ALTER TABLE " + TABLE_NAME +
                     " ADD " + COL_TYPE + " TEXT NOT NULL DEFAULT '" +
