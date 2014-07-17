@@ -59,9 +59,8 @@ public class SealnoteActivity extends Activity implements SharedPreferences.OnSh
         Misc.secureWindow(this);
 
         if (savedInstanceState != null) {
-            int currentFolderOrdinal = savedInstanceState.getInt("FOLDER",
-                    Note.Folder.FOLDER_LIVE.ordinal());
-            mLastFolder = mCurrentFolder = Note.Folder.values()[currentFolderOrdinal];
+            String folder = savedInstanceState.getString("FOLDER", Note.Folder.FOLDER_LIVE.name());
+            mLastFolder = mCurrentFolder = Note.Folder.valueOf(folder);
         } else {
             mLastFolder = mCurrentFolder = Note.Folder.FOLDER_LIVE;
         }
@@ -224,7 +223,7 @@ public class SealnoteActivity extends Activity implements SharedPreferences.OnSh
         super.onSaveInstanceState(outState);
 
         // Save current folder in use
-        outState.putInt("FOLDER", mCurrentFolder.ordinal());
+        outState.putString("FOLDER", mCurrentFolder.name());
     }
 
     /**
