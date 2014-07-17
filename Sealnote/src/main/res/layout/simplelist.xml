@@ -4,11 +4,12 @@
           android:layout_width="match_parent"
           android:layout_height="match_parent"
           android:id="@+id/notes_view"
-          android:layout_gravity="center_horizontal|bottom"
+          android:layout_gravity="center_horizontal|start"
           android:paddingTop="?android:actionBarSize"
           android:paddingLeft="0dp"
           android:paddingRight="0dp"
           android:choiceMode="multipleChoiceModal"
           android:background="@android:color/white"
+          android:clipToPadding="false"
           style="@style/Sealnote.Theme.Main.SimpleListView"
         />
