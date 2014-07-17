@@ -50,6 +50,7 @@
         <item name="android:actionBarItemBackground">@drawable/actionbar_item_selector</item>
         <item name="android:actionOverflowButtonStyle">@style/Sealnote.Theme.Main.ActionBar.Overflow</item>
         <item name="android:actionMenuTextColor">#bbffffff</item>
+        <item name="android:windowActionBarOverlay">true</item>
     </style>
 
     <style name="Sealnote.Theme.Note.ActionBar" parent="@android:style/Widget.Holo.Light.ActionBar">

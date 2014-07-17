@@ -34,17 +34,9 @@
             android:title="@string/pref_changePassword"
             android:dialogTitle="@string/pref_changePassword"
             />
-
     </PreferenceCategory>
 
     <PreferenceCategory android:title="@string/pref_catAppearance">
-        <CheckBoxPreference
-                android:key="DynamicFontSize"
-                android:title="@string/pref_dynamicFontSize"
-                android:defaultValue="true"
-                android:summary="@string/pref_dynamicFontSizeSummary"
-                />
-
         <ListPreference
                 android:key="NoteListViewType"
                 android:title="@string/pref_noteListViewType"
@@ -53,6 +45,20 @@
                 android:entryValues="@array/pref_noteListViewTypeValues"
                 android:defaultValue="tiles"
                 android:summary="@string/pref_noteListViewTypeSummary"
+                />
+
+        <CheckBoxPreference
+                android:key="NoteActivityBackground"
+                android:title="@string/pref_noteActivityBg"
+                android:defaultValue="true"
+                android:summary="@string/pref_noteActivityBgSummary"
+                />
+
+        <CheckBoxPreference
+                android:key="DynamicFontSize"
+                android:title="@string/pref_dynamicFontSize"
+                android:defaultValue="true"
+                android:summary="@string/pref_dynamicFontSizeSummary"
                 />
     </PreferenceCategory>
 </PreferenceScreen>

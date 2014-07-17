@@ -48,4 +48,9 @@ public class PreferenceHandler {
         SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(c);
         return sharedPrefs.getBoolean("AutoSave", false);
     }
+
+    public static boolean isNoteActivityBackgroundEnabled(Context c) {
+        SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(c);
+        return sharedPrefs.getBoolean("NoteActivityBackground", true);
+    }
 }

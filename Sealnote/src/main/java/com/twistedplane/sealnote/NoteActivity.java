@@ -524,8 +524,14 @@ public class NoteActivity extends Activity implements ColorDialogFragment.ColorC
             return;
         }
 
-        View view = findViewById(R.id.note_activity_title).getRootView();
-        view.setBackgroundColor(Misc.getColorForCode(this, color));
+        if (PreferenceHandler.isNoteActivityBackgroundEnabled(this)) {
+            View view = findViewById(R.id.note_activity_title).getRootView();
+            view.setBackgroundColor(Misc.getColorForCode(this, color));
+        } else {
+            View colorStrip1 = findViewById(R.id.note_activity_color_strip);
+            colorStrip1.setBackgroundColor(Misc.getColorForCode(this, color));
+            colorStrip1.setVisibility(View.VISIBLE);
+        }
     }
 
     /**

@@ -83,6 +83,8 @@
     <string name="pref_changePassword">Change Password</string>
     <string name="pref_noteListViewType">Notes View Layout</string>
     <string name="pref_noteListViewTypeSummary">Select layout used to show all notes in main screen</string>
+    <string name="pref_noteActivityBg">Note editor background</string>
+    <string name="pref_noteActivityBgSummary">Fill note editor screen completely with the note\'s tagged color</string>
 
     <!-- change password -->
     <string name="incorrect_old_password">Incorrect old password!</string>
