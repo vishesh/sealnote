@@ -5,12 +5,13 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.GridView;
 import android.widget.ImageView;
 import com.twistedplane.sealnote.R;
 import com.twistedplane.sealnote.utils.Misc;
@@ -49,11 +50,13 @@ public class ColorDialogFragment extends DialogFragment {
     class ColorAdapter extends ArrayAdapter<String> {
         final Context mContext;
         final int mBackground;
+        final int mResourceId;
 
         public ColorAdapter(Context context, int background, int resource, String[] colorNames) {
             super(context, resource, colorNames);
             mContext = context;
             mBackground = background;
+            mResourceId = resource;
         }
 
         /**
@@ -67,7 +70,7 @@ public class ColorDialogFragment extends DialogFragment {
             if (convertView == null) {
                 LayoutInflater layoutInflator = (LayoutInflater) mContext.getSystemService(
                         Context.LAYOUT_INFLATER_SERVICE);
-                view = layoutInflator.inflate(R.layout.color_choose_list_item, null);
+                view = layoutInflator.inflate(mResourceId, parent, false);
             } else {
                 view = convertView;
             }
@@ -89,22 +92,39 @@ public class ColorDialogFragment extends DialogFragment {
      */
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         String[] colorNames = getResources().getStringArray(R.array.note_colors_name);
 
         ColorAdapter colorAdapter = new ColorAdapter(getActivity(), mCurrentBackground,
                 R.layout.color_choose_list_item, colorNames);
 
+        // Create and setup Grid View
+        GridView gridView = new GridView(getActivity());
+        gridView.setLayoutParams(
+                new ViewGroup.LayoutParams(
+                        ViewGroup.LayoutParams.WRAP_CONTENT,
+                        ViewGroup.LayoutParams.WRAP_CONTENT
+                )
+        );
+        gridView.setNumColumns(4);
+        gridView.setVerticalSpacing(0);
+        gridView.setHorizontalSpacing(0);
+
+        gridView.setAdapter(colorAdapter);
+        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            /**
+             * Simply call OnColorChanged callback.
+             */
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int pos, long id) {
+                mListener.onColorChanged(pos);
+                ColorDialogFragment.this.dismiss();
+            }
+        });
+
         builder.setTitle(R.string.msg_pick_color)
-               .setAdapter(colorAdapter, new DialogInterface.OnClickListener() {
-                   /**
-                    * Simply call OnColorChanged callback.
-                    */
-                   @Override
-                   public void onClick(DialogInterface dialogInterface, int i) {
-                       mListener.onColorChanged(i);
-                   }
-               });
+               .setView(gridView);
+
         return builder.create();
     }
 
