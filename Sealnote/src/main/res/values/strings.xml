@@ -72,16 +72,16 @@
     <!-- Preferences -->
     <string name="pref_catGeneral">General</string>
     <string name="pref_catAppearance">Appearance</string>
-    <string name="pref_passwordTimeout">Password Timeout</string>
+    <string name="pref_passwordTimeout">Password timeout</string>
     <string name="pref_passwordTimeoutSummary">Inactivity timeout after which re-login is required.</string>
     <string name="pref_secureWindowTitle">Secure window content</string>
     <string name="pref_secureWindowSummary">Prevent window content from appearing in screenshots, switcher or other non-secure displays.</string>
-    <string name="pref_dynamicFontSize">Dynamic Font Size in Cards</string>
+    <string name="pref_dynamicFontSize">Dynamic font size in cards</string>
     <string name="pref_dynamicFontSizeSummary">Card font size is calculated dynamically as per note content. Requires re-login.</string>
     <string name="pref_autoSave">Autosave notes</string>
     <string name="pref_autoSaveSummary">Automatically save notes. No need to click on save button</string>
     <string name="pref_changePassword">Change Password</string>
-    <string name="pref_noteListViewType">Notes View Layout</string>
+    <string name="pref_noteListViewType">Notes view layout</string>
     <string name="pref_noteListViewTypeSummary">Select layout used to show all notes in main screen</string>
     <string name="pref_noteActivityBg">Note editor background</string>
     <string name="pref_noteActivityBgSummary">Fill note editor screen completely with the note\'s tagged color</string>
@@ -93,7 +93,6 @@
     <string name="old_password">Old password</string>
     <string name="new_password">New password</string>
     <string name="confirm_new_password">Confirm</string>
-    <string name="button_change">Change Password</string>
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="button_change">Change password</string>
 
 </resources>
