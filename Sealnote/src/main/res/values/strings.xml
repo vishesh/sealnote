@@ -94,5 +94,6 @@
     <string name="new_password">New password</string>
     <string name="confirm_new_password">Confirm</string>
     <string name="button_change">Change password</string>
+    <string name="please_wait">Please wait&#8230;</string>
 
 </resources>

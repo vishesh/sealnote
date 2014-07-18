@@ -3,11 +3,13 @@ package com.twistedplane.sealnote.internal;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.res.Resources;
+import android.os.AsyncTask;
 import android.preference.DialogPreference;
 import android.support.annotation.NonNull;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -76,10 +78,7 @@ public class PasswordPreference extends DialogPreference implements TextWatcher 
             @Override
             public void onClick(View view) {
                 //TODO: What if password didn't change successfully?
-                if (changePassword()) {
-                    // password changed successfully
-                    getDialog().dismiss();
-                }
+                new PasswordChangeTask().execute();
             }
         });
 
@@ -150,39 +149,30 @@ public class PasswordPreference extends DialogPreference implements TextWatcher 
     /**
      * Change encrypted database password
      *
-     * @return true if password changed successfully, else false
+     * @param oldDbPassword Password current being used to access password in current session.
+     *                      To restore state and continue with session.
+     * @param oldPassword   Old password given by user via form to validate
+     * @param newPassword   New password for database
+     * @return              True if password changed successfully, else false
      */
-    private boolean changePassword() {
-        Resources resources = getContext().getResources();
+    private boolean changePassword(String oldDbPassword, String oldPassword, String newPassword) {
         DatabaseHandler db = SealnoteApplication.getDatabase();
-
-        String oldDbPassword = SealnoteApplication.getDatabase().getPassword();
-        String oldPassword = mOldView.getText().toString();
-        String newPassword = mNewView.getText().toString();
-        String newConfirmPassword = mNewConfirmView.getText().toString();
 
         // Recycle old password, set new one and check if given old password
         // is correct
         db.recycle();
         try {
-            SealnoteApplication.getDatabase().setPassword(oldPassword);
+            db.setPassword(oldPassword);
             db.update();
         } catch (SQLiteException e) {
-            Toast.makeText(getContext(), resources.getString(R.string.incorrect_old_password),
-                    Toast.LENGTH_SHORT).show();
             db.recycle();
-            SealnoteApplication.getDatabase().setPassword(oldDbPassword);
-            db.update();
-            return false;
-        }
 
-        //NOTE: Probably note required as we already checked for this
-        if (!newPassword.equals(newConfirmPassword)) {
-            Toast.makeText(getContext(), resources.getString(R.string.password_dont_match),
-                    Toast.LENGTH_SHORT).show();
-            db.recycle();
-            SealnoteApplication.getDatabase().setPassword(oldDbPassword);
-            db.update();
+            // If timeout has occurred the old password will be null
+            // and we don't have to put database to original state
+            if (oldDbPassword != null && !oldDbPassword.equals("")) {
+                db.setPassword(oldDbPassword);
+                db.update();
+            }
             return false;
         }
 
@@ -193,9 +183,52 @@ public class PasswordPreference extends DialogPreference implements TextWatcher 
         db.recycle();
         SealnoteApplication.getDatabase().setPassword(newPassword);
         db.update();
-        Toast.makeText(getContext(), resources.getString(R.string.password_changed_success),
-                Toast.LENGTH_SHORT).show();
 
         return true;
+    }
+
+    /**
+     * Asynchronous task to change password
+     */
+    class PasswordChangeTask extends AsyncTask<Void, Void, Boolean> {
+        String oldDbPassword, oldPassword, newPassword;
+
+        /**
+         * Stores existing database password and entered passwords
+         * into local variables and change UI state to disabled
+         */
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            mChangeButton.setEnabled(false);
+            mChangeButton.setText(R.string.please_wait);
+
+            DatabaseHandler db = SealnoteApplication.getDatabase();
+            oldDbPassword = db.getPassword();
+            oldPassword = mOldView.getText().toString();
+            newPassword = mNewView.getText().toString();
+        }
+
+        @Override
+        protected Boolean doInBackground(Void... params) {
+            return changePassword(oldDbPassword, oldPassword, newPassword);
+        }
+
+        @Override
+        protected void onPostExecute(Boolean result) {
+            super.onPostExecute(result);
+            mChangeButton.setEnabled(true);
+            mChangeButton.setText(R.string.button_change);
+
+            Resources resources = getContext().getResources();
+            if (result) {
+                getDialog().dismiss();
+                Toast.makeText(getContext(), resources.getString(R.string.password_changed_success),
+                        Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(getContext(), resources.getString(R.string.incorrect_old_password),
+                        Toast.LENGTH_SHORT).show();
+            }
+        }
     }
 }
