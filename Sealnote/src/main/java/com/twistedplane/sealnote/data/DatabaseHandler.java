@@ -174,7 +174,6 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
         // Table to map notes with tags
         query = "CREATE TABLE " + TABLE_NOTE_TAG + " ( " +
-                COL_ID + " INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, " +
                 COL_NOTE_ID + " INTEGER, " +
                 COL_TAG_ID + " INTEGER, " +
                 String.format("FOREIGN KEY(%s) REFERENCES %s(%s), ", COL_NOTE_ID, TABLE_NAME, COL_ID) +
@@ -232,7 +231,6 @@ public class DatabaseHandler extends SQLiteOpenHelper {
             db.execSQL(query);
 
             query = "CREATE TABLE " + TABLE_NOTE_TAG + " ( " +
-                    COL_ID + " INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, " +
                     COL_NOTE_ID + " INTEGER, " +
                     COL_TAG_ID + " INTEGER, " +
                     String.format("FOREIGN KEY(%s) REFERENCES %s(%s), ", COL_NOTE_ID, TABLE_NAME, COL_ID) +
