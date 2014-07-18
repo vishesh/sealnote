@@ -36,6 +36,12 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     public static final String COL_DELETED = "deleted";
     public static final String COL_TYPE = "type";
 
+    public static final String TABLE_TAG_NAMES = "tags";
+    public static final String TABLE_NOTE_TAG = "note_tag";
+    public static final String COL_TAG_NAME = "name";
+    public static final String COL_NOTE_ID = "noteid";
+    public static final String COL_TAG_ID = "tagid";
+
     /**
      * Keep only one instance of database throughout application for performace
      */
@@ -143,6 +149,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
      */
     @Override
     public void onCreate(SQLiteDatabase db) {
+        // The main table with all notes
         String query = "CREATE TABLE " + TABLE_NAME + " ( " +
                 COL_ID + " INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, " +
                 COL_POSITION + " INTEGER, " +
@@ -155,6 +162,24 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 COL_ARCHIVED + " INTEGER NOT NULL DEFAULT '0'," +
                 COL_DELETED + " INTEGER NOT NULL DEFAULT '0'," +
                 COL_TYPE + " TEXT NOT NULL DEFAULT '" + Note.Type.TYPE_GENERIC.name() + "'" +
+                ") ";
+        db.execSQL(query);
+
+        // Table to store tag names
+        query = "CREATE TABLE " + TABLE_TAG_NAMES + " ( " +
+                COL_ID + " INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, " +
+                COL_TAG_NAME + " TEXT UNIQUE " +
+                ") ";
+        db.execSQL(query);
+
+        // Table to map notes with tags
+        query = "CREATE TABLE " + TABLE_NOTE_TAG + " ( " +
+                COL_ID + " INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, " +
+                COL_NOTE_ID + " INTEGER, " +
+                COL_TAG_ID + " INTEGER, " +
+                String.format("FOREIGN KEY(%s) REFERENCES %s(%s), ", COL_NOTE_ID, TABLE_NAME, COL_ID) +
+                String.format("FOREIGN KEY(%s) REFERENCES %s(%s), ", COL_TAG_ID, TABLE_TAG_NAMES, COL_ID) +
+                String.format("PRIMARY KEY (%s, %s)", COL_NOTE_ID, COL_TAG_ID) +
                 ") ";
         db.execSQL(query);
     }
@@ -184,9 +209,12 @@ public class DatabaseHandler extends SQLiteOpenHelper {
          *     + Add COL_TYPE which maps to Note.Type
          *     + Add COL_NOTE_EXTRA which keeps content to shown on CardView
          *       for non-generic notes
+         *     + Tag support
          */
         if (oldVersion <= 2) {
             Log.i(TAG, "Upgrading database from Version 2 to 3");
+
+            /* Note Type support */
             String query = "ALTER TABLE " + TABLE_NAME +
                     " ADD " + COL_TYPE + " TEXT NOT NULL DEFAULT '" +
                     Note.Type.TYPE_GENERIC.name() + "'";
@@ -194,6 +222,23 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
             query = "ALTER TABLE " + TABLE_NAME +
                     " ADD " + COL_NOTE_EXTRA + " TEXT ";
+            db.execSQL(query);
+
+            /* Tag support */
+            query = "CREATE TABLE " + TABLE_TAG_NAMES + " ( " +
+                    COL_ID + " INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, " +
+                    COL_TAG_NAME + " TEXT UNIQUE " +
+                    ") ";
+            db.execSQL(query);
+
+            query = "CREATE TABLE " + TABLE_NOTE_TAG + " ( " +
+                    COL_ID + " INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, " +
+                    COL_NOTE_ID + " INTEGER, " +
+                    COL_TAG_ID + " INTEGER, " +
+                    String.format("FOREIGN KEY(%s) REFERENCES %s(%s), ", COL_NOTE_ID, TABLE_NAME, COL_ID) +
+                    String.format("FOREIGN KEY(%s) REFERENCES %s(%s), ", COL_TAG_ID, TABLE_TAG_NAMES, COL_ID) +
+                    String.format("PRIMARY KEY (%s, %s)", COL_NOTE_ID, COL_TAG_ID) +
+                    ") ";
             db.execSQL(query);
         }
     }
