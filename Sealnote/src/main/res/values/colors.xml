@@ -21,6 +21,8 @@
     <color name="card_text_color">@color/note_foreground</color>
     <color name="card_text_color_header">#ff494949</color>
 
+    <color name="tag_bubble_foreground">#def0f0f0</color>
+
     <!-- simple list view -->
     <color name="simplelistview_activated" type="color">#ffe0e0e0</color>
     <color name="simplelistview_pressed" type="color">#fff4f4f4</color>

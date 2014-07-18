@@ -96,4 +96,6 @@
     <string name="button_change">Change password</string>
     <string name="please_wait">Please wait&#8230;</string>
 
+    <string name="add_tags">Add tags&#8230;</string>
+
 </resources>
