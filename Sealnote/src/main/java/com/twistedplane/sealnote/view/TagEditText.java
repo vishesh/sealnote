@@ -14,7 +14,6 @@ import android.widget.TextView;
 import com.twistedplane.sealnote.R;
 import com.twistedplane.sealnote.data.Note;
 
-import java.util.HashSet;
 import java.util.Set;
 
 /**

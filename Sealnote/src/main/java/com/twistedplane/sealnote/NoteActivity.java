@@ -161,6 +161,11 @@ public class NoteActivity extends Activity implements ColorDialogFragment.ColorC
         mNoteView = inflateNoteContentView(type);
         mNoteType = type;
 
+        // load suggestions
+        // TODO: Do this asynchronously if required
+        mTagEditText.loadSuggestions(SealnoteApplication.getDatabase().getAllTags().keySet());
+        mTagEditText.setThreshold(1);
+
         // TextWatcher to update share intent
         mNoteView.addTextChangedListener(mNoteTextWatcher); //LOOK
         mTitleView.addTextChangedListener(mNoteTextWatcher);
