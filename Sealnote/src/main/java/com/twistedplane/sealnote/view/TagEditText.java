@@ -14,6 +14,7 @@ import android.widget.TextView;
 import com.twistedplane.sealnote.R;
 import com.twistedplane.sealnote.data.Note;
 
+import java.util.HashSet;
 import java.util.Set;
 
 /**
@@ -188,9 +189,28 @@ public class TagEditText extends MultiAutoCompleteTextView implements View.OnFoc
         int finalSelectionPostion = -1; /* We don't know the final selection position yet */
         int done = 0;                   /* Starting position of next token/spannable */
 
+        // We keep a set of all tokens converted to lower case in this text
+        // as a set. This will be later be used to check for duplicate
+        // tokens and remove them
+        Set<String> tokenSet = new HashSet<String>(tokens.length);
+
         // Iterate through all tokens i.e. tags, make their bubble spannables
         // and add them to text view at appropriate positions
         for (String token : tokens) {
+            // Check for duplicate token
+            String lowerToken = token.toLowerCase();
+            if (tokenSet.contains(lowerToken)) {
+                // Skip the token if it already exists in bubbles
+                int end = done + token.length();
+                if (end < ssb.length() && ssb.charAt(end) == ' ') {
+                    end += 1;
+                }
+                ssb.delete(done, end);
+                continue;
+            } else {
+                tokenSet.add(lowerToken);
+            }
+
             ImageSpan imageSpan = getBubbleSpan(token);
             ssb.setSpan(imageSpan, done, done + token.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 

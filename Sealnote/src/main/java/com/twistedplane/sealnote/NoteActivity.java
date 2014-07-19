@@ -15,6 +15,7 @@ import android.widget.EditText;
 import android.widget.ShareActionProvider;
 import android.widget.TextView;
 import android.widget.Toast;
+import com.google.common.collect.Collections2;
 import com.twistedplane.sealnote.data.DatabaseHandler;
 import com.twistedplane.sealnote.data.Note;
 import com.twistedplane.sealnote.data.NoteContent;
@@ -22,6 +23,8 @@ import com.twistedplane.sealnote.fragment.ColorDialogFragment;
 import com.twistedplane.sealnote.utils.*;
 import com.twistedplane.sealnote.view.NoteView;
 import com.twistedplane.sealnote.view.TagEditText;
+
+import java.util.Set;
 
 
 /**
