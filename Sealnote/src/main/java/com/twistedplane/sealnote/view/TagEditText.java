@@ -8,9 +8,13 @@ import android.text.*;
 import android.text.style.ImageSpan;
 import android.util.AttributeSet;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.MultiAutoCompleteTextView;
 import android.widget.TextView;
 import com.twistedplane.sealnote.R;
+
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * View for editing tags. Provides auto-complete suggestions
@@ -67,6 +71,48 @@ public class TagEditText extends MultiAutoCompleteTextView implements View.OnFoc
         if (!hasFocus) {
             updateBubbles();
         }
+    }
+
+    /**
+     * Returns a Set collection containing all tags
+     */
+    public Set<String> getTagSet() {
+        String tags[] = getText().toString().split(" ");
+        HashSet<String> tagSet = new HashSet<String>();
+        for (String tag : tags) {
+            tagSet.add(tag);
+        }
+        return tagSet;
+    }
+
+    /**
+     * Takes a Set collection containing tags and load it into view
+     */
+    public void setTagSet(Set<String> tagSet) {
+        StringBuilder builder = new StringBuilder();
+
+        for (String tag : tagSet) {
+            builder.append(tag);
+            builder.append(" ");
+        }
+
+        setText(builder);
+    }
+
+    /**
+     * Loads a list of tags for suggestions that will be shown for completion
+     *
+     * @param tags  A set of tags used for filtering and suggesting
+     */
+    public void loadSuggestions(Set<String> tags) {
+        String tagArray[] = tags.toArray(new String[tags.size()]);
+        setAdapter(
+                new ArrayAdapter<String>(
+                        getContext(),
+                        android.R.layout.simple_spinner_dropdown_item,
+                        tagArray
+                )
+        );
     }
 
     /**
