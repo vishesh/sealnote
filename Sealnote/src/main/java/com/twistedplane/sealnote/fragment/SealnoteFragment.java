@@ -80,8 +80,8 @@ abstract public class SealnoteFragment extends Fragment implements
         Log.d(TAG, "Creating SealNote fragment...");
 
         // Get folder active in activity
-        String folder = getArguments().getString("FOLDER", Note.Folder.FOLDER_LIVE.name());
-        int tagid = getArguments().getInt("TAGID", -1);
+        String folder = getArguments().getString("SN_FOLDER", Note.Folder.FOLDER_LIVE.name());
+        int tagid = getArguments().getInt("SN_TAGID", -1);
         mCurrentFolder = Note.Folder.valueOf(folder);
         mCurrentTag = tagid;
 

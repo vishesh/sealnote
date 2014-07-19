@@ -1,5 +1,6 @@
 package com.twistedplane.sealnote;
 
+import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.FragmentTransaction;
@@ -34,7 +35,8 @@ import java.util.Set;
 /**
  * Main activity where all cards are listed in a staggered grid
  */
-public class SealnoteActivity extends Activity implements SharedPreferences.OnSharedPreferenceChangeListener {
+public class SealnoteActivity extends Activity
+        implements SharedPreferences.OnSharedPreferenceChangeListener {
     public final static String TAG = "SealnoteActivity";
 
     private DrawerLayout mDrawerLayout;
@@ -42,9 +44,8 @@ public class SealnoteActivity extends Activity implements SharedPreferences.OnSh
     private ListView mDrawerTagListView;
 
     private Note.Folder mCurrentFolder;
-    private Note.Folder mLastFolder = Note.Folder.FOLDER_NONE;
     private Map<String, Integer> mTags;
-    private int mLastTag;
+    private int mTagId;
 
     private SealnoteFragment mSealnoteFragment;
     private boolean mReloadFragment = false;
@@ -63,33 +64,44 @@ public class SealnoteActivity extends Activity implements SharedPreferences.OnSh
             return;
         }
 
+        String tagName = null;
+        /* Handle saved state */
+        if (savedInstanceState != null) {
+            String folder = savedInstanceState.getString("SN_FOLDER", Note.Folder.FOLDER_LIVE.name());
+            mTagId = savedInstanceState.getInt("SN_TAGID", -1);
+            tagName = savedInstanceState.getString("SN_TAGNAME", null);
+            mCurrentFolder = Note.Folder.valueOf(folder);
+        } else {
+            mCurrentFolder = Note.Folder.FOLDER_LIVE;
+            mTagId = -1;
+        }
+
+        /* Load and initialize views */
         setContentView(R.layout.main);
         Misc.secureWindow(this);
-
-        if (savedInstanceState != null) {
-            String folder = savedInstanceState.getString("FOLDER", Note.Folder.FOLDER_LIVE.name());
-            mLastFolder = mCurrentFolder = Note.Folder.valueOf(folder);
-        } else {
-            mLastFolder = mCurrentFolder = Note.Folder.FOLDER_LIVE;
-        }
-
-        if (mCurrentFolder == Note.Folder.FOLDER_TAG) {
-            //FIXME: This will not restore the tag state. Make it work
-            mCurrentFolder = Note.Folder.FOLDER_LIVE;
-        }
 
         loadNotesView();
         initNavigationDrawer();
 
+        /* Shared Preferences */
         SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
         sharedPrefs.registerOnSharedPreferenceChangeListener(this);
 
-        getActionBar().setDisplayHomeAsUpEnabled(true);
-        getActionBar().setHomeButtonEnabled(true);
+        /* Setup ActionBar */
+        ActionBar actionBar = getActionBar();
+        if (actionBar == null)
+            return;
+        actionBar.setDisplayHomeAsUpEnabled(true);
+        actionBar.setHomeButtonEnabled(true);
 
-        getActionBar().setTitle(getResources().getStringArray(
-                R.array.navigation_drawer
-        )[mCurrentFolder.ordinal() - 1]);
+        if (mCurrentFolder != Note.Folder.FOLDER_TAG) {
+            //FIXME: Cleanup
+            actionBar.setTitle(getResources().getStringArray(
+                    R.array.navigation_drawer
+            )[mCurrentFolder.ordinal() - 1]);
+        } else {
+            actionBar.setTitle(tagName);
+        }
     }
 
     private void loadNotesView() {
@@ -108,7 +120,8 @@ public class SealnoteActivity extends Activity implements SharedPreferences.OnSh
         }
 
         Bundle bundle = new Bundle();
-        bundle.putString("FOLDER", mCurrentFolder.name());
+        bundle.putString("SN_FOLDER", mCurrentFolder.name());
+        bundle.putInt("SN_TAGID", mTagId);
         mSealnoteFragment.setArguments(bundle);
 
         FragmentTransaction transaction = getFragmentManager().beginTransaction();
@@ -137,20 +150,9 @@ public class SealnoteActivity extends Activity implements SharedPreferences.OnSh
             /** Called when a drawer has settled in a completely closed state. **/
             public void onDrawerClosed(View view) {
                 super.onDrawerClosed(view);
-                if (mCurrentFolder == Note.Folder.FOLDER_TAG) {
-                    String selectedTag = (String) mDrawerTagListView.getItemAtPosition(
-                            mDrawerTagListView.getCheckedItemPosition()
-                    );
-                    int tagid = mTags.get(selectedTag);
-                    if (tagid != mLastTag) {
-                        mSealnoteFragment.setFolder(mCurrentFolder, tagid);
-                    }
-                    mLastTag = tagid;
-                    mLastFolder = mCurrentFolder;
-                } else if (mLastFolder != mCurrentFolder) {
-                    mSealnoteFragment.setFolder(mCurrentFolder, -1);
-                    mLastFolder = mCurrentFolder;
-                    mLastTag = -1;
+                if (mReloadFragment) {
+                    mSealnoteFragment.setFolder(mCurrentFolder,  mTagId);
+                    mReloadFragment = false;
                 }
                 invalidateOptionsMenu();
             }
@@ -176,22 +178,35 @@ public class SealnoteActivity extends Activity implements SharedPreferences.OnSh
                 itemIcons
         ));
 
-        // Set first item selected and bold
-        folderList.setItemChecked(0, true);
-
         folderList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int pos, long id) {
                 //FIXME
-                mCurrentFolder = Note.Folder.values()[pos + 1];
-                folderList.setItemChecked(pos, true);
-                getActionBar().setTitle(getResources().getStringArray(R.array.navigation_drawer)[pos]);
+                final Note.Folder newFolder;
+                switch (pos) {
+                    case 0:
+                        newFolder = Note.Folder.FOLDER_LIVE;
+                        break;
+                    case 1:
+                        newFolder = Note.Folder.FOLDER_ARCHIVE;
+                        break;
+                    case 2:
+                        newFolder = Note.Folder.FOLDER_TRASH;
+                        break;
+                    default:
+                        newFolder = Note.Folder.FOLDER_LIVE;
+                }
 
-                // Unselect whatever was selected in tag list
+                mReloadFragment = (newFolder != mCurrentFolder);
+                mCurrentFolder = newFolder;
+                mTagId = -1;
+
                 mDrawerTagListView.clearChoices();
+                folderList.setItemChecked(pos, true);
+                ((ArrayAdapter) adapterView.getAdapter()).notifyDataSetChanged();
 
+                getActionBar().setTitle(getResources().getStringArray(R.array.navigation_drawer)[pos]);
                 mDrawerLayout.closeDrawer(drawerContent);
-                ((NavigationDrawerAdapter) adapterView.getAdapter()).notifyDataSetChanged();
             }
         });
 
@@ -201,15 +216,17 @@ public class SealnoteActivity extends Activity implements SharedPreferences.OnSh
         mDrawerTagListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int pos, long id) {
+                int tagid = mTags.get(adapterView.getItemAtPosition(pos));
+                mReloadFragment = (tagid != mTagId);
+                mTagId = tagid;
                 mCurrentFolder = Note.Folder.FOLDER_TAG;
-                mDrawerTagListView.setItemChecked(pos, true);
-                getActionBar().setTitle((String) mDrawerTagListView.getItemAtPosition(pos));
 
-                // unselect whatever was selected in folder list
                 folderList.clearChoices();
-                mDrawerLayout.closeDrawer(drawerContent);
-
+                mDrawerTagListView.setItemChecked(pos, true);
                 ((ArrayAdapter) adapterView.getAdapter()).notifyDataSetChanged();
+
+                getActionBar().setTitle((String) mDrawerTagListView.getItemAtPosition(pos));
+                mDrawerLayout.closeDrawer(drawerContent);
             }
         });
     }
@@ -291,8 +308,13 @@ public class SealnoteActivity extends Activity implements SharedPreferences.OnSh
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
 
-        // Save current folder in use
-        outState.putString("FOLDER", mCurrentFolder.name());
+        // Save current folder/tags in use
+        outState.putString("SN_FOLDER", mCurrentFolder.name());
+        outState.putInt("SN_TAGID", mTagId);
+
+        // Since we are going to use TAGNAME only when mTagId != -1, and in
+        // that case the title is the best and fastest way to get tagname
+        outState.putString("SN_TAGNAME", getActionBar().getTitle().toString());
     }
 
     /**
