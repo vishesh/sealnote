@@ -28,6 +28,7 @@ import com.twistedplane.sealnote.utils.TimeoutHandler;
 import com.twistedplane.sealnote.view.simplelist.SimpleListFragment;
 import com.twistedplane.sealnote.view.staggeredgrid.StaggeredGridFragment;
 
+import java.util.Arrays;
 import java.util.Map;
 import java.util.Set;
 
@@ -46,6 +47,7 @@ public class SealnoteActivity extends Activity
     private Note.Folder mCurrentFolder;
     private Map<String, Integer> mTags;
     private int mTagId;
+    private String mTagName;
 
     private SealnoteFragment mSealnoteFragment;
     private boolean mReloadFragment = false;
@@ -64,13 +66,13 @@ public class SealnoteActivity extends Activity
             return;
         }
 
-        String tagName = null;
         /* Handle saved state */
         if (savedInstanceState != null) {
             String folder = savedInstanceState.getString("SN_FOLDER", Note.Folder.FOLDER_LIVE.name());
-            mTagId = savedInstanceState.getInt("SN_TAGID", -1);
-            tagName = savedInstanceState.getString("SN_TAGNAME", null);
             mCurrentFolder = Note.Folder.valueOf(folder);
+            mTagId = savedInstanceState.getInt("SN_TAGID", -1);
+            // This only makes sense when mTagId != -1
+            mTagName = savedInstanceState.getString("SN_TAGNAME", null);
         } else {
             mCurrentFolder = Note.Folder.FOLDER_LIVE;
             mTagId = -1;
@@ -100,7 +102,7 @@ public class SealnoteActivity extends Activity
                     R.array.navigation_drawer
             )[mCurrentFolder.ordinal() - 1]);
         } else {
-            actionBar.setTitle(tagName);
+            actionBar.setTitle(mTagName);
         }
     }
 
@@ -203,12 +205,24 @@ public class SealnoteActivity extends Activity
 
                 mDrawerTagListView.clearChoices();
                 folderList.setItemChecked(pos, true);
-                ((ArrayAdapter) adapterView.getAdapter()).notifyDataSetChanged();
 
                 getActionBar().setTitle(getResources().getStringArray(R.array.navigation_drawer)[pos]);
                 mDrawerLayout.closeDrawer(drawerContent);
             }
         });
+
+        /* On first start we need to select the first item on drawer */
+        switch (mCurrentFolder) {
+            case FOLDER_LIVE:
+                folderList.setItemChecked(0, true);
+                break;
+            case FOLDER_ARCHIVE:
+                folderList.setItemChecked(1, true);
+                break;
+            case FOLDER_TRASH:
+                folderList.setItemChecked(1, true);
+                break;
+        }
 
         /* Setup Drawer List for Tags */
         mDrawerTagListView.setChoiceMode(AbsListView.CHOICE_MODE_SINGLE);
@@ -216,14 +230,15 @@ public class SealnoteActivity extends Activity
         mDrawerTagListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int pos, long id) {
-                int tagid = mTags.get(adapterView.getItemAtPosition(pos));
+                mTagName = (String) adapterView.getItemAtPosition(pos);
+
+                int tagid = mTags.get(mTagName);
                 mReloadFragment = (tagid != mTagId);
                 mTagId = tagid;
                 mCurrentFolder = Note.Folder.FOLDER_TAG;
 
                 folderList.clearChoices();
                 mDrawerTagListView.setItemChecked(pos, true);
-                ((ArrayAdapter) adapterView.getAdapter()).notifyDataSetChanged();
 
                 getActionBar().setTitle((String) mDrawerTagListView.getItemAtPosition(pos));
                 mDrawerLayout.closeDrawer(drawerContent);
@@ -242,6 +257,15 @@ public class SealnoteActivity extends Activity
                         this, R.layout.drawer_tag_list_item, tags
                 )
         );
+
+        /* Select currently active tag if any in list view */
+        if (mTagId != -1) {
+            // We need to do this every resume/recreate but not
+            // for Folder list, because folder list is static while
+            // tags list's adapter is dynamic and changed
+            int position = Arrays.asList(tags).indexOf(mTagName);
+            mDrawerTagListView.setItemChecked(position, true);
+        }
     }
 
     @Override
@@ -280,12 +304,12 @@ public class SealnoteActivity extends Activity
             return;
         }
 
-        reloadTagsAdapter();
-
         if (mReloadFragment) {
             loadNotesView();
             mReloadFragment = false;
         }
+
+        reloadTagsAdapter();
 
         // preference may have changed, so do it again. Happens when coming
         // back from settings activity
