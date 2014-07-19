@@ -12,6 +12,7 @@ import android.widget.ArrayAdapter;
 import android.widget.MultiAutoCompleteTextView;
 import android.widget.TextView;
 import com.twistedplane.sealnote.R;
+import com.twistedplane.sealnote.data.Note;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -77,26 +78,14 @@ public class TagEditText extends MultiAutoCompleteTextView implements View.OnFoc
      * Returns a Set collection containing all tags
      */
     public Set<String> getTagSet() {
-        String tags[] = getText().toString().split(" ");
-        HashSet<String> tagSet = new HashSet<String>();
-        for (String tag : tags) {
-            tagSet.add(tag);
-        }
-        return tagSet;
+        return Note.convertToTagSet(getText().toString());
     }
 
     /**
      * Takes a Set collection containing tags and load it into view
      */
     public void setTagSet(Set<String> tagSet) {
-        StringBuilder builder = new StringBuilder();
-
-        for (String tag : tagSet) {
-            builder.append(tag);
-            builder.append(" ");
-        }
-
-        setText(builder);
+        setText(Note.convertTagSetToString(tagSet));
     }
 
     /**

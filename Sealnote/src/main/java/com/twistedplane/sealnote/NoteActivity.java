@@ -21,6 +21,7 @@ import com.twistedplane.sealnote.data.NoteContent;
 import com.twistedplane.sealnote.fragment.ColorDialogFragment;
 import com.twistedplane.sealnote.utils.*;
 import com.twistedplane.sealnote.view.NoteView;
+import com.twistedplane.sealnote.view.TagEditText;
 
 
 /**
@@ -48,6 +49,7 @@ public class NoteActivity extends Activity implements ColorDialogFragment.ColorC
     private ViewStub    mContentStub;   /* Inflated by appropriate view to edit given note type */
     private TextView    mEditedView;    /* Show last edited date/time */
     private NoteView    mNoteView;
+    private TagEditText mTagEditText;    /* Chips view editor for tags */
 
     private int         mBackgroundColor;
 
@@ -155,6 +157,7 @@ public class NoteActivity extends Activity implements ColorDialogFragment.ColorC
 
         mTitleView = (EditText) findViewById(R.id.note_activity_title);
         mEditedView = (TextView) findViewById(R.id.note_activity_edited);
+        mTagEditText = (TagEditText) findViewById(R.id.note_activity_tags);
         mNoteView = inflateNoteContentView(type);
         mNoteType = type;
 
@@ -207,6 +210,7 @@ public class NoteActivity extends Activity implements ColorDialogFragment.ColorC
         mNote = note;
         mTitleView.setText(mNote.getTitle());
         mNoteView.setNoteContent(mNote.getNote());
+        mTagEditText.setTagSet(mNote.loadGetTags());
 
         EasyDate date = mNote.getEditedDate();
         if (date == null) {
@@ -427,10 +431,11 @@ public class NoteActivity extends Activity implements ColorDialogFragment.ColorC
         mNote.setNote(noteContent);
         mNote.setColor(mBackgroundColor);
         mNote.setType(mNoteType);
+        mNote.setTags(mTagEditText.getTagSet());
 
         if (mNote.getId() == -1) {
             mNote.setPosition(-1);
-            int newNoteId = (int) handler.addNote(mNote);
+            int newNoteId = handler.addNote(mNote);
             mNote.setId(newNoteId);
         } else {
             // don't update timestamp when only background has changed

@@ -3,6 +3,7 @@ package com.twistedplane.sealnote.data;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteException;
 import android.util.Log;
 import com.twistedplane.sealnote.utils.EasyDate;
 import net.sqlcipher.CursorIndexOutOfBoundsException;
@@ -10,8 +11,7 @@ import net.sqlcipher.database.SQLiteDatabase;
 import net.sqlcipher.database.SQLiteOpenHelper;
 
 import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 /**
  * Helper class to manage database creation and upgrade, and manage notes.
@@ -68,7 +68,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
      * application. Note that password can be null due to timeouts which
      * resets the password for security.
      *
-     * @return  Current password in use or null is nothing is set
+     * @return Current password in use or null is nothing is set
      */
     public String getPassword() {
         return mPassword;
@@ -101,7 +101,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         super.close();
         if (mDatabase != null) {
             if (!mDatabase.isOpen())
-            mDatabase.close();
+                mDatabase.close();
             mDatabase = null;
         }
     }
@@ -118,8 +118,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     /**
      * Convert row at given cursor position to Note object.
      *
-     * @param cursor    Cursor object from which note data is to be retrieved
-     * @return          Note object with data set
+     * @param cursor Cursor object from which note data is to be retrieved
+     * @return Note object with data set
      */
     public static Note cursorToNote(Cursor cursor) {
         Note note = new Note();
@@ -244,7 +244,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     /**
      * Add a note to database
      */
-    public long addNote(Note note) {
+    public int addNote(Note note) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         EasyDate date = EasyDate.now();
@@ -255,11 +255,21 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         values.put(COL_COLOR, note.getColor());
         values.put(COL_CREATED, date.toString());
         values.put(COL_EDITED, date.toString());
-        values.put(COL_ARCHIVED, note.getIsArchived() ?1 :0);
-        values.put(COL_DELETED, note.getIsDeleted() ?1 :0);
+        values.put(COL_ARCHIVED, note.getIsArchived() ? 1 : 0);
+        values.put(COL_DELETED, note.getIsDeleted() ? 1 : 0);
         values.put(COL_TYPE, note.getType().name());
         values.put(COL_NOTE_EXTRA, note.getNote().getCardString());
-        return db.insert(TABLE_NAME, null, values);
+
+        db.beginTransaction();
+
+        int result = (int) db.insert(TABLE_NAME, null, values);
+        clearNoteTags(result);
+        addTagsToNote(result, note.getTags());
+
+        db.setTransactionSuccessful();
+        db.endTransaction();
+
+        return result;
     }
 
     /**
@@ -277,17 +287,25 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         if (updateTimestamp) {
             values.put(COL_EDITED, EasyDate.now().toString());
         }
-        values.put(COL_ARCHIVED, note.getIsArchived() ?1 :0);
-        values.put(COL_DELETED, note.getIsDeleted() ?1 :0);
+        values.put(COL_ARCHIVED, note.getIsArchived() ? 1 : 0);
+        values.put(COL_DELETED, note.getIsDeleted() ? 1 : 0);
         values.put(COL_NOTE_EXTRA, note.getNote().getCardString());
+
+        db.beginTransaction();
+
         db.update(TABLE_NAME, values, COL_ID + " = ?", new String[]{Integer.toString(note.getId())});
+        clearNoteTags(note.getId());
+        addTagsToNote(note.getId(), note.getTags());
+
+        db.setTransactionSuccessful();
+        db.endTransaction();
     }
 
     /**
      * Get note object of given id from database
      *
-     * @param id    Id of note
-     * @return      Note object
+     * @param id Id of note
+     * @return Note object
      */
     public Note getNote(int id) {
         SQLiteDatabase db = this.getReadableDatabase();
@@ -309,7 +327,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     public void archiveNote(int id, boolean archive) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
-        values.put(COL_ARCHIVED, archive ?1 :0);
+        values.put(COL_ARCHIVED, archive ? 1 : 0);
         db.update(TABLE_NAME, values, COL_ID + " = ?", new String[]{Integer.toString(id)});
     }
 
@@ -321,7 +339,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     public void trashNote(int id, boolean trash) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
-        values.put(COL_DELETED, trash ?1 :0);
+        values.put(COL_DELETED, trash ? 1 : 0);
         db.update(TABLE_NAME, values, COL_ID + " = ?", new String[]{Integer.toString(id)});
     }
 
@@ -330,7 +348,136 @@ public class DatabaseHandler extends SQLiteOpenHelper {
      */
     public void deleteNote(int id) {
         SQLiteDatabase db = this.getWritableDatabase();
+        db.beginTransaction();
+
+        clearNoteTags(id);
         db.delete(TABLE_NAME, COL_ID + " = ?", new String[]{Integer.toString(id)});
+
+        db.setTransactionSuccessful();
+        db.endTransaction();
+    }
+
+    /**
+     * Create a new tag and store it in database
+     */
+    public int newTag(String tag) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+
+        values.put(COL_TAG_NAME, tag);
+        return (int) db.insert(TABLE_TAG_NAMES, null, values);
+    }
+
+    /**
+     * Get tags attached to this note
+     */
+    public Set<String> getNoteTags(int noteid) {
+        Set<String> set = new HashSet<String>();
+        SQLiteDatabase db = getReadableDatabase();
+        String query = String.format(
+                "SELECT %s.%s AS tag FROM %s, %s WHERE %s.%s = ? AND %s.%s = %s.%s",
+                TABLE_TAG_NAMES, COL_TAG_NAME,
+                TABLE_TAG_NAMES, TABLE_NOTE_TAG,
+                TABLE_NOTE_TAG, COL_NOTE_ID,
+                TABLE_NOTE_TAG, COL_TAG_ID,
+                TABLE_TAG_NAMES, COL_ID
+        );
+        Cursor cursor = db.rawQuery(query, new String[] {String.format("%d", noteid)});
+
+        if(cursor.moveToFirst()) {
+            do {
+                String tag = cursor.getString(cursor.getColumnIndex("tag"));
+                set.add(tag);
+            } while (cursor.moveToNext());
+        }
+
+        cursor.close();
+        return set;
+    }
+
+    /**
+     * Add tags to note.
+     *
+     * NOTE: It is duty of caller to make sure this routine is
+     *       called inside transaction, otherwise exception
+     *       will be thrown
+     */
+    public void addTagsToNote(int noteid, Set<String> tags) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        if (!db.inTransaction()) {
+            throw new SQLiteException("This method should always be called inside transaction!");
+        }
+
+        ContentValues value = new ContentValues();
+        Map<String, Integer> allTags = getAllTags();
+
+        for (String tag : tags) {
+            value.clear();
+
+            int tagid;
+            if (!allTags.containsKey(tag)) {
+                tagid = newTag(tag);
+            } else {
+                tagid = allTags.get(tag);
+            }
+            value.put(COL_TAG_ID, tagid);
+            value.put(COL_NOTE_ID, noteid);
+            db.insert(TABLE_NOTE_TAG, null, value);
+        }
+    }
+
+    /**
+     * Delete all tags from Note
+     */
+    public void clearNoteTags(int id) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.delete(TABLE_NOTE_TAG, COL_NOTE_ID + " = ?", new String[]{Integer.toString(id)});
+    }
+
+
+//    /**
+//     * Remove tags from note.
+//     *
+//     * NOTE: It is duty of caller to make sure this routine
+//     *       is called inside transaction, otherwise exception
+//     *       will be thrown
+//     */
+//    public void removeTagsFromNote(int noteid, Set<String> tags) {
+//        SQLiteDatabase db = this.getWritableDatabase();
+//        if (!db.inTransaction()) {
+//            throw new SQLiteException("This method should always be called inside transaction!");
+//        }
+//
+//        ContentValues value = new ContentValues();
+//        Map<String, Integer> allTags = getAllTags();
+//
+//        for (String tag : tags) {
+//            value.clear();
+//
+//            int tagid = allTags.get(tag);
+//            db.delete(TABLE_NOTE_TAG, COL_TAG_ID + " = ? AND " + COL_NOTE_ID + " = ?",
+//                    new String[]{Integer.toString(tagid, noteid)});
+//        }
+//    }
+
+    /**
+     * Get a map of all <tag, id> stored in database
+     */
+    public Map<String, Integer> getAllTags() {
+        Map<String, Integer> map = new HashMap<String, Integer>();
+        SQLiteDatabase db = getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_TAG_NAMES, null);
+
+        if (cursor.moveToFirst()) {
+            do {
+                int id = cursor.getInt(cursor.getColumnIndex(COL_ID));
+                String tag = cursor.getString(cursor.getColumnIndex(COL_TAG_NAME));
+                map.put(tag, id);
+            } while (cursor.moveToNext());
+        }
+
+        cursor.close();
+        return map;
     }
 
     /**
