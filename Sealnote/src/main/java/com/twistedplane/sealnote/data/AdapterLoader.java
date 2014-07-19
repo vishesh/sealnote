@@ -12,6 +12,7 @@ import com.twistedplane.sealnote.fragment.SealnoteFragment;
  */
 public class AdapterLoader extends AsyncTaskLoader<Cursor> {
     private Note.Folder currentFolder = Note.Folder.FOLDER_LIVE;
+    private int tagid = -1;
     private Cursor mCursor;
 
     /**
@@ -34,6 +35,9 @@ public class AdapterLoader extends AsyncTaskLoader<Cursor> {
             case FOLDER_TRASH:
                 cursor = db.getDeletedNotesCursor();
                 break;
+            case FOLDER_TAG:
+                cursor = db.getNotesCursor(tagid);
+                break;
             default:
                 cursor = null;
         }
@@ -41,10 +45,11 @@ public class AdapterLoader extends AsyncTaskLoader<Cursor> {
         return cursor;
     }
 
-    public AdapterLoader(Context context, Note.Folder currentFolder) {
+    public AdapterLoader(Context context, Note.Folder currentFolder, int tagid) {
         super(context);
         Log.d(SealnoteFragment.TAG, "New adapter loader created");
         this.currentFolder = currentFolder;
+        this.tagid = tagid;
     }
 
     /* Runs on the UI thread */

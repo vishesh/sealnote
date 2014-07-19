@@ -512,6 +512,34 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     }
 
     /**
+     * Get a cursor object pointing to all live notes with given tag in database.
+     */
+    public Cursor getNotesCursor(int tagid) {
+        if (tagid == -1) {
+            throw new IllegalArgumentException("tagid = -1 not allowed. Use getNotesCursor()");
+        }
+
+        String qformat = "SELECT * FROM %s, %s " +
+                          "    WHERE %s.%s = '0' AND " +
+                          "          %s.%s = '0' AND " +
+                          "          %s.%s = '%d' AND " +
+                          "          %s.%s = %s.%s " +
+                          "     ORDER BY %s.%s DESC";
+        String query = String.format(
+                qformat,
+                TABLE_NAME, TABLE_NOTE_TAG,
+                TABLE_NAME, COL_ARCHIVED,
+                TABLE_NAME, COL_DELETED,
+                TABLE_NOTE_TAG, COL_TAG_ID, tagid,
+                TABLE_NOTE_TAG, COL_NOTE_ID,
+                TABLE_NAME, COL_ID,
+                TABLE_NAME, COL_EDITED
+        );
+
+        return getReadableDatabase().rawQuery(query, null);
+    }
+
+    /**
      * Get a cursor object pointing to all archived notes in database
      */
     public Cursor getArchivedNotesCursor() {

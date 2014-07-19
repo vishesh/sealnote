@@ -17,6 +17,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
 import android.view.*;
 import android.widget.*;
+import com.twistedplane.sealnote.data.DatabaseHandler;
 import com.twistedplane.sealnote.data.Note;
 import com.twistedplane.sealnote.fragment.SealnoteFragment;
 import com.twistedplane.sealnote.utils.FontCache;
@@ -25,6 +26,9 @@ import com.twistedplane.sealnote.utils.PreferenceHandler;
 import com.twistedplane.sealnote.utils.TimeoutHandler;
 import com.twistedplane.sealnote.view.simplelist.SimpleListFragment;
 import com.twistedplane.sealnote.view.staggeredgrid.StaggeredGridFragment;
+
+import java.util.Map;
+import java.util.Set;
 
 
 /**
@@ -35,10 +39,14 @@ public class SealnoteActivity extends Activity implements SharedPreferences.OnSh
 
     private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mDrawerToggle;
+    private ListView mDrawerTagListView;
+
     private Note.Folder mCurrentFolder;
     private Note.Folder mLastFolder = Note.Folder.FOLDER_NONE;
-    SealnoteFragment mSealnoteFragment;
+    private Map<String, Integer> mTags;
+    private int mLastTag;
 
+    private SealnoteFragment mSealnoteFragment;
     private boolean mReloadFragment = false;
 
     /**
@@ -101,22 +109,41 @@ public class SealnoteActivity extends Activity implements SharedPreferences.OnSh
         transaction.commit();
     }
 
+    private Map<String, Integer> getTags() {
+        return mTags;
+    }
+
     /**
      * Set up drawer layout and listeners
      */
     private void initNavigationDrawer() {
         final View drawerContent = findViewById(R.id.drawer_content);
+        final ListView  folderList = (ListView) findViewById(R.id.drawer_list);
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
+        mDrawerTagListView = (ListView) findViewById(R.id.drawer_tags);
+
+        /* Setup drawer */
+
         mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout,
-                R.drawable.ic_navigation_drawer, R.string.drawer_open, R.string.drawer_close)
-        {
+                R.drawable.ic_navigation_drawer, R.string.drawer_open, R.string.drawer_close) {
             /** Called when a drawer has settled in a completely closed state. **/
             public void onDrawerClosed(View view) {
                 super.onDrawerClosed(view);
-                if (mLastFolder != mCurrentFolder) {
-                    mSealnoteFragment.setFolder(mCurrentFolder);
+                if (mCurrentFolder == Note.Folder.FOLDER_TAG) {
+                    String selectedTag = (String) mDrawerTagListView.getItemAtPosition(
+                            mDrawerTagListView.getCheckedItemPosition()
+                    );
+                    int tagid = mTags.get(selectedTag);
+                    if (tagid != mLastTag) {
+                        mSealnoteFragment.setFolder(mCurrentFolder, tagid);
+                    }
+                    mLastTag = tagid;
                     mLastFolder = mCurrentFolder;
+                } else if (mLastFolder != mCurrentFolder) {
+                    mSealnoteFragment.setFolder(mCurrentFolder, -1);
+                    mLastFolder = mCurrentFolder;
+                    mLastTag = -1;
                 }
                 invalidateOptionsMenu();
             }
@@ -127,16 +154,15 @@ public class SealnoteActivity extends Activity implements SharedPreferences.OnSh
                 invalidateOptionsMenu();
             }
         };
-
-        // Set the drawer toggle as the DrawerListener
         mDrawerLayout.setDrawerListener(mDrawerToggle);
 
-        String[] itemStrings = getResources().getStringArray(R.array.navigation_drawer);
-        TypedArray itemIcons = getResources().obtainTypedArray(R.array.navigation_drawer_icons);
+        /* Setup Drawer List for Folders */
 
-        final ListView drawerList = (ListView) findViewById(R.id.drawer_list);
-        drawerList.setChoiceMode(AbsListView.CHOICE_MODE_SINGLE);
-        drawerList.setAdapter(new NavigationDrawerAdapter(
+        String[]        itemStrings = getResources().getStringArray(R.array.navigation_drawer);
+        TypedArray      itemIcons = getResources().obtainTypedArray(R.array.navigation_drawer_icons);
+
+        folderList.setChoiceMode(AbsListView.CHOICE_MODE_SINGLE);
+        folderList.setAdapter(new NavigationDrawerAdapter(
                 this,
                 R.layout.drawer_list_item,
                 itemStrings,
@@ -144,20 +170,54 @@ public class SealnoteActivity extends Activity implements SharedPreferences.OnSh
         ));
 
         // Set first item selected and bold
-        drawerList.setItemChecked(0, true);
+        folderList.setItemChecked(0, true);
 
-        drawerList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        folderList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int pos, long id) {
                 //FIXME
                 mCurrentFolder = Note.Folder.values()[pos + 1];
-                drawerList.setItemChecked(pos, true);
+                folderList.setItemChecked(pos, true);
                 getActionBar().setTitle(getResources().getStringArray(R.array.navigation_drawer)[pos]);
+
+                // Unselect whatever was selected in tag list
+                mDrawerTagListView.clearChoices();
 
                 mDrawerLayout.closeDrawer(drawerContent);
                 ((NavigationDrawerAdapter) adapterView.getAdapter()).notifyDataSetChanged();
             }
         });
+
+        /* Setup Drawer List for Tags */
+        mDrawerTagListView.setChoiceMode(AbsListView.CHOICE_MODE_SINGLE);
+
+        mDrawerTagListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int pos, long id) {
+                mCurrentFolder = Note.Folder.FOLDER_TAG;
+                mDrawerTagListView.setItemChecked(pos, true);
+                getActionBar().setTitle((String) mDrawerTagListView.getItemAtPosition(pos));
+
+                // unselect whatever was selected in folder list
+                folderList.clearChoices();
+                mDrawerLayout.closeDrawer(drawerContent);
+
+                ((ArrayAdapter) adapterView.getAdapter()).notifyDataSetChanged();
+            }
+        });
+    }
+
+    private void reloadTagsAdapter() {
+        DatabaseHandler handler = SealnoteApplication.getDatabase();
+        mTags = handler.getAllTags();
+        Set<String> tagSet = mTags.keySet();
+        String []tags = mTags.keySet().toArray(new String[tagSet.size()]);
+
+        mDrawerTagListView.setAdapter(
+                new ArrayAdapter<String>(
+                        this, R.layout.drawer_tag_list_item, tags
+                )
+        );
     }
 
     @Override
@@ -195,6 +255,8 @@ public class SealnoteActivity extends Activity implements SharedPreferences.OnSh
             Log.d(TAG, "Timed out! Going to password activity");
             return;
         }
+
+        reloadTagsAdapter();
 
         if (mReloadFragment) {
             loadNotesView();

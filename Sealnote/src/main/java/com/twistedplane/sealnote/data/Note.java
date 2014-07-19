@@ -21,7 +21,8 @@ public class Note implements Parcelable{
         FOLDER_NONE,        /* No folder selected */
         FOLDER_LIVE,        /* Notes that are alive that are note deleted and archived */
         FOLDER_ARCHIVE,     /* Archived and undeleted notes */
-        FOLDER_TRASH        /* Deleted notes */
+        FOLDER_TRASH,       /* Deleted notes */
+        FOLDER_TAG,         /* A tag is currently selected */
     }
 
     public static enum FolderAction {
