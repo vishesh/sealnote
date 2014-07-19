@@ -16,6 +16,7 @@ import android.widget.ShareActionProvider;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.google.common.collect.Collections2;
+import com.google.common.collect.Sets;
 import com.twistedplane.sealnote.data.DatabaseHandler;
 import com.twistedplane.sealnote.data.Note;
 import com.twistedplane.sealnote.data.NoteContent;
@@ -422,14 +423,20 @@ public class NoteActivity extends Activity implements ColorDialogFragment.ColorC
             return;
         }
 
-        final boolean noteContentNotChanged = mNote != null && title.equals(mNote.getTitle()) &&
-                text.equals(mNote.getNote().toString());
-        final boolean onlyBackgroundChanged = (noteContentNotChanged && mBackgroundColor != mNote.getColor());
+        final boolean tagsChanged = mNote != null && mNote.getTags() != null &&
+                Sets.symmetricDifference(mTagEditText.getTagSet(), mNote.getTags()).size() != 0;
+        final boolean backgroundChanged = (mNote != null && mBackgroundColor != mNote.getColor());
+        final boolean contentChanged = (
+                (mNote != null) &&
+                (!title.equals(mNote.getTitle()) || !text.equals(mNote.getNote().toString()))
+        );
+
+        final boolean anythingChanged = tagsChanged || backgroundChanged || contentChanged;
 
         if (mNote == null) {
             // this is a new note
             mNote = new Note();
-        } else if (mAutoSaveEnabled && noteContentNotChanged && mBackgroundColor == mNote.getColor()) {
+        } else if (mAutoSaveEnabled && !anythingChanged) {
             // Also avoid unnecessarily updating the edit timestamp of note
             Log.d(TAG, "Note didn't change. No need to autosave");
             return;
@@ -446,8 +453,9 @@ public class NoteActivity extends Activity implements ColorDialogFragment.ColorC
             int newNoteId = handler.addNote(mNote);
             mNote.setId(newNoteId);
         } else {
-            // don't update timestamp when only background has changed
-            handler.updateNote(mNote, !onlyBackgroundChanged);
+            // don't update timestamp when only background or tags or
+            // only those two have changed
+            handler.updateNote(mNote, contentChanged);
         }
     }
 
