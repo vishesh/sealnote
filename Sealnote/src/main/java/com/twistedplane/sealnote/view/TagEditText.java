@@ -14,7 +14,9 @@ import android.widget.TextView;
 import com.twistedplane.sealnote.R;
 import com.twistedplane.sealnote.data.Note;
 
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -25,6 +27,12 @@ import java.util.Set;
  */
 public class TagEditText extends MultiAutoCompleteTextView implements View.OnFocusChangeListener {
     private static final String TAG = "TagEditText";
+
+    /**
+     * Keep a map of tag in lower case to tag stored in database. We use this
+     * to avoid tags which are just different by case but not words
+     */
+    private Map<String, String> mTagLowerMap = new HashMap<String, String>();
 
     public TagEditText(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -102,6 +110,16 @@ public class TagEditText extends MultiAutoCompleteTextView implements View.OnFoc
                         tagArray
                 )
         );
+
+        // Update the tag map which will be used to check by case
+        // insensitive duplicates
+        mTagLowerMap.clear();
+        for (String tag : tagArray) {
+            String tagLower = tag.toLowerCase();
+            if (!mTagLowerMap.containsKey(tagLower)) {
+                mTagLowerMap.put(tagLower, tag);
+            }
+        }
     }
 
     /**
@@ -197,10 +215,19 @@ public class TagEditText extends MultiAutoCompleteTextView implements View.OnFoc
         // Iterate through all tokens i.e. tags, make their bubble spannables
         // and add them to text view at appropriate positions
         for (String token : tokens) {
-            // Check for duplicate token
             String lowerToken = token.toLowerCase();
+
+            // Check if this tag already has case insensitive duplicate
+            // in database. If so, use that tag
+            if (mTagLowerMap.containsKey(lowerToken)) {
+                String newToken = mTagLowerMap.get(lowerToken);
+                ssb.replace(done, done + token.length(), newToken);
+                token = newToken;
+            }
+
+            // Check if we have already added this tag to note. We don't
+            // to show them so we delete them
             if (tokenSet.contains(lowerToken)) {
-                // Skip the token if it already exists in bubbles
                 int end = done + token.length();
                 if (end < ssb.length() && ssb.charAt(end) == ' ') {
                     end += 1;
