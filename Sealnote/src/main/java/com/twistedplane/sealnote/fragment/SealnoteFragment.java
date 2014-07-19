@@ -102,6 +102,9 @@ abstract public class SealnoteFragment extends Fragment implements
             public void onInvalidated() {
                 super.onInvalidated();
                 Log.d(TAG, "Data set invalidated");
+                if (isRemoving() || isDetached() || !isVisible()) {
+                    return;
+                }
                 setFolder(mCurrentFolder, mCurrentTag);
             }
         });

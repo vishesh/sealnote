@@ -73,6 +73,11 @@ public class SealnoteActivity extends Activity implements SharedPreferences.OnSh
             mLastFolder = mCurrentFolder = Note.Folder.FOLDER_LIVE;
         }
 
+        if (mCurrentFolder == Note.Folder.FOLDER_TAG) {
+            //FIXME: This will not restore the tag state. Make it work
+            mCurrentFolder = Note.Folder.FOLDER_LIVE;
+        }
+
         loadNotesView();
         initNavigationDrawer();
 
@@ -81,8 +86,10 @@ public class SealnoteActivity extends Activity implements SharedPreferences.OnSh
 
         getActionBar().setDisplayHomeAsUpEnabled(true);
         getActionBar().setHomeButtonEnabled(true);
-        //FIXME
-        getActionBar().setTitle(getResources().getStringArray(R.array.navigation_drawer)[mCurrentFolder.ordinal() - 1]);
+
+        getActionBar().setTitle(getResources().getStringArray(
+                R.array.navigation_drawer
+        )[mCurrentFolder.ordinal() - 1]);
     }
 
     private void loadNotesView() {
