@@ -18,7 +18,7 @@ import com.twistedplane.sealnote.R;
  *
  * TODO: Clean this up. Mostly a hack
  */
-public class TagEditText extends MultiAutoCompleteTextView {
+public class TagEditText extends MultiAutoCompleteTextView implements View.OnFocusChangeListener {
     private static final String TAG = "TagEditText";
 
     public TagEditText(Context context, AttributeSet attrs) {
@@ -30,6 +30,8 @@ public class TagEditText extends MultiAutoCompleteTextView {
 
         setTokenizer(new TagTokenizer());
         addTextChangedListener(new TagTextWatcher());
+
+        setOnFocusChangeListener(this);
     }
 
     @Override
@@ -55,6 +57,15 @@ public class TagEditText extends MultiAutoCompleteTextView {
 
         if (selStart > 0 && selStart < length() && getText().charAt(selStart - 1) == ' ') {
             setSelection(selStart - 1);
+        }
+    }
+
+    /**
+     * Update bubbles when we lose focus
+     */
+    public void onFocusChange(View v, boolean hasFocus) {
+        if (!hasFocus) {
+            updateBubbles();
         }
     }
 
