@@ -39,6 +39,15 @@
                     android:name="android.support.PARENT_ACTIVITY"
                     android:value="com.twistedplane.sealnote.SealnoteActivity"/>
         </activity>
+        <activity
+                android:name="com.twistedplane.sealnote.TagsEditorActivity"
+                android:label="@string/title_activity_edit_tags"
+                android:parentActivityName="com.twistedplane.sealnote.SealnoteActivity"
+                android:theme="@style/Sealnote.Theme.Main">
+            <meta-data
+                    android:name="android.support.PARENT_ACTIVITY"
+                    android:value="com.twistedplane.sealnote.SealnoteActivity"/>
+        </activity>
     </application>
 
 </manifest>

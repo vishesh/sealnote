@@ -33,6 +33,10 @@
         </menu>
     </item>
 
+    <item android:id="@+id/action_edit_tags"
+          android:title="@string/action_edit_tags"
+          android:showAsAction="never" />
+
     <item android:id="@+id/action_settings"
           android:title="@string/action_settings"
           android:showAsAction="never" />

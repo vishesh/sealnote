@@ -395,6 +395,9 @@ public class SealnoteActivity extends Activity
             case R.id.action_new_note_login:
                 NoteActivity.startForNoteId(SealnoteActivity.this, -1, Note.Type.TYPE_LOGIN);
                 return true;
+            case R.id.action_edit_tags:
+                showEditTagsDialog();
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -419,6 +422,14 @@ public class SealnoteActivity extends Activity
      */
     private void showSettings() {
         Intent intent = new Intent(this, SettingsActivity.class);
+        this.startActivity(intent);
+    }
+
+    /**
+     * Dialog to edit/delete tags
+     */
+    private void showEditTagsDialog() {
+        Intent intent = new Intent(this, TagsEditorActivity.class);
         this.startActivity(intent);
     }
 

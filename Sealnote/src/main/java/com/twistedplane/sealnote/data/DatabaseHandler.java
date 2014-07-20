@@ -369,6 +369,34 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     }
 
     /**
+     * Delete tag from table
+     */
+    public void deleteTag(int tagid) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.beginTransaction();
+
+        // Delete this tag from all notes
+        db.delete(TABLE_NOTE_TAG, COL_TAG_ID + " = ?", new String[]{Integer.toString(tagid)});
+
+        // Delete the tag itself from database
+        db.delete(TABLE_TAG_NAMES, COL_ID + " = ?", new String[]{Integer.toString(tagid)});
+
+        db.setTransactionSuccessful();
+        db.endTransaction();
+    }
+
+    /**
+     * Rename tag
+     */
+    public void renameTag(int tagid, String newName) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+
+        values.put(COL_TAG_NAME, newName);
+        db.update(TABLE_TAG_NAMES, values, COL_ID + " = ?", new String[]{Integer.toString(tagid)});
+    }
+
+    /**
      * Get tags attached to this note
      */
     public Set<String> getNoteTags(int noteid) {
