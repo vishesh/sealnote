@@ -154,6 +154,7 @@ public class SealnoteActivity extends Activity
                 super.onDrawerClosed(view);
                 if (mReloadFragment) {
                     mSealnoteFragment.setFolder(mCurrentFolder,  mTagId);
+                    getActionBar().setTitle(mTagName);
                     mReloadFragment = false;
                 }
                 invalidateOptionsMenu();
@@ -207,7 +208,7 @@ public class SealnoteActivity extends Activity
                 ((ArrayAdapter) mDrawerTagListView.getAdapter()).notifyDataSetChanged();
                 folderList.setItemChecked(pos, true);
 
-                getActionBar().setTitle(getResources().getStringArray(R.array.navigation_drawer)[pos]);
+                mTagName = getResources().getStringArray(R.array.navigation_drawer)[pos];
                 mDrawerLayout.closeDrawer(drawerContent);
             }
         });
@@ -241,7 +242,6 @@ public class SealnoteActivity extends Activity
                 folderList.clearChoices();
                 mDrawerTagListView.setItemChecked(pos, true);
 
-                getActionBar().setTitle((String) mDrawerTagListView.getItemAtPosition(pos));
                 mDrawerLayout.closeDrawer(drawerContent);
             }
         });
