@@ -106,7 +106,7 @@ public class SimpleListAdapter extends SimpleCursorAdapter implements SealnoteAd
      * Sets current folder in view
      */
     @Override
-    public void setFolder(Note.Folder folder) {
+    public void setFolder(Note.Folder folder, int tagid) {
         // no implementation required
     }
 

@@ -19,22 +19,35 @@
                   android:layout_gravity="start"
                   android:orientation="vertical"
                   android:layout_marginTop="?android:actionBarSize"
+                  android:background="@android:drawable/screen_background_light"
             >
         <ImageView
                 android:layout_width="fill_parent"
-                android:layout_height="100dp"
+                android:layout_height="40dp"
                 android:adjustViewBounds="true"
                 android:scaleType="centerCrop"
                 android:clickable="true"
                 android:src="@drawable/intelligence_gathering"
                 />
+
         <ListView android:id="@+id/drawer_list"
                   android:layout_width="280dp"
-                  android:layout_height="match_parent"
+                  android:layout_height="wrap_content"
                   android:choiceMode="singleChoice"
                   android:divider="@android:color/transparent"
                   android:dividerHeight="0dp"
-                  android:background="@android:color/background_light"
+                  android:paddingBottom="0dp"
+                  android:layout_marginBottom="0dp"
+                />
+
+        <ListView android:id="@+id/drawer_tags"
+                  android:layout_width="280dp"
+                  android:layout_height="wrap_content"
+                  android:choiceMode="singleChoice"
+                  android:divider="@android:color/transparent"
+                  android:dividerHeight="0dp"
+                  android:paddingTop="0dp"
+                  android:layout_marginTop="0dp"
                 />
     </LinearLayout>
 </android.support.v4.widget.DrawerLayout>

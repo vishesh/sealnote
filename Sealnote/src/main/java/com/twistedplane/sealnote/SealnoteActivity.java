@@ -1,5 +1,6 @@
 package com.twistedplane.sealnote;
 
+import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.FragmentTransaction;
@@ -17,6 +18,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
 import android.view.*;
 import android.widget.*;
+import com.twistedplane.sealnote.data.DatabaseHandler;
 import com.twistedplane.sealnote.data.Note;
 import com.twistedplane.sealnote.fragment.SealnoteFragment;
 import com.twistedplane.sealnote.utils.FontCache;
@@ -26,19 +28,28 @@ import com.twistedplane.sealnote.utils.TimeoutHandler;
 import com.twistedplane.sealnote.view.simplelist.SimpleListFragment;
 import com.twistedplane.sealnote.view.staggeredgrid.StaggeredGridFragment;
 
+import java.util.Arrays;
+import java.util.Map;
+import java.util.Set;
+
 
 /**
  * Main activity where all cards are listed in a staggered grid
  */
-public class SealnoteActivity extends Activity implements SharedPreferences.OnSharedPreferenceChangeListener {
+public class SealnoteActivity extends Activity
+        implements SharedPreferences.OnSharedPreferenceChangeListener {
     public final static String TAG = "SealnoteActivity";
 
     private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mDrawerToggle;
-    private Note.Folder mCurrentFolder;
-    private Note.Folder mLastFolder = Note.Folder.FOLDER_NONE;
-    SealnoteFragment mSealnoteFragment;
+    private ListView mDrawerTagListView;
 
+    private Note.Folder mCurrentFolder;
+    private Map<String, Integer> mTags;
+    private int mTagId;
+    private String mTagName;
+
+    private SealnoteFragment mSealnoteFragment;
     private boolean mReloadFragment = false;
 
     /**
@@ -55,26 +66,44 @@ public class SealnoteActivity extends Activity implements SharedPreferences.OnSh
             return;
         }
 
+        /* Handle saved state */
+        if (savedInstanceState != null) {
+            String folder = savedInstanceState.getString("SN_FOLDER", Note.Folder.FOLDER_LIVE.name());
+            mCurrentFolder = Note.Folder.valueOf(folder);
+            mTagId = savedInstanceState.getInt("SN_TAGID", -1);
+            // This only makes sense when mTagId != -1
+            mTagName = savedInstanceState.getString("SN_TAGNAME", null);
+        } else {
+            mCurrentFolder = Note.Folder.FOLDER_LIVE;
+            mTagId = -1;
+        }
+
+        /* Load and initialize views */
         setContentView(R.layout.main);
         Misc.secureWindow(this);
-
-        if (savedInstanceState != null) {
-            String folder = savedInstanceState.getString("FOLDER", Note.Folder.FOLDER_LIVE.name());
-            mLastFolder = mCurrentFolder = Note.Folder.valueOf(folder);
-        } else {
-            mLastFolder = mCurrentFolder = Note.Folder.FOLDER_LIVE;
-        }
 
         loadNotesView();
         initNavigationDrawer();
 
+        /* Shared Preferences */
         SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
         sharedPrefs.registerOnSharedPreferenceChangeListener(this);
 
-        getActionBar().setDisplayHomeAsUpEnabled(true);
-        getActionBar().setHomeButtonEnabled(true);
-        //FIXME
-        getActionBar().setTitle(getResources().getStringArray(R.array.navigation_drawer)[mCurrentFolder.ordinal() - 1]);
+        /* Setup ActionBar */
+        ActionBar actionBar = getActionBar();
+        if (actionBar == null)
+            return;
+        actionBar.setDisplayHomeAsUpEnabled(true);
+        actionBar.setHomeButtonEnabled(true);
+
+        if (mCurrentFolder != Note.Folder.FOLDER_TAG) {
+            //FIXME: Cleanup
+            actionBar.setTitle(getResources().getStringArray(
+                    R.array.navigation_drawer
+            )[mCurrentFolder.ordinal() - 1]);
+        } else {
+            actionBar.setTitle(mTagName);
+        }
     }
 
     private void loadNotesView() {
@@ -93,7 +122,8 @@ public class SealnoteActivity extends Activity implements SharedPreferences.OnSh
         }
 
         Bundle bundle = new Bundle();
-        bundle.putString("FOLDER", mCurrentFolder.name());
+        bundle.putString("SN_FOLDER", mCurrentFolder.name());
+        bundle.putInt("SN_TAGID", mTagId);
         mSealnoteFragment.setArguments(bundle);
 
         FragmentTransaction transaction = getFragmentManager().beginTransaction();
@@ -101,22 +131,30 @@ public class SealnoteActivity extends Activity implements SharedPreferences.OnSh
         transaction.commit();
     }
 
+    private Map<String, Integer> getTags() {
+        return mTags;
+    }
+
     /**
      * Set up drawer layout and listeners
      */
     private void initNavigationDrawer() {
         final View drawerContent = findViewById(R.id.drawer_content);
+        final ListView  folderList = (ListView) findViewById(R.id.drawer_list);
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
+        mDrawerTagListView = (ListView) findViewById(R.id.drawer_tags);
+
+        /* Setup drawer */
+
         mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout,
-                R.drawable.ic_navigation_drawer, R.string.drawer_open, R.string.drawer_close)
-        {
+                R.drawable.ic_navigation_drawer, R.string.drawer_open, R.string.drawer_close) {
             /** Called when a drawer has settled in a completely closed state. **/
             public void onDrawerClosed(View view) {
                 super.onDrawerClosed(view);
-                if (mLastFolder != mCurrentFolder) {
-                    mSealnoteFragment.setFolder(mCurrentFolder);
-                    mLastFolder = mCurrentFolder;
+                if (mReloadFragment) {
+                    mSealnoteFragment.setFolder(mCurrentFolder,  mTagId);
+                    mReloadFragment = false;
                 }
                 invalidateOptionsMenu();
             }
@@ -127,37 +165,108 @@ public class SealnoteActivity extends Activity implements SharedPreferences.OnSh
                 invalidateOptionsMenu();
             }
         };
-
-        // Set the drawer toggle as the DrawerListener
         mDrawerLayout.setDrawerListener(mDrawerToggle);
 
-        String[] itemStrings = getResources().getStringArray(R.array.navigation_drawer);
-        TypedArray itemIcons = getResources().obtainTypedArray(R.array.navigation_drawer_icons);
+        /* Setup Drawer List for Folders */
 
-        final ListView drawerList = (ListView) findViewById(R.id.drawer_list);
-        drawerList.setChoiceMode(AbsListView.CHOICE_MODE_SINGLE);
-        drawerList.setAdapter(new NavigationDrawerAdapter(
+        String[]        itemStrings = getResources().getStringArray(R.array.navigation_drawer);
+        TypedArray      itemIcons = getResources().obtainTypedArray(R.array.navigation_drawer_icons);
+
+        folderList.setChoiceMode(AbsListView.CHOICE_MODE_SINGLE);
+        folderList.setAdapter(new NavigationDrawerAdapter(
                 this,
                 R.layout.drawer_list_item,
                 itemStrings,
                 itemIcons
         ));
 
-        // Set first item selected and bold
-        drawerList.setItemChecked(0, true);
-
-        drawerList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        folderList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int pos, long id) {
                 //FIXME
-                mCurrentFolder = Note.Folder.values()[pos + 1];
-                drawerList.setItemChecked(pos, true);
-                getActionBar().setTitle(getResources().getStringArray(R.array.navigation_drawer)[pos]);
+                final Note.Folder newFolder;
+                switch (pos) {
+                    case 0:
+                        newFolder = Note.Folder.FOLDER_LIVE;
+                        break;
+                    case 1:
+                        newFolder = Note.Folder.FOLDER_ARCHIVE;
+                        break;
+                    case 2:
+                        newFolder = Note.Folder.FOLDER_TRASH;
+                        break;
+                    default:
+                        newFolder = Note.Folder.FOLDER_LIVE;
+                }
 
+                mReloadFragment = (newFolder != mCurrentFolder);
+                mCurrentFolder = newFolder;
+                mTagId = -1;
+
+                mDrawerTagListView.clearChoices();
+                ((ArrayAdapter) mDrawerTagListView.getAdapter()).notifyDataSetChanged();
+                folderList.setItemChecked(pos, true);
+
+                getActionBar().setTitle(getResources().getStringArray(R.array.navigation_drawer)[pos]);
                 mDrawerLayout.closeDrawer(drawerContent);
-                ((NavigationDrawerAdapter) adapterView.getAdapter()).notifyDataSetChanged();
             }
         });
+
+        /* On first start we need to select the first item on drawer */
+        switch (mCurrentFolder) {
+            case FOLDER_LIVE:
+                folderList.setItemChecked(0, true);
+                break;
+            case FOLDER_ARCHIVE:
+                folderList.setItemChecked(1, true);
+                break;
+            case FOLDER_TRASH:
+                folderList.setItemChecked(1, true);
+                break;
+        }
+
+        /* Setup Drawer List for Tags */
+        mDrawerTagListView.setChoiceMode(AbsListView.CHOICE_MODE_SINGLE);
+
+        mDrawerTagListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int pos, long id) {
+                mTagName = (String) adapterView.getItemAtPosition(pos);
+
+                int tagid = mTags.get(mTagName);
+                mReloadFragment = (tagid != mTagId);
+                mTagId = tagid;
+                mCurrentFolder = Note.Folder.FOLDER_TAG;
+
+                folderList.clearChoices();
+                mDrawerTagListView.setItemChecked(pos, true);
+
+                getActionBar().setTitle((String) mDrawerTagListView.getItemAtPosition(pos));
+                mDrawerLayout.closeDrawer(drawerContent);
+            }
+        });
+    }
+
+    private void reloadTagsAdapter() {
+        DatabaseHandler handler = SealnoteApplication.getDatabase();
+        mTags = handler.getAllTags();
+        Set<String> tagSet = mTags.keySet();
+        String []tags = mTags.keySet().toArray(new String[tagSet.size()]);
+
+        mDrawerTagListView.setAdapter(
+                new ArrayAdapter<String>(
+                        this, R.layout.drawer_tag_list_item, tags
+                )
+        );
+
+        /* Select currently active tag if any in list view */
+        if (mTagId != -1) {
+            // We need to do this every resume/recreate but not
+            // for Folder list, because folder list is static while
+            // tags list's adapter is dynamic and changed
+            int position = Arrays.asList(tags).indexOf(mTagName);
+            mDrawerTagListView.setItemChecked(position, true);
+        }
     }
 
     @Override
@@ -201,6 +310,8 @@ public class SealnoteActivity extends Activity implements SharedPreferences.OnSh
             mReloadFragment = false;
         }
 
+        reloadTagsAdapter();
+
         // preference may have changed, so do it again. Happens when coming
         // back from settings activity
         Misc.secureWindow(this);
@@ -222,8 +333,13 @@ public class SealnoteActivity extends Activity implements SharedPreferences.OnSh
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
 
-        // Save current folder in use
-        outState.putString("FOLDER", mCurrentFolder.name());
+        // Save current folder/tags in use
+        outState.putString("SN_FOLDER", mCurrentFolder.name());
+        outState.putInt("SN_TAGID", mTagId);
+
+        // Since we are going to use TAGNAME only when mTagId != -1, and in
+        // that case the title is the best and fastest way to get tagname
+        outState.putString("SN_TAGNAME", getActionBar().getTitle().toString());
     }
 
     /**

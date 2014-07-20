@@ -15,12 +15,17 @@ import android.widget.EditText;
 import android.widget.ShareActionProvider;
 import android.widget.TextView;
 import android.widget.Toast;
+import com.google.common.collect.Collections2;
+import com.google.common.collect.Sets;
 import com.twistedplane.sealnote.data.DatabaseHandler;
 import com.twistedplane.sealnote.data.Note;
 import com.twistedplane.sealnote.data.NoteContent;
 import com.twistedplane.sealnote.fragment.ColorDialogFragment;
 import com.twistedplane.sealnote.utils.*;
 import com.twistedplane.sealnote.view.NoteView;
+import com.twistedplane.sealnote.view.TagEditText;
+
+import java.util.Set;
 
 
 /**
@@ -48,6 +53,7 @@ public class NoteActivity extends Activity implements ColorDialogFragment.ColorC
     private ViewStub    mContentStub;   /* Inflated by appropriate view to edit given note type */
     private TextView    mEditedView;    /* Show last edited date/time */
     private NoteView    mNoteView;
+    private TagEditText mTagEditText;    /* Chips view editor for tags */
 
     private int         mBackgroundColor;
 
@@ -155,8 +161,14 @@ public class NoteActivity extends Activity implements ColorDialogFragment.ColorC
 
         mTitleView = (EditText) findViewById(R.id.note_activity_title);
         mEditedView = (TextView) findViewById(R.id.note_activity_edited);
+        mTagEditText = (TagEditText) findViewById(R.id.note_activity_tags);
         mNoteView = inflateNoteContentView(type);
         mNoteType = type;
+
+        // load suggestions
+        // TODO: Do this asynchronously if required
+        mTagEditText.loadSuggestions(SealnoteApplication.getDatabase().getAllTags().keySet());
+        mTagEditText.setThreshold(1);
 
         // TextWatcher to update share intent
         mNoteView.addTextChangedListener(mNoteTextWatcher); //LOOK
@@ -207,6 +219,7 @@ public class NoteActivity extends Activity implements ColorDialogFragment.ColorC
         mNote = note;
         mTitleView.setText(mNote.getTitle());
         mNoteView.setNoteContent(mNote.getNote());
+        mTagEditText.setTagSet(mNote.loadGetTags());
 
         EasyDate date = mNote.getEditedDate();
         if (date == null) {
@@ -410,14 +423,20 @@ public class NoteActivity extends Activity implements ColorDialogFragment.ColorC
             return;
         }
 
-        final boolean noteContentNotChanged = mNote != null && title.equals(mNote.getTitle()) &&
-                text.equals(mNote.getNote().toString());
-        final boolean onlyBackgroundChanged = (noteContentNotChanged && mBackgroundColor != mNote.getColor());
+        final boolean tagsChanged = mNote != null && mNote.getTags() != null &&
+                Sets.symmetricDifference(mTagEditText.getTagSet(), mNote.getTags()).size() != 0;
+        final boolean backgroundChanged = (mNote != null && mBackgroundColor != mNote.getColor());
+        final boolean contentChanged = (
+                (mNote != null) &&
+                (!title.equals(mNote.getTitle()) || !text.equals(mNote.getNote().toString()))
+        );
+
+        final boolean anythingChanged = tagsChanged || backgroundChanged || contentChanged;
 
         if (mNote == null) {
             // this is a new note
             mNote = new Note();
-        } else if (mAutoSaveEnabled && noteContentNotChanged && mBackgroundColor == mNote.getColor()) {
+        } else if (mAutoSaveEnabled && !anythingChanged) {
             // Also avoid unnecessarily updating the edit timestamp of note
             Log.d(TAG, "Note didn't change. No need to autosave");
             return;
@@ -427,14 +446,16 @@ public class NoteActivity extends Activity implements ColorDialogFragment.ColorC
         mNote.setNote(noteContent);
         mNote.setColor(mBackgroundColor);
         mNote.setType(mNoteType);
+        mNote.setTags(mTagEditText.getTagSet());
 
         if (mNote.getId() == -1) {
             mNote.setPosition(-1);
-            int newNoteId = (int) handler.addNote(mNote);
+            int newNoteId = handler.addNote(mNote);
             mNote.setId(newNoteId);
         } else {
-            // don't update timestamp when only background has changed
-            handler.updateNote(mNote, !onlyBackgroundChanged);
+            // don't update timestamp when only background or tags or
+            // only those two have changed
+            handler.updateNote(mNote, contentChanged);
         }
     }
 

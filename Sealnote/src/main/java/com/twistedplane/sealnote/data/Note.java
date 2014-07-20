@@ -3,9 +3,12 @@ package com.twistedplane.sealnote.data;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.util.Log;
+import com.twistedplane.sealnote.SealnoteApplication;
 import com.twistedplane.sealnote.utils.EasyDate;
 
 import java.text.ParseException;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Note contains all the data and helper functions related to a particular
@@ -18,7 +21,8 @@ public class Note implements Parcelable{
         FOLDER_NONE,        /* No folder selected */
         FOLDER_LIVE,        /* Notes that are alive that are note deleted and archived */
         FOLDER_ARCHIVE,     /* Archived and undeleted notes */
-        FOLDER_TRASH        /* Deleted notes */
+        FOLDER_TRASH,       /* Deleted notes */
+        FOLDER_TAG,         /* A tag is currently selected */
     }
 
     public static enum FolderAction {
@@ -43,6 +47,7 @@ public class Note implements Parcelable{
     private boolean     mArchived;      /* Is note archived */
     private boolean     mDeleted;       /* Is note in Trash folder */
     private Type        mType;          /* Type of note eg. Credit Card, Password, Text */
+    private Set<String> mTags;          /* Tags attached to this note */
 
     public Note() {
         this.mId = -1;
@@ -89,6 +94,7 @@ public class Note implements Parcelable{
         mDeleted = inParcel.readInt() > 0;
         mType = Type.valueOf(inParcel.readString());
         mNote = NoteContent.fromString(mType, inParcel.readString());
+        mTags = convertToTagSet(inParcel.readString());
     }
 
     @Override
@@ -102,6 +108,37 @@ public class Note implements Parcelable{
         outParcel.writeInt(mArchived ?1 :0);
         outParcel.writeInt(mDeleted ?1 :0);
         outParcel.writeString(mType.name());
+        outParcel.writeString(convertTagSetToString(mTags));
+    }
+
+    /**
+     * Converts given space separated tag string to a Set collection
+     */
+    public static Set<String> convertToTagSet(String tagString) {
+        String tags[] = tagString.split(" ");
+        HashSet<String> tagSet = new HashSet<String>();
+        for (String tag : tags) {
+            String trimmed = tag.trim();
+            if (trimmed.equals("")) {
+                continue;
+            }
+            tagSet.add(trimmed);
+        }
+        return tagSet;
+    }
+
+    /**
+     * Convert given tag set to space separated tag string
+     */
+    public static String convertTagSetToString(Set<String> tagSet) {
+        StringBuilder builder = new StringBuilder();
+
+        for (String tag : tagSet) {
+            builder.append(tag);
+            builder.append(" ");
+        }
+
+        return builder.toString();
     }
 
     public int getId() {
@@ -178,6 +215,29 @@ public class Note implements Parcelable{
 
     public void setType(Type type) {
         mType = type;
+    }
+
+    /**
+     * NOTE: This may return null, if loadGetTags() has not been
+     * called earlier, as tags are not loaded from database with note.
+     * They have to be explicitly loaded
+     */
+    public Set<String> getTags() {
+        return mTags;
+    }
+
+    public void setTags(Set<String> tagSet) {
+        mTags = tagSet;
+    }
+
+    /**
+     * Note by default doesn't load tags. Call this method to load
+     * tags from database and return them. Use getTags() later
+     */
+    public Set<String> loadGetTags() {
+        final DatabaseHandler handler = SealnoteApplication.getDatabase();
+        mTags = handler.getNoteTags(mId);
+        return mTags;
     }
 
     @Override

@@ -32,6 +32,7 @@ abstract public class SealnoteFragment extends Fragment implements
     protected SealnoteAdapter mAdapter;
     protected AdapterView mAdapterView;
     protected Note.Folder mCurrentFolder;
+    protected int mCurrentTag;
 
     /**
      * View to show when AdapterLoadTask is running. Show activity
@@ -79,8 +80,10 @@ abstract public class SealnoteFragment extends Fragment implements
         Log.d(TAG, "Creating SealNote fragment...");
 
         // Get folder active in activity
-        String folder = getArguments().getString("FOLDER", Note.Folder.FOLDER_LIVE.name());
+        String folder = getArguments().getString("SN_FOLDER", Note.Folder.FOLDER_LIVE.name());
+        int tagid = getArguments().getInt("SN_TAGID", -1);
         mCurrentFolder = Note.Folder.valueOf(folder);
+        mCurrentTag = tagid;
 
         mAdapter = createAdapter();
 
@@ -99,7 +102,10 @@ abstract public class SealnoteFragment extends Fragment implements
             public void onInvalidated() {
                 super.onInvalidated();
                 Log.d(TAG, "Data set invalidated");
-                setFolder(mCurrentFolder);
+                if (isRemoving() || isDetached() || !isVisible()) {
+                    return;
+                }
+                setFolder(mCurrentFolder, mCurrentTag);
             }
         });
     }
@@ -135,19 +141,20 @@ abstract public class SealnoteFragment extends Fragment implements
 
         Log.d(TAG, "Reloading adapter during fragment resume. folder = " + mCurrentFolder);
         if (mCurrentFolder == Note.Folder.FOLDER_NONE) {
-            setFolder(Note.Folder.FOLDER_LIVE);
+            setFolder(Note.Folder.FOLDER_LIVE, -1);
         } else {
-            setFolder(mCurrentFolder);
+            setFolder(mCurrentFolder, mCurrentTag);
         }
     }
 
     /**
      * Sets folder view of current fragment
      */
-    public void setFolder(Note.Folder folder) {
+    public void setFolder(Note.Folder folder, int tagid) {
         Log.d(TAG, "Switching folder to " + folder);
         mCurrentFolder = folder;
-        mAdapter.setFolder(folder);
+        mCurrentTag = tagid;
+        mAdapter.setFolder(folder, tagid);
         getLoaderManager().restartLoader(0, null, this);
     }
 
@@ -180,6 +187,9 @@ abstract public class SealnoteFragment extends Fragment implements
             case FOLDER_TRASH:
                 actionBarBg = getResources().getDrawable(R.drawable.ab_background_trash);
                 break;
+            case FOLDER_TAG:
+                actionBarBg = getResources().getDrawable(R.drawable.ab_background_tag);
+                break;
             default:
                 actionBarBg = getResources().getDrawable(R.drawable.ab_background);
                 break;
@@ -191,7 +201,7 @@ abstract public class SealnoteFragment extends Fragment implements
     @Override
     public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
         layoutProgressHeader.setVisibility(View.VISIBLE);
-        return new AdapterLoader(getActivity(), mCurrentFolder);
+        return new AdapterLoader(getActivity(), mCurrentFolder, mCurrentTag);
     }
 
     @Override

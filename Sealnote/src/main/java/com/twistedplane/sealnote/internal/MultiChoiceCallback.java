@@ -99,6 +99,11 @@ abstract public class MultiChoiceCallback implements ActionMode.Callback {
             unarchiveItem.setVisible(false);
             deleteItem.setVisible(true);
             restoreItem.setVisible(true);
+        } else if (currentFolder == Note.Folder.FOLDER_TAG) {
+            archiveItem.setVisible(true);
+            unarchiveItem.setVisible(false);
+            deleteItem.setVisible(true);
+            restoreItem.setVisible(false);
         }
 
         return true;

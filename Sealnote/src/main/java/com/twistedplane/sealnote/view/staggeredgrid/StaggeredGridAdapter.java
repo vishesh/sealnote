@@ -131,7 +131,7 @@ public class StaggeredGridAdapter extends CardGridStaggeredCursorAdapter impleme
      * Sets current folder in view
      */
     @Override
-    public void setFolder(Note.Folder folder) {
+    public void setFolder(Note.Folder folder, int tagid) {
         mCurrentFolder = folder;
     }
 
