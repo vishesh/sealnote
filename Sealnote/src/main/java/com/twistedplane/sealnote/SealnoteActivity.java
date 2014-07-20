@@ -204,6 +204,7 @@ public class SealnoteActivity extends Activity
                 mTagId = -1;
 
                 mDrawerTagListView.clearChoices();
+                ((ArrayAdapter) mDrawerTagListView.getAdapter()).notifyDataSetChanged();
                 folderList.setItemChecked(pos, true);
 
                 getActionBar().setTitle(getResources().getStringArray(R.array.navigation_drawer)[pos]);

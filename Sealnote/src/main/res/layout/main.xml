@@ -36,21 +36,8 @@
                   android:choiceMode="singleChoice"
                   android:divider="@android:color/transparent"
                   android:dividerHeight="0dp"
-                />
-
-        <TextView android:id="@+id/drawer_tag_header"
-                  android:layout_width="280dp"
-                  android:layout_height="wrap_content"
-                  android:textAllCaps="true"
-                  android:textStyle="bold"
-                  android:paddingStart="10dp"
-                  android:paddingEnd="10dp"
-                  android:paddingLeft="10dp"
-                  android:paddingRight="10dp"
-                  android:paddingTop="14dp"
-                  android:textColor="#ff555555"
-                  android:fontFamily="sans-serif-condensed"
-                  android:text="Tags"
+                  android:paddingBottom="0dp"
+                  android:layout_marginBottom="0dp"
                 />
 
         <ListView android:id="@+id/drawer_tags"
@@ -59,6 +46,8 @@
                   android:choiceMode="singleChoice"
                   android:divider="@android:color/transparent"
                   android:dividerHeight="0dp"
+                  android:paddingTop="0dp"
+                  android:layout_marginTop="0dp"
                 />
     </LinearLayout>
 </android.support.v4.widget.DrawerLayout>
