@@ -509,6 +509,31 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     }
 
     /**
+     * Get a map of all <tag, id> stored in database
+     */
+    public Map<Integer, Integer> getAllTagsCount() {
+        Map<Integer, Integer> map = new HashMap<Integer, Integer>();
+        SQLiteDatabase db = getReadableDatabase();
+
+        String query = String.format(
+                "SELECT %s, COUNT(*) FROM %s GROUP BY %s",
+                COL_TAG_ID, TABLE_NOTE_TAG, COL_TAG_ID
+        );
+        Cursor cursor = db.rawQuery(query, null);
+
+        if (cursor.moveToFirst()) {
+            do {
+                int tagid = cursor.getInt(0);
+                int count = cursor.getInt(1);
+                map.put(tagid, count);
+            } while (cursor.moveToNext());
+        }
+
+        cursor.close();
+        return map;
+    }
+
+    /**
      * Get a list of all notes stored in database
      */
     public List<Note> getAllNotes() {

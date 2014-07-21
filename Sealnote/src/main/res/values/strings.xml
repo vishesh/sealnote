@@ -35,6 +35,8 @@
 
     <string name="rename">Rename</string>
     <string name="rename_tag">Rename tag</string>
+    <string name="delete_tag">Delete tag \"%s\"</string>
+    <string name="are_you_sure_delete_tag">Are you sure you want to delete this tag?</string>
 
     <string name="whitespace_not_allowed">Error. Whitespace not allowed in tags!</string>
 

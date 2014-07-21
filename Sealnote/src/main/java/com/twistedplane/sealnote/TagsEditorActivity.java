@@ -14,9 +14,7 @@ import com.twistedplane.sealnote.data.DatabaseHandler;
 import com.twistedplane.sealnote.utils.Misc;
 import com.twistedplane.sealnote.utils.TimeoutHandler;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Activity to delete/rename tags
@@ -26,6 +24,7 @@ public class TagsEditorActivity extends ListActivity {
 
     private DatabaseHandler         mHandler;
     private Map<String, Integer>    mTagMap;
+    private Map<Integer, Integer>   mTagCount;
     private TagsAdapter             mAdapter;
     private List<String>            mAdapterData;
 
@@ -36,8 +35,16 @@ public class TagsEditorActivity extends ListActivity {
 
         mHandler = SealnoteApplication.getDatabase();
         mTagMap = mHandler.getAllTags();
+        mTagCount = mHandler.getAllTagsCount();
         mAdapterData = new ArrayList<String>(mTagMap.keySet());
         mAdapter = new TagsAdapter(this, mAdapterData);
+
+        Collections.sort(mAdapterData, new Comparator<String>() {
+            @Override
+            public int compare(String lhs, String rhs) {
+                return lhs.compareToIgnoreCase(rhs);
+            }
+        });
         setListAdapter(mAdapter);
 
         View view = getLayoutInflater().inflate(R.layout.empty_tags, null);
@@ -112,7 +119,37 @@ public class TagsEditorActivity extends ListActivity {
         mAdapter.notifyDataSetChanged();
     }
 
-    protected void onDeleteClick(ListView l, View v, int position, long id) {
+    protected void onDeleteClick(ListView l, View v, final int position, long id) {
+        final String tag = mAdapterData.get(position);
+        final int tagid = mTagMap.get(tag);
+
+        if (mTagCount.containsKey(tagid)) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this)
+                    .setTitle(
+                            String.format(
+                                    getResources().getString(R.string.delete_tag),
+                                    tag
+                            )
+                    )
+                    .setMessage(R.string.are_you_sure_delete_tag)
+                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int whichButton) {
+                            deleteTag(position);
+                        }
+                    })
+                    .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            // do nothing
+                        }
+                    });
+            builder.show();
+        } else {
+            deleteTag(position);
+        }
+    }
+
+    protected void deleteTag(int position) {
         final String tag = mAdapterData.get(position);
         final int tagid = mTagMap.get(tag);
 
@@ -153,8 +190,17 @@ public class TagsEditorActivity extends ListActivity {
             ImageButton button = (ImageButton) view.findViewById(R.id.delete_button);
             button.setTag(position);
 
-            TextView tv = (TextView) view.findViewById(R.id.text1);
-            tv.setText(getItem(position));
+            TextView tagNameView = (TextView) view.findViewById(R.id.text1);
+            tagNameView.setText(getItem(position));
+
+            TextView countView = (TextView) view.findViewById(R.id.note_count);
+
+            int tagid = mTagMap.get(getItem(position));
+            if (mTagCount.containsKey(tagid)) {
+                countView.setText(Integer.toString(mTagCount.get(tagid)));
+            } else {
+                countView.setText("");
+            }
 
             // We just created a new View, hence add a click listener which
             // will dynamically pick up id, position from view tag and
