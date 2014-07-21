@@ -35,12 +35,12 @@ public class NoteContentLogin extends NoteContent {
         if (!mUpdated) {
             update();
         }
-        String result = "";
-        if (!mUrl.equals("")) {
-            result += mUrl;
+        String result = mUrl.trim();
+        if (!result.equals("")) {
+            result += "<br/>";
         }
-        if (!mPassword.equals("")) {
-            result += result.equals("") ? mLogin : String.format("<br/>Login: <b>%s</b>", mLogin);
+        if (!mLogin.equals("")) {
+            result += String.format("Login: <b>%s</b>", mLogin);
         }
         return result;
     }
