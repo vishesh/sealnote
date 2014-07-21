@@ -57,7 +57,7 @@
                     android:textStyle="normal"
                     android:textSize="28sp"
                     android:textColor="@color/note_foreground"
-                    android:inputType="textCapWords"
+                    android:inputType="textCapSentences"
                     android:imeOptions="actionNext"
                     android:autoText="false"
                     android:gravity="center"
