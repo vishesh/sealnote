@@ -21,6 +21,7 @@ import java.io.File;
  */
 public class PasswordActivity extends Activity {
     public final static String TAG = "PasswordActivity";
+    private EditText mPasswordInput;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -28,6 +29,8 @@ public class PasswordActivity extends Activity {
         setContentView(R.layout.activity_password);
 
         TimeoutHandler.instance().init();
+
+        mPasswordInput = (EditText) findViewById(R.id.password_input);
 
         if (checkExistingDatabase()) {
             createLoginScreen();
@@ -51,18 +54,17 @@ public class PasswordActivity extends Activity {
      */
     private void createWelcomeScreen() {
         final Button createButton = (Button) findViewById(R.id.password_action_button);
-        final EditText passwordView = (EditText) findViewById(R.id.password_input);
 
         // Override the default text set in layout
-        passwordView.setHint(getResources().getString(R.string.create_password));
+        mPasswordInput.setHint(getResources().getString(R.string.create_password));
         createButton.setText(getResources().getString(R.string.get_started));
 
         createButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String password_input = passwordView.getText().toString();
+                String password_input = mPasswordInput.getText().toString();
                 if (!password_input.equals("")) {
-                    new LoginTask().execute(passwordView.getText().toString());
+                    new LoginTask().execute(mPasswordInput.getText().toString());
                     createButton.setEnabled(false); //FIXME: Add progress bar
                 } else {
                     AlertDialog.Builder alert = new AlertDialog.Builder(PasswordActivity.this);
@@ -80,17 +82,16 @@ public class PasswordActivity extends Activity {
      */
     private void createLoginScreen() {
         final Button button = (Button) findViewById(R.id.password_action_button);
-        final EditText password = (EditText) findViewById(R.id.password_input);
 
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 toggleProgress();
-                new LoginTask().execute(password.getText().toString());
+                new LoginTask().execute(mPasswordInput.getText().toString());
             }
         });
 
-        password.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+        mPasswordInput.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int actionId, KeyEvent keyEvent) {
                 if (actionId == EditorInfo.IME_ACTION_GO) {
@@ -168,6 +169,7 @@ public class PasswordActivity extends Activity {
                 Toast.makeText(PasswordActivity.this, getResources()
                      .getString(R.string.invalid_password), Toast.LENGTH_LONG)
                      .show();
+                mPasswordInput.setText("");
                 PasswordActivity.this.toggleProgress();
             }
         }
