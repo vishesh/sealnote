@@ -3,6 +3,7 @@ package com.twistedplane.sealnote.internal;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.res.Resources;
+import android.database.DatabaseUtils;
 import android.os.AsyncTask;
 import android.preference.DialogPreference;
 import android.support.annotation.NonNull;
@@ -177,7 +178,9 @@ public class PasswordPreference extends DialogPreference implements TextWatcher 
         }
 
         // make query to change database key
-        db.getWritableDatabase().rawQuery("PRAGMA rekey = '" + newPassword + "'", null).close();
+        String query = String.format("PRAGMA rekey = %s", DatabaseUtils.sqlEscapeString(newPassword));
+        db.getWritableDatabase().execSQL(query);
+        db.getWritableDatabase().close();
 
         // Recycle old password and state, and set new password in handler
         db.recycle();
