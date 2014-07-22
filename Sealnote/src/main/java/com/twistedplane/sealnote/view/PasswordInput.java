@@ -11,6 +11,9 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import com.twistedplane.sealnote.R;
+import com.twistedplane.sealnote.crypto.PasswordQuality;
+
+import java.io.IOException;
 
 public class PasswordInput extends RelativeLayout {
     private EditText    mInput;
@@ -18,6 +21,7 @@ public class PasswordInput extends RelativeLayout {
     private TextView    mStrengthText;
     private View        mContent;
     private boolean     mMeterEnabled = true;
+    private PasswordQuality mQuality = new PasswordQuality();
 
     //TODO: Move to arrays.xml
     public static final String[] STRENGTH = new String[] {
@@ -87,6 +91,11 @@ public class PasswordInput extends RelativeLayout {
 
         mProgress.setMax(4);
 
+        try {
+            mQuality.initDictionary(getResources().getAssets().open("xato_passlist.txt"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         updateMeter();
         setMeterEnabled(mMeterEnabled);
     }
@@ -110,6 +119,7 @@ public class PasswordInput extends RelativeLayout {
     private void updateMeter() {
         if (mMeterEnabled) {
             // calculate password strength and set level
+            setLevel(mQuality.score(mInput.getText()));
         }
     }
 
@@ -128,5 +138,9 @@ public class PasswordInput extends RelativeLayout {
     public void setMeterEnabled(boolean value) {
         mMeterEnabled = value;
         mContent.setVisibility(value ? VISIBLE : GONE);
+    }
+
+    public void addTextChangedListener(TextWatcher watcher) {
+        mInput.addTextChangedListener(watcher);
     }
 }

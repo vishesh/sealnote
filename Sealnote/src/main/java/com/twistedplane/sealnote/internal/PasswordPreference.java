@@ -17,6 +17,7 @@ import android.widget.Toast;
 import com.twistedplane.sealnote.R;
 import com.twistedplane.sealnote.SealnoteApplication;
 import com.twistedplane.sealnote.data.DatabaseHandler;
+import com.twistedplane.sealnote.view.PasswordInput;
 import net.sqlcipher.database.SQLiteException;
 
 /**
@@ -29,7 +30,7 @@ public class PasswordPreference extends DialogPreference implements TextWatcher 
     public final static String TAG = "PasswordPreference";
 
     private EditText mOldView;
-    private EditText mNewView;
+    private PasswordInput mNewView;
     private EditText mNewConfirmView;
     private Button mChangeButton;
     private Button mCancelButton;
@@ -66,10 +67,13 @@ public class PasswordPreference extends DialogPreference implements TextWatcher 
         super.onBindDialogView(view);
 
         mOldView = (EditText) view.findViewById(R.id.diag_password_pref_oldPassword);
-        mNewView = (EditText) view.findViewById(R.id.diag_password_pref_newPassword);
+        mNewView = (PasswordInput) view.findViewById(R.id.diag_password_pref_newPassword);
         mNewConfirmView = (EditText) view.findViewById(R.id.diag_password_pref_newPasswordConfirm);
         mChangeButton = (Button) view.findViewById(R.id.button_positive);
         mCancelButton = (Button) view.findViewById(R.id.button_negative);
+
+        //FIXME: Set in XML
+        mNewView.setHint(getContext().getResources().getString(R.string.new_password));
 
         // initially everything is empty hence the button is disabled
         mChangeButton.setEnabled(false);
@@ -129,7 +133,7 @@ public class PasswordPreference extends DialogPreference implements TextWatcher 
      */
     private void updateChangeButtonState() {
         String oldPassword = mOldView.getText().toString();
-        String newPassword = mNewView.getText().toString();
+        String newPassword = mNewView.getText();
         String newConfirmPassword = mNewConfirmView.getText().toString();
 
         // any of three EditText is empty, we won't accept
@@ -208,7 +212,7 @@ public class PasswordPreference extends DialogPreference implements TextWatcher 
             DatabaseHandler db = SealnoteApplication.getDatabase();
             oldDbPassword = db.getPassword();
             oldPassword = mOldView.getText().toString();
-            newPassword = mNewView.getText().toString();
+            newPassword = mNewView.getText();
         }
 
         @Override

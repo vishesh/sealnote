@@ -92,6 +92,8 @@ public class PasswordActivity extends Activity {
             }
         });
 
+        mPasswordInput.setMeterEnabled(false);
+
         mPasswordInput.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int actionId, KeyEvent keyEvent) {
