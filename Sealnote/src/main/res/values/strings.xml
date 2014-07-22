@@ -108,4 +108,7 @@
     <string name="add_tags">Add tags&#8230;</string>
     <string name="no_tags_found">No tags found!</string>
 
+    <string name="version">Version</string>
+    <string name="help_and_about"><![CDATA[Help & About]]></string>
+
 </resources>

@@ -1,4 +1,4 @@
-package com.twistedplane.sealnote.internal;
+package com.twistedplane.sealnote.settings;
 
 import android.app.AlertDialog;
 import android.content.Context;
