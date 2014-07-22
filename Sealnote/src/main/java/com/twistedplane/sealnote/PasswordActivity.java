@@ -11,6 +11,7 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.*;
 import com.twistedplane.sealnote.data.DatabaseHandler;
 import com.twistedplane.sealnote.utils.TimeoutHandler;
+import com.twistedplane.sealnote.view.PasswordInput;
 import net.sqlcipher.database.SQLiteException;
 
 import java.io.File;
@@ -21,7 +22,7 @@ import java.io.File;
  */
 public class PasswordActivity extends Activity {
     public final static String TAG = "PasswordActivity";
-    private EditText mPasswordInput;
+    private PasswordInput mPasswordInput;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -30,7 +31,7 @@ public class PasswordActivity extends Activity {
 
         TimeoutHandler.instance().init();
 
-        mPasswordInput = (EditText) findViewById(R.id.password_input);
+        mPasswordInput = (PasswordInput) findViewById(R.id.password_input);
 
         if (checkExistingDatabase()) {
             createLoginScreen();
@@ -87,9 +88,11 @@ public class PasswordActivity extends Activity {
             @Override
             public void onClick(View view) {
                 toggleProgress();
-                new LoginTask().execute(mPasswordInput.getText().toString());
+                new LoginTask().execute(mPasswordInput.getText());
             }
         });
+
+        mPasswordInput.setMeterEnabled(false);
 
         mPasswordInput.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
