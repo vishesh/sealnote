@@ -98,4 +98,22 @@
         <item name="android:dividerHeight">1px</item>
     </style>
 
+    <!-- Note Content -->
+
+    <style name="NoteContentCard">
+        <item name="android:paddingTop">@dimen/nc_card_vertical_spacing</item>
+        <item name="android:paddingRight">@dimen/nc_card_horizontal_padding</item>
+        <item name="android:paddingBottom">@dimen/nc_vertical_padding</item>
+        <item name="android:paddingLeft">@dimen/nc_card_horizontal_padding</item>
+        <item name="android:background">@drawable/note_type_card</item>
+    </style>
+
+    <style name="NoteContentCard_EditText">
+        <item name="android:textSize">@dimen/nc_card_font_size</item>
+        <item name="android:textColor">@color/note_foreground</item>
+        <item name="android:textColorHint">@color/note_hint_foreground</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:typeface">monospace</item>
+    </style>
+
 </resources>

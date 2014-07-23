@@ -140,7 +140,7 @@ public class TagEditText extends MultiAutoCompleteTextView implements View.OnFoc
     private TextView createBubbleTextView(String text) {
         TextView tv = new TextView(getContext());
         tv.setText(text);
-        tv.setTextSize(TypedValue.COMPLEX_UNIT_PX, (int) (getTextSize() * 1.2));
+        tv.setTextSize(TypedValue.COMPLEX_UNIT_PX, (int) (getTextSize() * 1.6));
         tv.setTextColor(getResources().getColor(R.color.tag_bubble_foreground));
 
         // Convert PADDING in dp to px and set it to view

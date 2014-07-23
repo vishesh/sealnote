@@ -56,4 +56,25 @@
     <dimen name="password_activity_button_horizontal_padding">28dp</dimen>
     <dimen name="password_activity_button_vertical_padding">18dp</dimen>
 
+    <!-- Change password dialog -->
+    <dimen name="passoword_change_view_padding">8dp</dimen>
+    <dimen name="passoword_change_text_spacer">2dp</dimen>
+    <dimen name="passoword_change_text_category_spacer">8dp</dimen>
+
+    <!--
+                Note Content
+    -->
+
+    <dimen name="nc_vertical_margin">8dp</dimen>
+    <dimen name="nc_vertical_padding">8dp</dimen>
+
+    <!-- card note content -->
+    <dimen name="nc_card_vertical_spacing">2dp</dimen>
+    <dimen name="nc_card_horizontal_padding">10dp</dimen>
+    <dimen name="nc_card_horizontal_spacing">10dp</dimen>
+    <dimen name="nc_card_font_size">18sp</dimen>
+
+
+    <dimen name="password_meter_stroke_width">0dp</dimen>
+
 </resources>
