@@ -7,6 +7,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.text.*;
 import android.text.style.ImageSpan;
 import android.util.AttributeSet;
+import android.util.TypedValue;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.MultiAutoCompleteTextView;
@@ -139,7 +140,7 @@ public class TagEditText extends MultiAutoCompleteTextView implements View.OnFoc
     private TextView createBubbleTextView(String text) {
         TextView tv = new TextView(getContext());
         tv.setText(text);
-        tv.setTextSize(getTextSize());
+        tv.setTextSize(TypedValue.COMPLEX_UNIT_PX, (int) (getTextSize() * 1.2));
         tv.setTextColor(getResources().getColor(R.color.tag_bubble_foreground));
 
         // Convert PADDING in dp to px and set it to view

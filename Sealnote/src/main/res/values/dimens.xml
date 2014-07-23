@@ -41,8 +41,8 @@
 
     <!-- margins -->
 
-    <dimen name="note_view_horizontal_margin">16dp</dimen>
-    <dimen name="note_view_vertical_margin">16dp</dimen>
+    <dimen name="note_view_horizontal_margin">18dp</dimen>
+    <dimen name="note_view_vertical_margin">14dp</dimen>
 
     <dimen name="note_view_edited_font_size">12sp</dimen>
 

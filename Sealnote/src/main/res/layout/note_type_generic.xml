@@ -18,5 +18,6 @@
         android:autoText="false"
         android:autoLink="all"
         android:linksClickable="true"
+        android:textColorHint="@color/note_hint_foreground"
         />
 

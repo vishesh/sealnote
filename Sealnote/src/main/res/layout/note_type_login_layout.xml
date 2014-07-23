@@ -30,6 +30,7 @@
                 android:textAllCaps="true"
                 android:textSize="22sp"
                 android:textColor="@color/note_foreground"
+                android:textColorHint="@color/note_hint_foreground"
                 />
 
         <LinearLayout
@@ -53,6 +54,7 @@
                     android:typeface="monospace"
                     android:singleLine="true"
                     android:textColor="@color/note_foreground"
+                    android:textColorHint="@color/note_hint_foreground"
                     />
         </LinearLayout>
 
@@ -78,6 +80,7 @@
                     android:singleLine="true"
                     android:inputType="textNoSuggestions"
                     android:textColor="@color/note_foreground"
+                    android:textColorHint="@color/note_hint_foreground"
                     />
 
         </LinearLayout>
@@ -100,6 +103,7 @@
             android:autoText="false"
             android:autoLink="all"
             android:linksClickable="true"
+            android:textColorHint="@color/note_hint_foreground"
             />
 
 </LinearLayout>
