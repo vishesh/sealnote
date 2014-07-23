@@ -64,5 +64,14 @@
 
     <PreferenceCategory android:title="@string/help_and_about">
         <com.twistedplane.sealnote.settings.VersionPreference />
+        <Preference
+            android:title="@string/acknowledgements"
+            android:persistent="false">
+            <intent
+                android:action="android.intent.action.VIEW"
+                android:targetPackage="com.twistedplane.sealnote"
+                android:targetClass="com.twistedplane.sealnote.WebViewActivity"
+                />
+        </Preference>
     </PreferenceCategory>
 </PreferenceScreen>
