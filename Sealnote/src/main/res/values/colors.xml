@@ -7,6 +7,7 @@
 
     <!-- actionbar -->
     <item name="light_gray" type="color">#ffececec</item>
+
     <item name="theme_background" type="color">#0099bb</item>
     <item name="theme_background_pressed" type="color">#005b70</item>
     <item name="actionbar_item_pressed_background" type="color">#55000000</item>
@@ -17,9 +18,20 @@
     <item name="transparent" type="color">#00000000</item>
     <item name="note_view_tint" type="color">#22ffffff</item>
     <item name="darkblue" type="color">#FF0099CC</item>
-    <item name="note_foreground" type="color">#ff373737</item>
+    <item name="note_foreground" type="color">#de171717</item>
+    <item name="note_hint_foreground" type="color">#44171717</item>
     <color name="card_text_color">@color/note_foreground</color>
     <color name="card_text_color_header">#ff494949</color>
+
+    <color name="tag_bubble_foreground">#def0f0f0</color>
+
+    <item name="pressed_grey" type="color">#ffd3d3d3</item>
+    <color name="list_button_pressed">@color/pressed_grey</color>
+
+    <!-- simple list view -->
+    <color name="simplelistview_activated" type="color">#ffe0e0e0</color>
+    <color name="simplelistview_pressed" type="color">#fff4f4f4</color>
+    <color name="simplelistview_selected" type="color">#fff4f4f4</color>
 
     <!-- color card -->
     <!--<color name="card_background_color0">#ffecf0f1</color>--> <!-- Cloudy -->

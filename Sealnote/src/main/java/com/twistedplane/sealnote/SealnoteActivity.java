@@ -1,77 +1,56 @@
 package com.twistedplane.sealnote;
 
+import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.content.res.TypedArray;
-import android.database.Cursor;
-import android.database.DataSetObserver;
 import android.graphics.Typeface;
-import android.graphics.drawable.Drawable;
-import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
 import android.view.*;
 import android.widget.*;
-import com.nhaarman.listviewanimations.swinginadapters.AnimationAdapter;
-import com.nhaarman.listviewanimations.swinginadapters.prepared.ScaleInAnimationAdapter;
 import com.twistedplane.sealnote.data.DatabaseHandler;
 import com.twistedplane.sealnote.data.Note;
-import com.twistedplane.sealnote.data.SealnoteAdapter;
+import com.twistedplane.sealnote.fragment.SealnoteFragment;
 import com.twistedplane.sealnote.utils.FontCache;
 import com.twistedplane.sealnote.utils.Misc;
+import com.twistedplane.sealnote.utils.PreferenceHandler;
 import com.twistedplane.sealnote.utils.TimeoutHandler;
-import com.twistedplane.sealnote.views.SealnoteCardGridStaggeredView;
+import com.twistedplane.sealnote.view.simplelist.SimpleListFragment;
+import com.twistedplane.sealnote.view.staggeredgrid.StaggeredGridFragment;
 
-//FIXME: Clean up code and update flag on settings changed.
+import java.util.Arrays;
+import java.util.Map;
+import java.util.Set;
+
 
 /**
  * Main activity where all cards are listed in a staggered grid
  */
-public class SealnoteActivity extends Activity {
+public class SealnoteActivity extends Activity
+        implements SharedPreferences.OnSharedPreferenceChangeListener {
     public final static String TAG = "SealnoteActivity";
 
-
-    /**
-     * Adapter used by Staggered Grid View to display note cards
-     */
-    private SealnoteAdapter mAdapter = new SealnoteAdapter(this, null);
-    private SealnoteCardGridStaggeredView mNoteListView;
     private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mDrawerToggle;
+    private ListView mDrawerTagListView;
+
     private Note.Folder mCurrentFolder;
+    private Map<String, Integer> mTags;
+    private int mTagId;
+    private String mTagName;
 
-    /**
-     * FIXME: Hacks
-     */
-    private Note.Folder mLastFolder;
-    private boolean mRefreshRequired = false;
-
-    /**
-     * View to show when AdapterLoadTask is running. Show activity
-     * progress circle
-     */
-    private View layoutProgressHeader;
-
-    /**
-     * View shown where is no cards available.
-     */
-    private View mEmptyGridLayout;
-
-    /**
-     * TextView show when no cards is available in Trash or Archive
-     */
-    private TextView mEmptyGeneric;
-
-    /**
-     * If a task is already executing to load adapter
-     */
-    private boolean mAdapterLoading = false;
+    private SealnoteFragment mSealnoteFragment;
+    private boolean mReloadFragment = false;
 
     /**
      * Called when the activity is first created.
@@ -79,15 +58,7 @@ public class SealnoteActivity extends Activity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.d(TAG, "Creating...");
-
-        setContentView(R.layout.main);
-        Misc.secureWindow(this);
-
-        mNoteListView = (SealnoteCardGridStaggeredView) findViewById(R.id.main_note_grid);
-        mEmptyGridLayout = findViewById(R.id.layout_empty_grid);
-        mEmptyGeneric = (TextView) findViewById(R.id.empty_folder_generic);
-        layoutProgressHeader = findViewById(R.id.layoutHeaderProgress);
+        Log.d(TAG, "Creating main activity...");
 
         if (SealnoteApplication.getDatabase().getPassword() == null) {
             // onResume will follow up which will start PasswordActivity and setup database password
@@ -95,44 +66,73 @@ public class SealnoteActivity extends Activity {
             return;
         }
 
-        /**
-         * Called whenever there is change in dataset. Any future changes
-         * will call this
-         */
-        mAdapter.registerDataSetObserver(new DataSetObserver() {
-            @Override
-            public void onChanged() {
-                super.onChanged();
-                onAdapterDataSetChanged();
-            }
-        });
-
-        int currentFolderInt = 0;
-
+        /* Handle saved state */
         if (savedInstanceState != null) {
-            currentFolderInt = savedInstanceState.getInt("FOLDER", 0);
+            String folder = savedInstanceState.getString("SN_FOLDER", Note.Folder.FOLDER_LIVE.name());
+            mCurrentFolder = Note.Folder.valueOf(folder);
+            mTagId = savedInstanceState.getInt("SN_TAGID", -1);
+            // This only makes sense when mTagId != -1
+            mTagName = savedInstanceState.getString("SN_TAGNAME", null);
+        } else {
+            mCurrentFolder = Note.Folder.FOLDER_LIVE;
+            mTagId = -1;
         }
 
-        switch (currentFolderInt) {
-            case 0:
-                mCurrentFolder = Note.Folder.FOLDER_LIVE;
-                break;
-            case 1:
-                mCurrentFolder = Note.Folder.FOLDER_ARCHIVE;
-                break;
-            case 2:
-                mCurrentFolder = Note.Folder.FOLDER_TRASH;
-                break;
-            default:
-                mCurrentFolder = Note.Folder.FOLDER_LIVE;
-                break;
-        }
-        mRefreshRequired = true;
+        /* Load and initialize views */
+        setContentView(R.layout.main);
+        Misc.secureWindow(this);
 
+        loadNotesView();
         initNavigationDrawer();
-        getActionBar().setDisplayHomeAsUpEnabled(true);
-        getActionBar().setHomeButtonEnabled(true);
-        getActionBar().setTitle(getResources().getStringArray(R.array.navigation_drawer)[currentFolderInt]);
+
+        /* Shared Preferences */
+        SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
+        sharedPrefs.registerOnSharedPreferenceChangeListener(this);
+
+        /* Setup ActionBar */
+        ActionBar actionBar = getActionBar();
+        if (actionBar == null)
+            return;
+        actionBar.setDisplayHomeAsUpEnabled(true);
+        actionBar.setHomeButtonEnabled(true);
+
+        if (mCurrentFolder != Note.Folder.FOLDER_TAG) {
+            //FIXME: Cleanup
+            actionBar.setTitle(getResources().getStringArray(
+                    R.array.navigation_drawer
+            )[mCurrentFolder.ordinal() - 1]);
+        } else {
+            actionBar.setTitle(mTagName);
+        }
+    }
+
+    private void loadNotesView() {
+        final PreferenceHandler.NoteListViewType type = PreferenceHandler.getNoteListViewType(this);
+
+        switch (type) {
+            case VIEW_TILES:
+                mSealnoteFragment = new StaggeredGridFragment();
+                break;
+            case VIEW_COLUMN:
+                mSealnoteFragment = new StaggeredGridFragment();
+                break;
+            case VIEW_SIMPLE_LIST:
+                mSealnoteFragment = new SimpleListFragment();
+                break;
+        }
+
+        Bundle bundle = new Bundle();
+        bundle.putString("SN_FOLDER", mCurrentFolder.name());
+        bundle.putInt("SN_TAGID", mTagId);
+        mSealnoteFragment.setArguments(bundle);
+
+        FragmentTransaction transaction = getFragmentManager().beginTransaction();
+        transaction.replace(R.id.fragment_container, mSealnoteFragment);
+        transaction.commit();
+    }
+
+    private Map<String, Integer> getTags() {
+        return mTags;
     }
 
     /**
@@ -140,79 +140,133 @@ public class SealnoteActivity extends Activity {
      */
     private void initNavigationDrawer() {
         final View drawerContent = findViewById(R.id.drawer_content);
+        final ListView  folderList = (ListView) findViewById(R.id.drawer_list);
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
-        mDrawerToggle = new ActionBarDrawerToggle(
-                this,                  /* host Activity */
-                mDrawerLayout,         /* DrawerLayout object */
-                R.drawable.ic_navigation_drawer,  /* nav drawer icon to replace 'Up' caret */
-                R.string.drawer_open,  /* "open drawer" description */
-                R.string.drawer_close  /* "close drawer" description */
-        ) {
+        mDrawerTagListView = (ListView) findViewById(R.id.drawer_tags);
 
-            /** Called when a drawer has settled in a completely closed state. */
+        /* Setup drawer */
+
+        mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout,
+                R.drawable.ic_navigation_drawer, R.string.drawer_open, R.string.drawer_close) {
+            /** Called when a drawer has settled in a completely closed state. **/
             public void onDrawerClosed(View view) {
                 super.onDrawerClosed(view);
-                invalidateOptionsMenu();
-
-                if (!mAdapterLoading && mRefreshRequired) {
-                    new AdapterLoadTask(mCurrentFolder).execute();
-                    mRefreshRequired = false;
+                if (mReloadFragment) {
+                    mSealnoteFragment.setFolder(mCurrentFolder,  mTagId);
+                    getActionBar().setTitle(mTagName);
+                    mReloadFragment = false;
                 }
+                invalidateOptionsMenu();
             }
 
-            /** Called when a drawer has settled in a completely open state. */
+            /** Called when a drawer has settled in a completely open state. **/
             public void onDrawerOpened(View drawerView) {
                 super.onDrawerOpened(drawerView);
                 invalidateOptionsMenu();
             }
         };
-
-        // Set the drawer toggle as the DrawerListener
         mDrawerLayout.setDrawerListener(mDrawerToggle);
 
-        String[] itemStrings = getResources().getStringArray(R.array.navigation_drawer);
-        TypedArray itemIcons = getResources().obtainTypedArray(R.array.navigation_drawer_icons);
+        /* Setup Drawer List for Folders */
 
-        final ListView drawerList = (ListView) findViewById(R.id.drawer_list);
-        drawerList.setChoiceMode(AbsListView.CHOICE_MODE_SINGLE);
-        drawerList.setAdapter(new NavigationDrawerAdapter(
+        String[]        itemStrings = getResources().getStringArray(R.array.navigation_drawer);
+        TypedArray      itemIcons = getResources().obtainTypedArray(R.array.navigation_drawer_icons);
+
+        folderList.setChoiceMode(AbsListView.CHOICE_MODE_SINGLE);
+        folderList.setAdapter(new NavigationDrawerAdapter(
                 this,
                 R.layout.drawer_list_item,
                 itemStrings,
                 itemIcons
         ));
 
-        // Set first item selected and bold
-        drawerList.setItemChecked(0, true);
-
-        drawerList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            int oldChecked = 0;
-
+        folderList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int pos, long id) {
-                if (pos == 0) {
-                    // FOLDER_LIVE
-                    mCurrentFolder = Note.Folder.FOLDER_LIVE;
-                } else if (pos == 1) {
-                    // FOLDER_ARCHIVE
-                    mCurrentFolder = Note.Folder.FOLDER_ARCHIVE;
-                } else if (pos == 2) {
-                    // FOLDER_TRASH
-                    mCurrentFolder = Note.Folder.FOLDER_TRASH;
+                //FIXME
+                final Note.Folder newFolder;
+                switch (pos) {
+                    case 0:
+                        newFolder = Note.Folder.FOLDER_LIVE;
+                        break;
+                    case 1:
+                        newFolder = Note.Folder.FOLDER_ARCHIVE;
+                        break;
+                    case 2:
+                        newFolder = Note.Folder.FOLDER_TRASH;
+                        break;
+                    default:
+                        newFolder = Note.Folder.FOLDER_LIVE;
                 }
 
-                // FIXME: Hack used to check if we should refresh when drawer is closed
-                mRefreshRequired = (mCurrentFolder != mLastFolder);
-                mLastFolder = mCurrentFolder;
+                mReloadFragment = (newFolder != mCurrentFolder);
+                mCurrentFolder = newFolder;
+                mTagId = -1;
 
-                drawerList.setItemChecked(pos, true);
-                getActionBar().setTitle(getResources().getStringArray(R.array.navigation_drawer)[pos]);
+                mDrawerTagListView.clearChoices();
+                ((ArrayAdapter) mDrawerTagListView.getAdapter()).notifyDataSetChanged();
+                folderList.setItemChecked(pos, true);
 
+                mTagName = getResources().getStringArray(R.array.navigation_drawer)[pos];
                 mDrawerLayout.closeDrawer(drawerContent);
-                ((NavigationDrawerAdapter) adapterView.getAdapter()).notifyDataSetChanged();
             }
         });
+
+        /* On first start we need to select the first item on drawer */
+        switch (mCurrentFolder) {
+            case FOLDER_LIVE:
+                folderList.setItemChecked(0, true);
+                break;
+            case FOLDER_ARCHIVE:
+                folderList.setItemChecked(1, true);
+                break;
+            case FOLDER_TRASH:
+                folderList.setItemChecked(1, true);
+                break;
+        }
+
+        /* Setup Drawer List for Tags */
+        mDrawerTagListView.setChoiceMode(AbsListView.CHOICE_MODE_SINGLE);
+
+        mDrawerTagListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int pos, long id) {
+                mTagName = (String) adapterView.getItemAtPosition(pos);
+
+                int tagid = mTags.get(mTagName);
+                mReloadFragment = (tagid != mTagId);
+                mTagId = tagid;
+                mCurrentFolder = Note.Folder.FOLDER_TAG;
+
+                folderList.clearChoices();
+                mDrawerTagListView.setItemChecked(pos, true);
+
+                mDrawerLayout.closeDrawer(drawerContent);
+            }
+        });
+    }
+
+    private void reloadTagsAdapter() {
+        DatabaseHandler handler = SealnoteApplication.getDatabase();
+        mTags = handler.getAllTags();
+        Set<String> tagSet = mTags.keySet();
+        String []tags = mTags.keySet().toArray(new String[tagSet.size()]);
+
+        mDrawerTagListView.setAdapter(
+                new ArrayAdapter<String>(
+                        this, R.layout.drawer_tag_list_item, tags
+                )
+        );
+
+        /* Select currently active tag if any in list view */
+        if (mTagId != -1) {
+            // We need to do this every resume/recreate but not
+            // for Folder list, because folder list is static while
+            // tags list's adapter is dynamic and changed
+            int position = Arrays.asList(tags).indexOf(mTagName);
+            mDrawerTagListView.setItemChecked(position, true);
+        }
     }
 
     @Override
@@ -230,6 +284,14 @@ public class SealnoteActivity extends Activity {
         mDrawerToggle.onConfigurationChanged(newConfig);
     }
 
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+        if (key.equals("NoteListViewType") || key.equals("DynamicFontSize")) {
+            Log.d(TAG, "NoteListView type changed!");
+            mReloadFragment = true;
+        }
+    }
+
     /**
      * When coming back from foreground check if timeout has expired and if
      * so load logout to password activity. Otherwise reset the timeout status.
@@ -243,9 +305,12 @@ public class SealnoteActivity extends Activity {
             return;
         }
 
-        if (!mAdapterLoading) {
-            new AdapterLoadTask(mCurrentFolder).execute();
+        if (mReloadFragment) {
+            loadNotesView();
+            mReloadFragment = false;
         }
+
+        reloadTagsAdapter();
 
         // preference may have changed, so do it again. Happens when coming
         // back from settings activity
@@ -258,13 +323,7 @@ public class SealnoteActivity extends Activity {
     @Override
     public void onPause() {
         super.onPause();
-        mAdapter.clearCursor();
         TimeoutHandler.instance().pause(this);
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
     }
 
     /**
@@ -274,18 +333,13 @@ public class SealnoteActivity extends Activity {
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
 
-        // Save current folder in use
-        switch (mCurrentFolder) {
-            case FOLDER_LIVE:
-                outState.putInt("FOLDER", 0);
-                break;
-            case FOLDER_ARCHIVE:
-                outState.putInt("FOLDER", 1);
-                break;
-            case FOLDER_TRASH:
-                outState.putInt("FOLDER", 2);
-                break;
-        }
+        // Save current folder/tags in use
+        outState.putString("SN_FOLDER", mCurrentFolder.name());
+        outState.putInt("SN_TAGID", mTagId);
+
+        // Since we are going to use TAGNAME only when mTagId != -1, and in
+        // that case the title is the best and fastest way to get tagname
+        outState.putString("SN_TAGNAME", getActionBar().getTitle().toString());
     }
 
     /**
@@ -299,6 +353,9 @@ public class SealnoteActivity extends Activity {
         return super.onCreateOptionsMenu(menu);
     }
 
+    /**
+     * Update actionbar when invalidated
+     */
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
         boolean result = super.onPrepareOptionsMenu(menu);
@@ -320,9 +377,6 @@ public class SealnoteActivity extends Activity {
 
         // Handle presses on the action bar items
         switch (item.getItemId()) {
-            case R.id.action_new_note:
-                onCreateNoteClick(null);
-                return true;
             case R.id.action_about:
                 showAboutDialog();
                 return true;
@@ -332,33 +386,21 @@ public class SealnoteActivity extends Activity {
             case R.id.action_logout:
                 TimeoutHandler.instance().expire(this);
                 return true;
+            case R.id.action_new_note_generic:
+                onCreateNoteClick(null);
+                return true;
+            case R.id.action_new_note_card:
+                NoteActivity.startForNoteId(SealnoteActivity.this, -1, Note.Type.TYPE_CARD);
+                return true;
+            case R.id.action_new_note_login:
+                NoteActivity.startForNoteId(SealnoteActivity.this, -1, Note.Type.TYPE_LOGIN);
+                return true;
+            case R.id.action_edit_tags:
+                showEditTagsDialog();
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
-    }
-
-    /**
-     * Load adapter to card grid view. Reload data from database. Also setup animations.
-     */
-    private void loadAdapter() {
-        setAnimationAdapter();
-
-        // get fresh data and swap
-        mNoteListView.requestLayout();
-        mNoteListView.invalidate();
-    }
-
-    /**
-     * Set animation adapter for card grid view and make it card grid's external adapter.
-     */
-    private void setAnimationAdapter() {
-        AnimationAdapter animCardArrayAdapter = new ScaleInAnimationAdapter(mAdapter);
-
-        animCardArrayAdapter.setAnimationDurationMillis(1000);
-        animCardArrayAdapter.setAnimationDelayMillis(500);
-
-        animCardArrayAdapter.setAbsListView(mNoteListView);
-        mNoteListView.setExternalAdapter(animCardArrayAdapter, mAdapter);
     }
 
     /**
@@ -384,123 +426,22 @@ public class SealnoteActivity extends Activity {
     }
 
     /**
-     * Callback when dataset in card grid's adapter is changed.
+     * Dialog to edit/delete tags
      */
-    private void onAdapterDataSetChanged() {
-        if (mAdapter.getCount() > 0) {
-            mEmptyGridLayout.setVisibility(View.GONE);
-            mEmptyGeneric.setVisibility(View.GONE);
-        } else if (mCurrentFolder == Note.Folder.FOLDER_LIVE) {
-            mEmptyGridLayout.setVisibility(View.VISIBLE);
-            mEmptyGeneric.setVisibility(View.GONE);
-        } else {
-            mEmptyGridLayout.setVisibility(View.GONE);
-            mEmptyGeneric.setVisibility(View.VISIBLE);
-            mEmptyGeneric.setText(getActionBar().getTitle() + " is empty!");
-        }
-
-        final Drawable actionBarBg;
-
-        switch(mCurrentFolder) {
-            case FOLDER_LIVE:
-                actionBarBg = getResources().getDrawable(R.drawable.ab_background);
-                break;
-            case FOLDER_ARCHIVE:
-                actionBarBg = getResources().getDrawable(R.drawable.ab_background_archive);
-                break;
-            case FOLDER_TRASH:
-                actionBarBg = getResources().getDrawable(R.drawable.ab_background_trash);
-                break;
-            default:
-                actionBarBg = getResources().getDrawable(R.drawable.ab_background);
-                break;
-        }
-
-        getActionBar().setBackgroundDrawable(actionBarBg);
-
-        // No cursor set reload
-        if (mAdapter.getCursor() == null) {
-            new AdapterLoadTask(mCurrentFolder).execute();
-        }
-
+    private void showEditTagsDialog() {
+        Intent intent = new Intent(this, TagsEditorActivity.class);
+        this.startActivity(intent);
     }
 
     /**
      * Called when any create new button/action is clicked.
      */
     public void onCreateNoteClick(View view) {
-        NoteActivity.startForNoteId(SealnoteActivity.this, -1);
+        NoteActivity.startForNoteId(SealnoteActivity.this, -1, null);
     }
 
     /**
-     * Asynchronous Task to load adapter.
-     *
-     * Hide the grid view in activity and shows layoutProgressHeader.
-     */
-    private class AdapterLoadTask extends AsyncTask<Void, Void, Cursor> {
-        private Note.Folder currentFolder;
-
-        AdapterLoadTask(Note.Folder currentFolder) {
-            super();
-            this.currentFolder =  currentFolder;
-        }
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            mAdapterLoading = true;
-            mAdapter.clearCursor();
-            mAdapter.setCurrentFolder(currentFolder);
-
-            // Before starting background task, update visibility of views
-            layoutProgressHeader.setVisibility(View.VISIBLE);
-        }
-
-        /**
-         * Loads database, get cursor to all notes given folder in database
-         * and return a new cursor
-         *
-         * @return  Adapter object containing all notes
-         */
-        @Override
-        protected Cursor doInBackground(Void... voids) {
-            final DatabaseHandler db = SealnoteApplication.getDatabase();
-            final Cursor cursor;
-
-            if (currentFolder == Note.Folder.FOLDER_LIVE) {
-                cursor = db.getNotesCursor();
-            } else if (currentFolder == Note.Folder.FOLDER_ARCHIVE) {
-                cursor = db.getArchivedNotesCursor();
-            } else if (currentFolder == Note.Folder.FOLDER_TRASH) {
-                cursor = db.getDeletedNotesCursor();
-            } else {
-                cursor = null;
-            }
-
-            return cursor;
-        }
-
-        /**
-         * Takes the result of task ie. adapter and load it to the view.
-         * Revert back the visibilities of views.
-         *
-         * @param cursor   Result containing cursor to notes
-         */
-        @Override
-        protected void onPostExecute(Cursor cursor) {
-            super.onPostExecute(cursor);
-            mAdapter.changeCursor(cursor);
-
-            // Make the progress view gone and card grid visible
-            layoutProgressHeader.setVisibility(View.GONE);
-
-            SealnoteActivity.this.loadAdapter();
-            mAdapterLoading = false;
-        }
-    }
-
-    /**
-     * Adapter for Navigation Drawer list containing folder names
+     * Adapter to show list of folders in drawer
      */
     private class NavigationDrawerAdapter extends ArrayAdapter<String> {
         private LayoutInflater mInflater;

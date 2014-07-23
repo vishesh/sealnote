@@ -1,6 +1,7 @@
 package com.twistedplane.sealnote.internal;
 
 import android.content.Context;
+import android.text.Html;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
@@ -129,7 +130,7 @@ public class SealnoteCard extends Card {
         super.setupInnerViewElements(parent, view);
 
         TextView textView = (TextView) view.findViewById(R.id.cardcontent_note);
-        String text = this.mNote.getNote();
+        String text = this.mNote.getNote().getCardStringCached();
 
         textView.setTypeface(FontCache.getFont(getContext(), "RobotoSlab-Light.ttf"));
 
@@ -139,7 +140,15 @@ public class SealnoteCard extends Card {
             textView.setVisibility(View.VISIBLE);
 
             // Trim and set note
-            textView.setText(this.mNote.getNote().trim());
+            if (mNote.getType() != Note.Type.TYPE_GENERIC) {
+                //FIXME: Clean this shit up
+                // Since only TYPE_LOGIN gives HTML content. For rest it would eat the
+                // newlines and show everything together, which sucks.
+                textView.setText(Html.fromHtml(text.trim()));
+            } else {
+                //
+                textView.setText(text.trim());
+            }
 
             // Dynamic Text Size
             if (PreferenceHandler.isDynamicFontSizeEnabled(getContext())) {

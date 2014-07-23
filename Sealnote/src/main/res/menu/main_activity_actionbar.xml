@@ -14,10 +14,28 @@
           android:actionViewClass="android.widget.SearchView"/>
           -->
 
-    <item android:id="@+id/action_new_note"
-          android:icon="@drawable/ic_action_new"
-          android:title="@string/action_new_note"
-          android:showAsAction="always" />
+    <item
+            android:id="@+id/action_new_note"
+            android:icon="@drawable/ic_action_new"
+            android:title="@string/action_new_note"
+            android:showAsAction="always">
+
+        <menu>
+            <item android:id="@+id/action_new_note_generic"
+                  android:title="@string/action_new_generic_note"
+                    />
+            <item android:id="@+id/action_new_note_card"
+                  android:title="@string/action_new_card_note"
+                    />
+            <item android:id="@+id/action_new_note_login"
+                  android:title="@string/action_new_login_note"
+                    />
+        </menu>
+    </item>
+
+    <item android:id="@+id/action_edit_tags"
+          android:title="@string/action_edit_tags"
+          android:showAsAction="never" />
 
     <item android:id="@+id/action_settings"
           android:title="@string/action_settings"

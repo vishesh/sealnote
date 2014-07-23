@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+       android:orientation="vertical"
+       android:layout_width="match_parent"
+       android:layout_height="wrap_content"
+       android:layout_marginTop="20dp"
+       android:paddingLeft="@dimen/activity_horizontal_margin"
+       android:paddingRight="@dimen/activity_horizontal_margin"
+        >
+    <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:paddingTop="15dp"
+            android:paddingBottom="16dp"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
+            android:background="@drawable/note_type_card"
+            >
+        <EditText
+                android:id="@+id/note_login_url"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/note_login_url"
+                android:typeface="monospace"
+                android:inputType="textUri"
+                android:singleLine="true"
+                android:textAllCaps="true"
+                android:textSize="22sp"
+                android:textColor="@color/note_foreground"
+                android:textColorHint="@color/note_hint_foreground"
+                />
+
+        <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                >
+            <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/note_login_name"
+                    android:typeface="monospace"
+                    android:textAllCaps="true"
+                    />
+
+            <EditText
+                    android:id="@+id/note_login_name"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="20dp"
+                    android:typeface="monospace"
+                    android:singleLine="true"
+                    android:textColor="@color/note_foreground"
+                    android:textColorHint="@color/note_hint_foreground"
+                    />
+        </LinearLayout>
+
+        <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                >
+            <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:typeface="monospace"
+                    android:text="@string/note_login_password"
+                    android:textAllCaps="true"
+                    />
+
+            <EditText
+                    android:id="@+id/note_login_password"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="20dp"
+                    android:typeface="monospace"
+                    android:singleLine="true"
+                    android:inputType="textNoSuggestions"
+                    android:textColor="@color/note_foreground"
+                    android:textColorHint="@color/note_hint_foreground"
+                    />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <EditText
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/note_additional_note"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/note_additional_notes"
+            android:background="@android:color/transparent"
+            android:paddingTop="@dimen/note_view_vertical_margin"
+            android:paddingBottom="@dimen/note_view_vertical_margin"
+            android:textSize="20sp"
+            android:textColor="@color/note_foreground"
+            android:textColorLink="@color/note_foreground"
+            android:inputType="textCapSentences|textMultiLine"
+            android:autoText="false"
+            android:autoLink="all"
+            android:linksClickable="true"
+            android:textColorHint="@color/note_hint_foreground"
+            />
+
+</LinearLayout>

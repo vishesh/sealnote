@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<com.twistedplane.sealnote.view.NoteGenericView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/note_activity_note"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/note_note"
+        android:background="@android:color/transparent"
+        android:paddingLeft="@dimen/note_view_horizontal_margin"
+        android:paddingRight="@dimen/note_view_horizontal_margin"
+        android:paddingTop="@dimen/note_view_vertical_margin"
+        android:paddingBottom="@dimen/note_view_vertical_margin"
+        android:textSize="20sp"
+        android:textColor="@color/note_foreground"
+        android:textColorLink="@color/note_foreground"
+        android:inputType="textCapSentences|textMultiLine"
+        android:autoText="false"
+        android:autoLink="all"
+        android:linksClickable="true"
+        android:textColorHint="@color/note_hint_foreground"
+        />
+

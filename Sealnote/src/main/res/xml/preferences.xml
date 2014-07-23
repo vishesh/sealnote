@@ -7,21 +7,21 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
     <PreferenceCategory android:title="@string/pref_catGeneral">
         <CheckBoxPreference
-                android:key="pref_autoSave"
+                android:key="AutoSave"
                 android:title="@string/pref_autoSave"
                 android:defaultValue="false"
                 android:summary="@string/pref_autoSaveSummary"
                 />
 
         <CheckBoxPreference
-                android:key="pref_secureWindow"
+                android:key="SecureWindow"
                 android:title="@string/pref_secureWindowTitle"
                 android:defaultValue="false"
                 android:summary="@string/pref_secureWindowSummary"
                 />
 
         <ListPreference
-                android:key="pref_passwordTimeout"
+                android:key="PasswordTimeout"
                 android:title="@string/pref_passwordTimeout"
                 android:dialogTitle="@string/pref_passwordTimeout"
                 android:entries="@array/pref_passwordTimeoutValueNames"
@@ -30,25 +30,48 @@
                 android:summary="@string/pref_passwordTimeoutSummary"
                 />
 
-        <com.twistedplane.sealnote.internal.PasswordPreference
+        <com.twistedplane.sealnote.settings.PasswordPreference
             android:title="@string/pref_changePassword"
             android:dialogTitle="@string/pref_changePassword"
             />
-
     </PreferenceCategory>
 
     <PreferenceCategory android:title="@string/pref_catAppearance">
+        <ListPreference
+                android:key="NoteListViewType"
+                android:title="@string/pref_noteListViewType"
+                android:dialogTitle="@string/pref_noteListViewType"
+                android:entries="@array/pref_noteListViewTypeNames"
+                android:entryValues="@array/pref_noteListViewTypeValues"
+                android:defaultValue="tiles"
+                android:summary="@string/pref_noteListViewTypeSummary"
+                />
+
         <CheckBoxPreference
-                android:key="pref_dynamicFontSize"
+                android:key="NoteActivityBackground"
+                android:title="@string/pref_noteActivityBg"
+                android:defaultValue="true"
+                android:summary="@string/pref_noteActivityBgSummary"
+                />
+
+        <CheckBoxPreference
+                android:key="DynamicFontSize"
                 android:title="@string/pref_dynamicFontSize"
                 android:defaultValue="true"
                 android:summary="@string/pref_dynamicFontSizeSummary"
                 />
-        <CheckBoxPreference
-                android:key="pref_multiColumnGrid"
-                android:title="@string/pref_multiColumnGrid"
-                android:defaultValue="true"
-                android:summary="@string/pref_multiColumnGridSummary"
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="@string/help_and_about">
+        <com.twistedplane.sealnote.settings.VersionPreference />
+        <Preference
+            android:title="@string/acknowledgements"
+            android:persistent="false">
+            <intent
+                android:action="android.intent.action.VIEW"
+                android:targetPackage="com.twistedplane.sealnote"
+                android:targetClass="com.twistedplane.sealnote.WebViewActivity"
                 />
+        </Preference>
     </PreferenceCategory>
 </PreferenceScreen>
