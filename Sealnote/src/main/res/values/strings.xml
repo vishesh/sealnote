@@ -124,8 +124,35 @@
         You will be asked same password during <font color="#2a36b1">restore</font>.
         ]]>
     </string>
+
+    <string name="info_restore_message">
+        <![CDATA[
+        Please open the <font color="#cc0000">encrypted backup</font> file that was created
+        by <font color="#259b24">SealNote backup</font>.
+        ]]>
+    </string>
+
+    <string name="info_restore_message_2">
+       <![CDATA[
+        Please <font color="#cc00000">enter password</font> that was used to encrypt this backup.
+        If the password is correct a <font color="#259b24">button will appear </font>
+        to proceed to next step.
+        ]]>
+    </string>
+
+    <string name="restoring"><![CDATA[ <font color="#269b24">Restoring&#8230;</font> ]]></string>
+    <string name="restore_complete_info"><![CDATA[
+    Restore was <font color="#269b24">successful.</font> Restart app or go back
+    to <font color="#cc0000">login again</font>.
+    ]]></string>
+
     <string name="send_to">Send to</string>
     <string name="backup_complete">Backup complete!</string>
     <string name="backup_error">Backup unsuccessful!</string>
+    <string name="restore_complete">Restore complete!</string>
+    <string name="restore_error">Restore unsuccessful!</string>
+    <string name="restore">Restore</string>
+    <string name="pick_backup_file">Pick Backup File</string>
+    <string name="start_restore">Start Restore</string>
 
 </resources>

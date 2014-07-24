@@ -79,7 +79,7 @@
             <intent
                     android:action="android.intent.action.VIEW"
                     android:targetPackage="com.twistedplane.sealnote"
-                    android:targetClass="com.twistedplane.sealnote.BackupActivity"
+                    android:targetClass="com.twistedplane.sealnote.RestoreActivity"
                     />
         </Preference>
     </PreferenceCategory>

@@ -3,7 +3,10 @@ package com.twistedplane.sealnote.storage;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
+import com.twistedplane.sealnote.SealnoteApplication;
 import com.twistedplane.sealnote.data.DatabaseHandler;
+import net.sqlcipher.database.SQLiteDatabase;
+import net.sqlcipher.database.SQLiteException;
 
 import java.io.*;
 
@@ -39,6 +42,34 @@ public class BackupUtils {
         backupFile.deleteOnExit();
         copy(dbFile, backupFile);
         return backupFile;
+    }
+
+    /**
+     * Restores give database as new database
+     */
+    public static File restoreDatabase(Context context, File file) throws IOException {
+        DatabaseHandler dbHandler = SealnoteApplication.getDatabase();
+        dbHandler.close();
+        dbHandler.recycle();
+
+        File dbFile = context.getDatabasePath(DatabaseHandler.DBNAME);
+        copy(file, dbFile);
+
+        return dbFile;
+    }
+
+    /**
+     * Public check database password
+     */
+    public static boolean checkDatabasePassword(Context context, File file, String password) {
+        try {
+            SQLiteDatabase database = new SQLiteDatabase(file.getPath(),
+                    password.toCharArray(), null, 0);
+            database.close();
+        } catch (SQLiteException e) {
+            return false;
+        }
+        return true;
     }
 
     /**
@@ -86,6 +117,55 @@ public class BackupUtils {
         protected void onPostExecute(File file) {
             super.onPostExecute(file);
             mBackupListener.onBackupFinish(file);
+        }
+    }
+
+    /**
+     * Expected by RestoreTask during start and finish of task
+     */
+    public static interface RestoreListener {
+        public void onRestoreStart();
+        public void onRestoreFinish(boolean result);
+    }
+
+    /**
+     * Task to do backup asynchronously. Expects a callback interface
+     * BackupListener
+     */
+    public static class RestoreTask extends AsyncTask<File, Void, Boolean> {
+        RestoreListener mRestoreListener;
+        Context mContext;
+
+        public RestoreTask(Context context, RestoreListener restoreListener) {
+            mRestoreListener = restoreListener;
+            mContext = context;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            mRestoreListener.onRestoreStart();
+        }
+
+        @Override
+        protected Boolean doInBackground(File... files) {
+            File file = files[0];
+
+            try {
+                restoreDatabase(mContext, file);
+            } catch (IOException e) {
+                Log.d(TAG, "Error during backup!");
+                e.printStackTrace();
+                return false;
+            }
+
+            return true;
+        }
+
+        @Override
+        protected void onPostExecute(Boolean result) {
+            super.onPostExecute(result);
+            mRestoreListener.onRestoreFinish(result);
         }
     }
 }
