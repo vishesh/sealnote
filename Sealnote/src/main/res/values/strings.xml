@@ -94,6 +94,9 @@
     <string name="pref_noteListViewTypeSummary">Select layout used to show all notes in main screen</string>
     <string name="pref_noteActivityBg">Note editor background</string>
     <string name="pref_noteActivityBgSummary">Fill note editor screen completely with the note\'s tagged color</string>
+    <string name="pref_catStorage">Storage</string>
+    <string name="pref_backup">Backup</string>
+    <string name="pref_restore">Restore</string>
 
     <!-- change password -->
     <string name="incorrect_old_password">Incorrect old password!</string>
@@ -111,5 +114,18 @@
     <string name="version">Version</string>
     <string name="acknowledgements">Acknowledgements</string>
     <string name="help_and_about"><![CDATA[Help & About]]></string>
+    <string name="backup">Backup</string>
+
+    <!-- backup and restore -->
+    <string name="info_backup_message">
+        <![CDATA[
+        An <font color="#cc0000">encrypted backup</font> file will be created using your
+        <font color="#259b24"> current password.</font>
+        You will be asked same password during <font color="#2a36b1">restore</font>.
+        ]]>
+    </string>
+    <string name="send_to">Send to</string>
+    <string name="backup_complete">Backup complete!</string>
+    <string name="backup_error">Backup unsuccessful!</string>
 
 </resources>
