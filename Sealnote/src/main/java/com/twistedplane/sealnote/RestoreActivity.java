@@ -12,6 +12,8 @@ import android.text.TextWatcher;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.ViewFlipper;
@@ -78,6 +80,13 @@ public class RestoreActivity extends Activity implements BackupUtils.RestoreList
         mRestoreProgress = findViewById(R.id.restore_progress);
         mPasswordInput = (EditText) findViewById(R.id.input_password);
 
+        // Setup flipper animations
+        Animation animationFlipIn  = AnimationUtils.loadAnimation(this, R.anim.flipin);
+        Animation animationFlipOut = AnimationUtils.loadAnimation(this, R.anim.flipout);
+
+        mFlipper.setInAnimation(animationFlipIn);
+        mFlipper.setOutAnimation(animationFlipOut);
+
         setupMessages();
         setupCheckCallbackup();
     }
@@ -94,6 +103,12 @@ public class RestoreActivity extends Activity implements BackupUtils.RestoreList
                 getString(R.string.info_restore_message_2)
         ));
         messageView2.setTypeface(FontCache.getFont(this, "Roboto-Light.ttf"));
+
+        TextView messageView3 = (TextView) findViewById(R.id.message_view_3);
+        messageView2.setText(Html.fromHtml(
+                getString(R.string.restore_complete_info)
+        ));
+        messageView3.setTypeface(FontCache.getFont(this, "Roboto-Light.ttf"));
     }
 
     /**
@@ -159,10 +174,7 @@ public class RestoreActivity extends Activity implements BackupUtils.RestoreList
             return;
         }
         findViewById(R.id.restore_progress).setVisibility(View.INVISIBLE);
-
-        TextView message = (TextView) findViewById(R.id.message_view_2);
-        message.setText(Html.fromHtml(getString(R.string.restore_complete_info)));
-        message.setTextSize(TypedValue.COMPLEX_UNIT_SP, 30);
+        mFlipper.showNext();
     }
 
     /**

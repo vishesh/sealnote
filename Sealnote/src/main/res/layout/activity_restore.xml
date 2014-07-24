@@ -91,4 +91,16 @@
                     />
         </FrameLayout>
     </LinearLayout>
+
+
+    <TextView
+            android:id="@+id/message_view_3"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="@dimen/activity_horizontal_margin"
+            android:layout_marginRight="@dimen/activity_horizontal_margin"
+            android:layout_marginBottom="?android:actionBarSize"
+            android:textSize="30sp"
+            android:gravity="center"
+            />
 </ViewFlipper>
