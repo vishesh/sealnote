@@ -77,4 +77,8 @@
 
     <dimen name="password_meter_stroke_width">0dp</dimen>
 
+    <!-- backup and restore -->
+    <dimen name="br_font_size_big">24sp</dimen>
+    <dimen name="br_font_size_normal">22sp</dimen>
+
 </resources>

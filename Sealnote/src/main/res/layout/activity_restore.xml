@@ -18,7 +18,7 @@
                 android:id="@+id/message_view_1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textSize="30sp"
+                android:textSize="@dimen/br_font_size_big"
                 android:gravity="center"
                 />
 
@@ -48,7 +48,7 @@
                 android:id="@+id/message_view_2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textSize="28sp"
+                android:textSize="@dimen/br_font_size_normal"
                 android:gravity="center"
                 />
 
@@ -100,7 +100,7 @@
             android:layout_marginLeft="@dimen/activity_horizontal_margin"
             android:layout_marginRight="@dimen/activity_horizontal_margin"
             android:layout_marginBottom="?android:actionBarSize"
-            android:textSize="30sp"
+            android:textSize="@dimen/br_font_size_big"
             android:gravity="center"
             android:layout_gravity="center"
             />

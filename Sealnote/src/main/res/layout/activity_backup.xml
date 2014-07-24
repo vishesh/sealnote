@@ -14,7 +14,7 @@
             android:id="@+id/message_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="28sp"
+            android:textSize="@dimen/br_font_size_normal"
             android:text="@string/info_backup_message"
             android:gravity="center"
             />
