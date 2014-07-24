@@ -19,7 +19,8 @@ public class FontCache {
             return mFontMap.get(fontName);
         }
         else {
-            Typeface tf = Typeface.createFromAsset(context.getAssets(), "fonts/" + fontName);
+            Typeface tf = Typeface.createFromAsset(context.getApplicationContext().getAssets(),
+                    "fonts/" + fontName);
             mFontMap.put(fontName, tf);
             return tf;
         }
