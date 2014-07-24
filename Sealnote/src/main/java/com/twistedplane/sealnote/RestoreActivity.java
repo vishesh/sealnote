@@ -10,7 +10,6 @@ import android.text.Editable;
 import android.text.Html;
 import android.text.TextWatcher;
 import android.util.Log;
-import android.util.TypedValue;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -105,7 +104,7 @@ public class RestoreActivity extends Activity implements BackupUtils.RestoreList
         messageView2.setTypeface(FontCache.getFont(this, "Roboto-Light.ttf"));
 
         TextView messageView3 = (TextView) findViewById(R.id.message_view_3);
-        messageView2.setText(Html.fromHtml(
+        messageView3.setText(Html.fromHtml(
                 getString(R.string.restore_complete_info)
         ));
         messageView3.setTypeface(FontCache.getFont(this, "Roboto-Light.ttf"));

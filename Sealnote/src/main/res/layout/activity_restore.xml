@@ -102,5 +102,6 @@
             android:layout_marginBottom="?android:actionBarSize"
             android:textSize="30sp"
             android:gravity="center"
+            android:layout_gravity="center"
             />
 </ViewFlipper>
