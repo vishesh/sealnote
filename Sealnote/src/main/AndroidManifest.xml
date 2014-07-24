@@ -58,6 +58,26 @@
                     android:value="com.twistedplane.sealnote.SettingsActivity"/>
         </activity>
 
+        <activity
+                android:name="com.twistedplane.sealnote.BackupActivity"
+                android:parentActivityName="com.twistedplane.sealnote.SettingsActivity"
+                android:theme="@style/Sealnote.Theme.Main"
+                android:label="@string/backup">
+            <meta-data
+                    android:name="android.support.PARENT_ACTIVITY"
+                    android:value="com.twistedplane.sealnote.SettingsActivity"/>
+        </activity>
+
+        <activity
+                android:name="com.twistedplane.sealnote.RestoreActivity"
+                android:parentActivityName="com.twistedplane.sealnote.SettingsActivity"
+                android:theme="@style/Sealnote.Theme.Main"
+                android:label="@string/restore">
+            <meta-data
+                    android:name="android.support.PARENT_ACTIVITY"
+                    android:value="com.twistedplane.sealnote.SettingsActivity"/>
+        </activity>
+
     </application>
 
 </manifest>
