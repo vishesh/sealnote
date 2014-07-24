@@ -4,7 +4,7 @@
        android:orientation="vertical"
        android:layout_width="match_parent"
        android:layout_height="wrap_content"
-       android:layout_marginTop="20dp"
+       android:layout_marginTop="@dimen/nc_vertical_margin"
        android:paddingLeft="@dimen/activity_horizontal_margin"
        android:paddingRight="@dimen/activity_horizontal_margin"
         >
@@ -13,24 +13,17 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:paddingTop="15dp"
-            android:paddingBottom="16dp"
-            android:paddingLeft="20dp"
-            android:paddingRight="20dp"
-            android:background="@drawable/note_type_card"
+            style="@style/NoteContentCard"
             >
         <EditText
                 android:id="@+id/note_login_url"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/note_login_url"
-                android:typeface="monospace"
                 android:inputType="textUri"
-                android:singleLine="true"
                 android:textAllCaps="true"
                 android:textSize="22sp"
-                android:textColor="@color/note_foreground"
-                android:textColorHint="@color/note_hint_foreground"
+                style="@style/NoteContentCard_EditText"
                 />
 
         <LinearLayout
@@ -50,11 +43,8 @@
                     android:id="@+id/note_login_name"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="20dp"
-                    android:typeface="monospace"
-                    android:singleLine="true"
-                    android:textColor="@color/note_foreground"
-                    android:textColorHint="@color/note_hint_foreground"
+                    android:layout_marginLeft="@dimen/nc_card_horizontal_spacing"
+                    style="@style/NoteContentCard_EditText"
                     />
         </LinearLayout>
 
@@ -75,12 +65,9 @@
                     android:id="@+id/note_login_password"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="20dp"
-                    android:typeface="monospace"
-                    android:singleLine="true"
+                    android:layout_marginLeft="@dimen/nc_card_horizontal_spacing"
                     android:inputType="textNoSuggestions"
-                    android:textColor="@color/note_foreground"
-                    android:textColorHint="@color/note_hint_foreground"
+                    style="@style/NoteContentCard_EditText"
                     />
 
         </LinearLayout>
