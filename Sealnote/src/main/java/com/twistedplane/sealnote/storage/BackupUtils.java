@@ -106,7 +106,7 @@ public class BackupUtils {
             try {
                 file = backupDatabase(mContext);
             } catch (IOException e) {
-                Log.d(TAG, "Error during backup!");
+                Log.e(TAG, "Error during backup!");
                 e.printStackTrace();
             }
 
@@ -154,7 +154,7 @@ public class BackupUtils {
             try {
                 restoreDatabase(mContext, file);
             } catch (IOException e) {
-                Log.d(TAG, "Error during backup!");
+                Log.e(TAG, "Error during backup!");
                 e.printStackTrace();
                 return false;
             }

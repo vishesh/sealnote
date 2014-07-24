@@ -201,9 +201,9 @@ public class RestoreActivity extends Activity implements BackupUtils.RestoreList
                     retrieveContentFile(data.getData());
                     mFlipper.showNext();
                 } catch (FileNotFoundException e) {
-                    Log.d(TAG, "Backup file no longer exisits");
+                    Log.e(TAG, "Backup file no longer exisits");
                 } catch (IOException e) {
-                    Log.d(TAG, "Error copying file!");
+                    Log.e(TAG, "Error copying file!");
                 }
                 break;
             case REQUEST_RESTORE:
