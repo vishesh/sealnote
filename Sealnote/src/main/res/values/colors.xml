@@ -18,7 +18,7 @@
     <item name="transparent" type="color">#00000000</item>
     <item name="note_view_tint" type="color">#22ffffff</item>
     <item name="darkblue" type="color">#FF0099CC</item>
-    <item name="note_foreground" type="color">#de171717</item>
+    <item name="note_foreground" type="color">#de000000</item>
     <item name="note_hint_foreground" type="color">#44171717</item>
     <color name="card_text_color">@color/note_foreground</color>
     <color name="card_text_color_header">#ff494949</color>
@@ -37,7 +37,7 @@
     <!--<color name="card_background_color0">#ffecf0f1</color>--> <!-- Cloudy -->
     <color name="card_background_color0">#ffffffff</color>
     <color name="card_background_color1">#ffffbb22</color>
-    <color name="card_background_color2">#ffcbcb1d</color>
+    <color name="card_background_color2">#ffeeee22</color>
     <color name="card_background_color3">#ffbbe535</color>
     <color name="card_background_color4">#ff66ccdd</color>
     <color name="card_background_color5">#ff77ddbb</color>
