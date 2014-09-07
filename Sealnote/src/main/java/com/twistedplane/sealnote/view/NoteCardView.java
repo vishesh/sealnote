@@ -13,6 +13,7 @@ import com.twistedplane.sealnote.R;
 import com.twistedplane.sealnote.data.NoteContent;
 import com.twistedplane.sealnote.data.NoteContentCard;
 import com.twistedplane.sealnote.utils.FontCache;
+import com.twistedplane.sealnote.utils.PreferenceHandler;
 
 /**
  * View for editing content of Note.Type = CARD
@@ -55,7 +56,7 @@ public class NoteCardView extends LinearLayout implements NoteView {
         mCardNote = (EditText) findViewById(R.id.note_card_note);
         mCardBrand = (ImageView) findViewById(R.id.note_card_brand);
 
-        mCardNote.setTypeface(FontCache.getFont(getContext(), "RobotoSlab-Regular.ttf")); //LOOK
+        mCardNote.setTypeface(FontCache.getFont(getContext(), PreferenceHandler.getFontDefault())); //LOOK
         mCardNumber.addTextChangedListener(new FourDigitCardFormatWatcher());
     }
 

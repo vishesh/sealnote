@@ -6,6 +6,7 @@ import android.widget.EditText;
 import com.twistedplane.sealnote.data.Note;
 import com.twistedplane.sealnote.data.NoteContent;
 import com.twistedplane.sealnote.utils.FontCache;
+import com.twistedplane.sealnote.utils.PreferenceHandler;
 
 /**
  * View for simple plain text note content.
@@ -27,7 +28,7 @@ public class NoteGenericView extends EditText implements NoteView {
     }
 
     public void init() {
-        setTypeface(FontCache.getFont(getContext(), "RobotoSlab-Regular.ttf")); //LOOK
+        setTypeface(FontCache.getFont(getContext(), PreferenceHandler.getFontDefault())); //LOOK
     }
 
     /**

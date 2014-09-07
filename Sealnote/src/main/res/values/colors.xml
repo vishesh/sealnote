@@ -21,7 +21,7 @@
     <item name="note_foreground" type="color">#de000000</item>
     <item name="note_hint_foreground" type="color">#44171717</item>
     <color name="card_text_color">@color/note_foreground</color>
-    <color name="card_text_color_header">#ff494949</color>
+    <color name="card_text_color_header">#bb000000</color>
 
     <color name="tag_bubble_foreground">#def0f0f0</color>
 

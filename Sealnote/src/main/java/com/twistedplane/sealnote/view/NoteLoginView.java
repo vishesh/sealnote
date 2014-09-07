@@ -10,6 +10,7 @@ import com.twistedplane.sealnote.R;
 import com.twistedplane.sealnote.data.NoteContent;
 import com.twistedplane.sealnote.data.NoteContentLogin;
 import com.twistedplane.sealnote.utils.FontCache;
+import com.twistedplane.sealnote.utils.PreferenceHandler;
 
 /**
  * View for editing note content of Note.Type = Login
@@ -43,7 +44,7 @@ public class NoteLoginView extends LinearLayout implements NoteView {
         mPassword = (EditText) findViewById(R.id.note_login_password);
         mNote = (EditText) findViewById(R.id.note_additional_note);
 
-        mNote.setTypeface(FontCache.getFont(getContext(), "RobotoSlab-Regular.ttf")); //LOOK
+        mNote.setTypeface(FontCache.getFont(getContext(), PreferenceHandler.getFontDefault())); //LOOK
     }
 
     @Override

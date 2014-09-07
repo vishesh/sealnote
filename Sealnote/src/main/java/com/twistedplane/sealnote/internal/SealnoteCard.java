@@ -31,7 +31,7 @@ class SealnoteCardHeader extends CardHeader {
         if (view != null){
             TextView titleView = (TextView) view.findViewById(R.id.card_header_inner_simple_title);
             if (titleView != null) {
-                titleView.setTypeface(FontCache.getFont(getContext(), "RobotoSlab-Bold.ttf"));
+                titleView.setTypeface(FontCache.getFont(getContext(), PreferenceHandler.getFontBold()));
             }
         }
     }
@@ -132,7 +132,7 @@ public class SealnoteCard extends Card {
         TextView textView = (TextView) view.findViewById(R.id.cardcontent_note);
         String text = this.mNote.getNote().getCardStringCached();
 
-        textView.setTypeface(FontCache.getFont(getContext(), "RobotoSlab-Light.ttf"));
+        textView.setTypeface(FontCache.getFont(getContext(), PreferenceHandler.getFontLight()));
 
         // We make text view gone in content is there is no text show to avoid them
         // taking space that shows nothing

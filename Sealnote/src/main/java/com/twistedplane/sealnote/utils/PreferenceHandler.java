@@ -2,6 +2,7 @@ package com.twistedplane.sealnote.utils;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.Typeface;
 import android.preference.PreferenceManager;
 
 /**
@@ -52,5 +53,17 @@ public class PreferenceHandler {
     public static boolean isNoteActivityBackgroundEnabled(Context c) {
         SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(c);
         return sharedPrefs.getBoolean("NoteActivityBackground", true);
+    }
+
+    public static String getFontDefault() {
+        return "SourceSansPro-Regular";
+    }
+
+    public static String getFontLight() {
+        return "SourceSansPro-Light";
+    }
+
+    public static String getFontBold() {
+        return "SourceSansPro-Bold";
     }
 }
