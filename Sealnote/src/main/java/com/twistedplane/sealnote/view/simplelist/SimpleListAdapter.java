@@ -15,6 +15,7 @@ import com.twistedplane.sealnote.data.SealnoteAdapter;
 import com.twistedplane.sealnote.utils.EasyDate;
 import com.twistedplane.sealnote.utils.FontCache;
 import com.twistedplane.sealnote.utils.Misc;
+import com.twistedplane.sealnote.utils.PreferenceHandler;
 
 import java.text.ParseException;
 
@@ -76,9 +77,9 @@ public class SimpleListAdapter extends SimpleCursorAdapter implements SealnoteAd
         TextView text2 = (TextView) view.findViewById(R.id.text2);
         TextView text3 = (TextView) view.findViewById(R.id.text3);
 
-        text1.setTypeface(FontCache.getFont(context, "RobotoSlab-Regular.ttf"));
-        text2.setTypeface(FontCache.getFont(context, "RobotoSlab-Regular.ttf"));
-        text3.setTypeface(FontCache.getFont(context, "RobotoSlab-Regular.ttf"));
+        text1.setTypeface(FontCache.getFont(context, PreferenceHandler.getFontDefault()));
+        text2.setTypeface(FontCache.getFont(context, PreferenceHandler.getFontDefault()));
+        text3.setTypeface(FontCache.getFont(context, PreferenceHandler.getFontDefault()));
 
         return view;
     }

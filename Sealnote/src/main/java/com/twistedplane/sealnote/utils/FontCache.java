@@ -20,7 +20,7 @@ public class FontCache {
         }
         else {
             Typeface tf = Typeface.createFromAsset(context.getApplicationContext().getAssets(),
-                    "fonts/" + fontName);
+                    "fonts/" + fontName + ".ttf");
             mFontMap.put(fontName, tf);
             return tf;
         }

@@ -489,7 +489,7 @@ public class SealnoteActivity extends Activity
             tv.setText(mStrings[position]);
 
             if (convertView == null) {
-                tv.setTypeface(FontCache.getFont(getContext(), "RobotoCondensed-Regular.ttf"), Typeface.NORMAL);
+                tv.setTypeface(FontCache.getFont(getContext(), "RobotoCondensed-Regular"), Typeface.NORMAL);
             }
 
             return view;

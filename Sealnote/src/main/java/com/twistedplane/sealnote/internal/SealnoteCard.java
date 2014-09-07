@@ -31,7 +31,7 @@ class SealnoteCardHeader extends CardHeader {
         if (view != null){
             TextView titleView = (TextView) view.findViewById(R.id.card_header_inner_simple_title);
             if (titleView != null) {
-                titleView.setTypeface(FontCache.getFont(getContext(), "RobotoSlab-Bold.ttf"));
+                titleView.setTypeface(FontCache.getFont(getContext(), PreferenceHandler.getFontBold()));
             }
         }
     }
@@ -99,19 +99,15 @@ public class SealnoteCard extends Card {
      * @param str   String for which font size is to be calculated
      * @return      Font size in sp
      */
-    private float getBigFontSize(String str) {
+    private int getBigFontSize(String str) {
         // TODO: Make it not dumb
         int length = str.length();
 
-        if (length >= 300) {
+        if (length >= 150) {
             return 16;
-        }
-        else if (length >= 200 && length < 300) {
-            return 16;
-        }
-        else if (length >= 50 && length < 200) {
+        } else if (length >= 80 && length < 150) {
             return 18;
-        } else if (length >= 20 && length < 50) {
+        } else if (length >= 20 && length < 80) {
             return 24;
         } else if (length >= 15 && length < 20) {
             return 26;
@@ -131,8 +127,7 @@ public class SealnoteCard extends Card {
 
         TextView textView = (TextView) view.findViewById(R.id.cardcontent_note);
         String text = this.mNote.getNote().getCardStringCached();
-
-        textView.setTypeface(FontCache.getFont(getContext(), "RobotoSlab-Light.ttf"));
+        int textSize = -1;
 
         // We make text view gone in content is there is no text show to avoid them
         // taking space that shows nothing
@@ -152,11 +147,18 @@ public class SealnoteCard extends Card {
 
             // Dynamic Text Size
             if (PreferenceHandler.isDynamicFontSizeEnabled(getContext())) {
-                textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, getBigFontSize(text));
+                textSize = getBigFontSize(text);
+                textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, textSize);
             }
         } else {
             textView.setText("");
             textView.setVisibility(View.GONE);
+        }
+
+        if (textSize > 18) {
+            textView.setTypeface(FontCache.getFont(getContext(), PreferenceHandler.getFontLight()));
+        } else {
+            textView.setTypeface(FontCache.getFont(getContext(), PreferenceHandler.getFontDefault()));
         }
 
         // set background for card as per given

@@ -171,7 +171,7 @@ public class NoteActivity extends Activity implements ColorDialogFragment.ColorC
         mNoteView.addTextChangedListener(mNoteTextWatcher); //LOOK
         mTitleView.addTextChangedListener(mNoteTextWatcher);
 
-        mTitleView.setTypeface(FontCache.getFont(this, "RobotoSlab-Bold.ttf"));
+        mTitleView.setTypeface(FontCache.getFont(this, PreferenceHandler.getFontBold()));
 
         // set focus to text view //TODO: Only if id=-1
         if (isNewNote) {

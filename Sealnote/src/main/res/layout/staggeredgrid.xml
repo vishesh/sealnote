@@ -8,7 +8,7 @@
         android:layout_height="wrap_content"
         card:column_count_portrait="2"
         card:column_count_landscape="3"
-        card:item_margin="8dp"
+        card:item_margin="5dp"
         android:layout_gravity="center_horizontal|bottom"
         android:paddingTop="?android:actionBarSize"
         />
