@@ -34,7 +34,7 @@ public class BackupActivity extends Activity implements BackupUtils.BackupListen
                 getString(R.string.info_backup_message)
         ));
 
-        messageView.setTypeface(FontCache.getFont(this, "Roboto-Light.ttf"));
+        messageView.setTypeface(FontCache.getFont(this, "Roboto-Light"));
     }
 
     /**
