@@ -95,19 +95,19 @@ public class RestoreActivity extends Activity implements BackupUtils.RestoreList
         messageView1.setText(Html.fromHtml(
                 getString(R.string.info_restore_message)
         ));
-        messageView1.setTypeface(FontCache.getFont(this, "Roboto-Light.ttf"));
+        messageView1.setTypeface(FontCache.getFont(this, "Roboto-Light"));
 
         TextView messageView2 = (TextView) findViewById(R.id.message_view_2);
         messageView2.setText(Html.fromHtml(
                 getString(R.string.info_restore_message_2)
         ));
-        messageView2.setTypeface(FontCache.getFont(this, "Roboto-Light.ttf"));
+        messageView2.setTypeface(FontCache.getFont(this, "Roboto-Light"));
 
         TextView messageView3 = (TextView) findViewById(R.id.message_view_3);
         messageView3.setText(Html.fromHtml(
                 getString(R.string.restore_complete_info)
         ));
-        messageView3.setTypeface(FontCache.getFont(this, "Roboto-Light.ttf"));
+        messageView3.setTypeface(FontCache.getFont(this, "Roboto-Light"));
     }
 
     /**
