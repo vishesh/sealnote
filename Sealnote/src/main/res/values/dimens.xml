@@ -30,7 +30,7 @@
 
     <!-- font size -->
     <dimen name="cardcontent_title_size">14sp</dimen>
-    <dimen name="cardcontent_note_size">18sp</dimen>
+    <dimen name="cardcontent_note_size">16sp</dimen>
 
     <!-- override default -->
     <dimen name="card_background_default_radius">0dip</dimen>
