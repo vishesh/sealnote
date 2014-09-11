@@ -172,6 +172,7 @@ public class NoteActivity extends Activity implements ColorDialogFragment.ColorC
         mTitleView.addTextChangedListener(mNoteTextWatcher);
 
         mTitleView.setTypeface(FontCache.getFont(this, PreferenceHandler.getFontBold()));
+        mTagEditText.setTypeface(FontCache.getFont(this, PreferenceHandler.getFontDefault()));
 
         // set focus to text view //TODO: Only if id=-1
         if (isNewNote) {

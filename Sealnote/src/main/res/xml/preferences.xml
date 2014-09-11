@@ -85,15 +85,23 @@
     </PreferenceCategory>
 
     <PreferenceCategory android:title="@string/help_and_about">
+        <Preference
+                android:title="@string/write_a_review"
+                android:persistent="false">
+            <intent
+                    android:action="android.intent.action.VIEW"
+                    android:data="market://details?id=com.twistedplane.sealnote"
+                    />
+        </Preference>
         <com.twistedplane.sealnote.settings.VersionPreference />
         <Preference
-            android:title="@string/acknowledgements"
-            android:persistent="false">
+                android:title="@string/acknowledgements"
+                android:persistent="false">
             <intent
-                android:action="android.intent.action.VIEW"
-                android:targetPackage="com.twistedplane.sealnote"
-                android:targetClass="com.twistedplane.sealnote.WebViewActivity"
-                />
+                    android:action="android.intent.action.VIEW"
+                    android:targetPackage="com.twistedplane.sealnote"
+                    android:targetClass="com.twistedplane.sealnote.WebViewActivity"
+                    />
         </Preference>
     </PreferenceCategory>
 </PreferenceScreen>

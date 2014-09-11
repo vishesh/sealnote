@@ -14,6 +14,7 @@
     <dimen name="nc_card_horizontal_padding">14dp</dimen>
     <dimen name="nc_card_horizontal_spacing">14dp</dimen>
     <dimen name="nc_card_font_size">20sp</dimen>
+    <dimen name="nc_font_size">22sp</dimen>
 
     <!-- backup and restore -->
     <dimen name="br_font_size_big">30sp</dimen>

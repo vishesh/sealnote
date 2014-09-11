@@ -64,6 +64,7 @@
     <!--
                 Note Content
     -->
+    <dimen name="nc_font_size">20sp</dimen>
 
     <dimen name="nc_vertical_margin">8dp</dimen>
     <dimen name="nc_vertical_padding">8dp</dimen>

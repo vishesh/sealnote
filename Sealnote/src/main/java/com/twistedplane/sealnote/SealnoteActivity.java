@@ -27,6 +27,7 @@ import com.twistedplane.sealnote.utils.PreferenceHandler;
 import com.twistedplane.sealnote.utils.TimeoutHandler;
 import com.twistedplane.sealnote.view.simplelist.SimpleListFragment;
 import com.twistedplane.sealnote.view.staggeredgrid.StaggeredGridFragment;
+import org.codechimp.apprater.AppRater;
 
 import java.util.Arrays;
 import java.util.Map;
@@ -104,6 +105,8 @@ public class SealnoteActivity extends Activity
         } else {
             actionBar.setTitle(mTagName);
         }
+
+        AppRater.app_launched(this);
     }
 
     private void loadNotesView() {
