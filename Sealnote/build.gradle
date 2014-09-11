@@ -59,4 +59,6 @@ dependencies {
     compile 'com.github.gabrielemariotti.cards:library:1.6.0'
     compile 'com.github.gabrielemariotti.cards:library-extra:1.6.0'
     compile 'com.nhaarman.listviewanimations:library:2.6.0'
+
+    compile 'com.github.codechimp-org.apprater:library:1.0.+'
 }
