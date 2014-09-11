@@ -39,7 +39,7 @@
                     android:paddingRight="14dp"
                     android:paddingTop="6dp"
                     android:paddingBottom="8dp"
-                    android:textSize="14sp"
+                    android:textSize="16sp"
                     android:imeOptions="actionNext"
                     android:inputType="textNoSuggestions"
                     android:background="#10000000"

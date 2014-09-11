@@ -14,6 +14,8 @@ import android.widget.MultiAutoCompleteTextView;
 import android.widget.TextView;
 import com.twistedplane.sealnote.R;
 import com.twistedplane.sealnote.data.Note;
+import com.twistedplane.sealnote.utils.FontCache;
+import com.twistedplane.sealnote.utils.PreferenceHandler;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -138,17 +140,23 @@ public class TagEditText extends MultiAutoCompleteTextView implements View.OnFoc
      * drawn on canvas to create ImageSpan for the main text view.
      */
     private TextView createBubbleTextView(String text) {
-        TextView tv = new TextView(getContext());
-        tv.setText(text);
-        tv.setTextSize(TypedValue.COMPLEX_UNIT_PX, (int) (getTextSize() * 1.6));
-        tv.setTextColor(getResources().getColor(R.color.tag_bubble_foreground));
-
         // Convert PADDING in dp to px and set it to view
         final int PADDING = 6;
         float scale = getResources().getDisplayMetrics().density;
         int dp = (int) (PADDING * scale + 0.5f);
-        tv.setPadding(dp, dp/2, dp, dp/2);
 
+        TextView tv = new TextView(getContext());
+        tv.setText(text);
+
+        //FIXME: Hardcoded values, which itself doesn't work as expected. Probably density issue
+        int size = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 16,
+                getResources().getDisplayMetrics());
+        tv.setTextSize(TypedValue.COMPLEX_UNIT_PX, (int) (size + 1.5 * dp));
+
+        tv.setTextColor(getResources().getColor(R.color.tag_bubble_foreground));
+        tv.setTypeface(FontCache.getFont(getContext(), PreferenceHandler.getFontDefault()));
+
+        tv.setPadding(dp, dp/2, dp, dp/2);
         tv.setBackgroundResource(R.drawable.bubble);
 
         return tv;
