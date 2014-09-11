@@ -124,7 +124,7 @@
             android:background="@android:color/transparent"
             android:paddingTop="@dimen/note_view_vertical_margin"
             android:paddingBottom="@dimen/note_view_vertical_margin"
-            android:textSize="@dimen/nc_card_font_size"
+            android:textSize="@dimen/nc_font_size"
             android:textColor="@color/note_foreground"
             android:textColorLink="@color/note_foreground"
             android:inputType="textCapSentences|textMultiLine"
