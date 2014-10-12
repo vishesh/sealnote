@@ -2,6 +2,7 @@ package com.twistedplane.sealnote.storage;
 
 import android.content.Context;
 import android.os.AsyncTask;
+import android.os.Environment;
 import android.util.Log;
 import com.twistedplane.sealnote.SealnoteApplication;
 import com.twistedplane.sealnote.data.DatabaseHandler;
@@ -15,6 +16,25 @@ import java.io.*;
  */
 public class BackupUtils {
     private static final String TAG = "BackupUtils";
+
+    /* Checks if external storage is available for read and write */
+    public static boolean isExternalStorageWritable() {
+        String state = Environment.getExternalStorageState();
+        if (Environment.MEDIA_MOUNTED.equals(state)) {
+            return true;
+        }
+        return false;
+    }
+
+    /* Checks if external storage is available to at least read */
+    public static boolean isExternalStorageReadable() {
+        String state = Environment.getExternalStorageState();
+        if (Environment.MEDIA_MOUNTED.equals(state) ||
+                Environment.MEDIA_MOUNTED_READ_ONLY.equals(state)) {
+            return true;
+        }
+        return false;
+    }
 
     /**
      * Copy content of src file to dst
@@ -38,7 +58,16 @@ public class BackupUtils {
      */
     public static File backupDatabase(Context context) throws IOException {
         File dbFile = context.getDatabasePath(DatabaseHandler.DBNAME);
-        File backupFile = new File(context.getExternalCacheDir(), "sealnote-backup.db");
+        File backupFile;
+
+        if (isExternalStorageReadable() && isExternalStorageWritable()) {
+            backupFile = new File(context.getExternalCacheDir(), "sealnote-backup.db");
+            Log.d(TAG, "Writing to external storage. " + backupFile.getAbsolutePath());
+        } else {
+            //NOTE: Do we really have to do this? Are we sure there is no other way?
+            return null;
+        }
+
         backupFile.deleteOnExit();
         copy(dbFile, backupFile);
         return backupFile;
