@@ -1,6 +1,7 @@
 package com.twistedplane.sealnote;
 
 
+import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
