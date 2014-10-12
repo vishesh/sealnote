@@ -1,1 +1,1 @@
-include ':Sealnote'
+include ':Sealnote', ':aFileChooser'
