@@ -23,12 +23,23 @@ android {
         versionCode 26
         versionName "0.8.6"
     }
+
+    signingConfigs {
+        release {
+            storeFile file(System.getenv("SEALNOTE_KEYSTORE"))
+            storePassword System.getenv("SEALNOTE_KEYSTORE_PASSWORD")
+            keyAlias System.getenv("SEALNOTE_KEY_ALIAS")
+            keyPassword System.getenv("SEALNOTE_KEY_PASSWORD")
+        }
+    }
+
     buildTypes {
         release {
             runProguard false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
             debuggable false
             jniDebugBuild false
+            signingConfig signingConfigs.release
         }
         debug {
             debuggable true
