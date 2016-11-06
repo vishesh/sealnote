@@ -26,7 +26,7 @@ android {
 
     signingConfigs {
         release {
-            storeFile file(System.getenv("SEALNOTE_KEYSTORE"))
+            storeFile file(String.valueOf(System.getenv("SEALNOTE_KEYSTORE")))
             storePassword System.getenv("SEALNOTE_KEYSTORE_PASSWORD")
             keyAlias System.getenv("SEALNOTE_KEY_ALIAS")
             keyPassword System.getenv("SEALNOTE_KEY_PASSWORD")
