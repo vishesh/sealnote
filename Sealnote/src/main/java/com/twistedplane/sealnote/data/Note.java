@@ -2,7 +2,9 @@ package com.twistedplane.sealnote.data;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.text.TextUtils;
 import android.util.Log;
+
 import com.twistedplane.sealnote.SealnoteApplication;
 import com.twistedplane.sealnote.utils.EasyDate;
 
@@ -14,7 +16,7 @@ import java.util.Set;
  * Note contains all the data and helper functions related to a particular
  * note. Acts as a map between an entry in storage database and Java.
  */
-public class Note implements Parcelable{
+public class Note implements Parcelable {
     public static final String TAG = "Note";
 
     public static enum Folder {
@@ -38,15 +40,15 @@ public class Note implements Parcelable{
         TYPE_CARD,
     }
 
-    private int         mId;            /* Unique note id */
-    private int         mPosition;      /* Position of note */
-    private String      mNoteTitle;     /* Note title */
+    private int mId;            /* Unique note id */
+    private int mPosition;      /* Position of note */
+    private String mNoteTitle;     /* Note title */
     private NoteContent mNote;          /* Note content */
-    private EasyDate    mEditedDate;    /* Last write date */
-    private int         mColor;         /* Note color code, 0-7 */
-    private boolean     mArchived;      /* Is note archived */
-    private boolean     mDeleted;       /* Is note in Trash folder */
-    private Type        mType;          /* Type of note eg. Credit Card, Password, Text */
+    private EasyDate mEditedDate;    /* Last write date */
+    private int mColor;         /* Note color code, 0-7 */
+    private boolean mArchived;      /* Is note archived */
+    private boolean mDeleted;       /* Is note in Trash folder */
+    private Type mType;          /* Type of note eg. Credit Card, Password, Text */
     private Set<String> mTags;          /* Tags attached to this note */
 
     public Note() {
@@ -105,8 +107,8 @@ public class Note implements Parcelable{
         outParcel.writeString(mNote.toString());
         outParcel.writeString(mEditedDate.toString());
         outParcel.writeInt(mColor);
-        outParcel.writeInt(mArchived ?1 :0);
-        outParcel.writeInt(mDeleted ?1 :0);
+        outParcel.writeInt(mArchived ? 1 : 0);
+        outParcel.writeInt(mDeleted ? 1 : 0);
         outParcel.writeString(mType.name());
         outParcel.writeString(convertTagSetToString(mTags));
     }
@@ -115,6 +117,7 @@ public class Note implements Parcelable{
      * Converts given space separated tag string to a Set collection
      */
     public static Set<String> convertToTagSet(String tagString) {
+        tagString = !TextUtils.isEmpty(tagString) ? tagString : "";
         String tags[] = tagString.split(" ");
         HashSet<String> tagSet = new HashSet<String>();
         for (String tag : tags) {

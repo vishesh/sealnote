@@ -15,7 +15,9 @@ import android.widget.EditText;
 import android.widget.ShareActionProvider;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import com.google.common.collect.Sets;
+
 import com.twistedplane.sealnote.data.DatabaseHandler;
 import com.twistedplane.sealnote.data.Note;
 import com.twistedplane.sealnote.data.NoteContent;
@@ -28,39 +30,40 @@ import com.twistedplane.sealnote.view.TagEditText;
 /**
  * NoteActivity implements activity to show and edit note in a full window view.
  */
-public class NoteActivity extends Activity implements ColorDialogFragment.ColorChangedListener{
+public class NoteActivity extends Activity implements ColorDialogFragment.ColorChangedListener {
     public final static String TAG = "NoteActivity";
 
-    private Note        mNote;
-    private Note.Type   mNoteType;
-    private Intent      mShareIntent;
-    private boolean     mSaveButtonClicked = false; /* To avoid action on reclicking  */
-    private boolean     mAutoSaveEnabled;
-    private boolean     mLoadingNote = true;    /* Is note loaded from database? */
+    private Note mNote;
+    private Note.Type mNoteType;
+    private Intent mShareIntent;
+    private boolean mSaveButtonClicked = false; /* To avoid action on reclicking  */
+    private boolean mAutoSaveEnabled;
+    private boolean mLoadingNote = true;    /* Is note loaded from database? */
 
     /**
      * Timeout finishes current activity, and hence executes onPause() and saveInstanceState().
-     * Since state has already been saved with previous pause which started the timer, this variable
+     * Since state has already been saved with previous pause which started the timer, this
+     * variable
      * helps to avoids saving note again unnecessarily.
      */
-    private boolean     mTimedOut = false;
+    private boolean mTimedOut = false;
 
     // Views in activity
-    private EditText    mTitleView;
-    private ViewStub    mContentStub;   /* Inflated by appropriate view to edit given note type */
-    private TextView    mEditedView;    /* Show last edited date/time */
-    private NoteView    mNoteView;
+    private EditText mTitleView;
+    private ViewStub mContentStub;   /* Inflated by appropriate view to edit given note type */
+    private TextView mEditedView;    /* Show last edited date/time */
+    private NoteView mNoteView;
     private TagEditText mTagEditText;    /* Chips view editor for tags */
 
-    private int         mBackgroundColor;
+    private int mBackgroundColor;
 
     /**
      * Start a new NoteActivity with given note id.
      *
      * TODO: Take note object to make loading faster
      *
-     * @param context   Context to use
-     * @param id        Id of note. -1 for new note.
+     * @param context Context to use
+     * @param id Id of note. -1 for new note.
      */
     public static void startForNoteId(Context context, int id, Note.Type type) {
         if (id != -1 && type != null) {
@@ -107,46 +110,52 @@ public class NoteActivity extends Activity implements ColorDialogFragment.ColorC
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_note);
-        // Even though we change content view later, we secure window as soon as possible
-        Misc.secureWindow(NoteActivity.this);
+        try {
+            // Even though we change content view later, we secure window as soon as possible
+            Misc.secureWindow(NoteActivity.this);
 
-        mBackgroundColor = 0;
-        mAutoSaveEnabled = PreferenceHandler.isAutosaveEnabled(NoteActivity.this);
+            mBackgroundColor = 0;
+            mAutoSaveEnabled = PreferenceHandler.isAutosaveEnabled(NoteActivity.this);
 
-        int id = -1;
-        int typeInt = -1;
-        Note bundledNote = null;
+            int id = -1;
+            int typeInt = -1;
+            Note bundledNote = null;
 
-        if (savedInstanceState != null) {
-            id = savedInstanceState.getInt("NOTE_ID", -1);
-            bundledNote = savedInstanceState.getParcelable("NOTE");
-        }
+            if (savedInstanceState != null) {
+                id = savedInstanceState.getInt("NOTE_ID", -1);
+                bundledNote = savedInstanceState.getParcelable("NOTE");
+            }
 
-        if (id == -1) {
-            Bundle extras = getIntent().getExtras();
-            id = extras.getInt("NOTE_ID", -1);
-            typeInt = extras.getInt("NOTE_TYPE", -1);
-        }
+            if (id == -1) {
+                Bundle extras = getIntent().getExtras();
+                id = extras.getInt("NOTE_ID", -1);
+                typeInt = extras.getInt("NOTE_TYPE", -1);
+            }
 
-        if (typeInt == -1) {
-            mNoteType = Note.Type.TYPE_GENERIC;
-        } else {
-            mNoteType = Note.Type.values()[typeInt];
-        }
+            if (typeInt == -1) {
+                mNoteType = Note.Type.TYPE_GENERIC;
+            } else {
+                mNoteType = Note.Type.values()[typeInt];
+            }
 
-        if (id != -1 && savedInstanceState != null && bundledNote != null) {
-            Log.d(TAG, "Unsaved existing note being retrieved from bundle");
-            mLoadingNote = false;
-            init(false, bundledNote.getType());
-            loadNote(bundledNote);
-        } else if (id != -1) {
-            // existing note. Start an async task to load from storage
-            new NoteLoadTask().execute(id);
-        } else {
-            Log.d(TAG, "Creating new note");
-            mLoadingNote = false;
-            init(true, mNoteType); // new note simply setup views
-            getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
+            if (id != -1 && savedInstanceState != null && bundledNote != null) {
+                Log.d(TAG, "Unsaved existing note being retrieved from bundle");
+                mLoadingNote = false;
+                init(false, bundledNote.getType());
+                loadNote(bundledNote);
+            } else if (id != -1) {
+                // existing note. Start an async task to load from storage
+                new NoteLoadTask().execute(id);
+            } else {
+                Log.d(TAG, "Creating new note");
+                mLoadingNote = false;
+                init(true, mNoteType); // new note simply setup views
+                getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
+            }
+        } catch (IllegalArgumentException ex) {
+            Toast.makeText(this, ex.getMessage(), Toast.LENGTH_LONG)
+                    .show();
+            startPasswordActivity();
         }
     }
 
@@ -286,7 +295,7 @@ public class NoteActivity extends Activity implements ColorDialogFragment.ColorC
         int noteId = -1;
         if (mAutoSaveEnabled) {
             saveNote();
-            noteId = (mNote == null) ?-1 :mNote.getId(); // No changes made to new note
+            noteId = (mNote == null) ? -1 : mNote.getId(); // No changes made to new note
             Log.d(TAG, "Note saved automatically due to activity pause.");
         } else {
             if (mNote != null && mNote.getId() != -1) {
@@ -426,7 +435,7 @@ public class NoteActivity extends Activity implements ColorDialogFragment.ColorC
         final boolean backgroundChanged = (mNote != null && mBackgroundColor != mNote.getColor());
         final boolean contentChanged = (
                 (mNote != null) &&
-                (!title.equals(mNote.getTitle()) || !text.equals(mNote.getNote().toString()))
+                        (!title.equals(mNote.getTitle()) || !text.equals(mNote.getNote().toString()))
         );
 
         final boolean anythingChanged = tagsChanged || backgroundChanged || contentChanged;
@@ -525,7 +534,8 @@ public class NoteActivity extends Activity implements ColorDialogFragment.ColorC
      * Called when save action is invoked by click
      */
     public void doSave() {
-        if (mSaveButtonClicked) return; else mSaveButtonClicked = true; //FIXME: Hack. Avoids double saving
+        if (mSaveButtonClicked) return;
+        else mSaveButtonClicked = true; //FIXME: Hack. Avoids double saving
         saveNote();
         Toast.makeText(this, getResources().getString(R.string.note_saved), Toast.LENGTH_SHORT).show();
         finish();
@@ -596,5 +606,11 @@ public class NoteActivity extends Activity implements ColorDialogFragment.ColorC
             // will probably be not correct due to delay
             invalidateOptionsMenu();
         }
+    }
+
+    private void startPasswordActivity() {
+        Intent intent = new Intent(this, PasswordActivity.class);
+        startActivity(intent);
+        finish();
     }
 }
