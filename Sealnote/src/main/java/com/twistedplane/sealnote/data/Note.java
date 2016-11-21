@@ -83,7 +83,8 @@ public class Note implements Parcelable{
         mId = inParcel.readInt();
         mPosition = inParcel.readInt();
         mNoteTitle = inParcel.readString();
-        String note = inParcel.readString();
+        mType = Type.valueOf(inParcel.readString());
+        mNote = NoteContent.fromString(mType, inParcel.readString());
         try {
             mEditedDate = EasyDate.fromIsoString(inParcel.readString());
         } catch (ParseException e) {
@@ -92,8 +93,6 @@ public class Note implements Parcelable{
         mColor = inParcel.readInt();
         mArchived = inParcel.readInt() > 0;
         mDeleted = inParcel.readInt() > 0;
-        mType = Type.valueOf(inParcel.readString());
-        mNote = NoteContent.fromString(mType, note);
         mTags = convertToTagSet(inParcel.readString());
     }
 
@@ -102,12 +101,12 @@ public class Note implements Parcelable{
         outParcel.writeInt(mId);
         outParcel.writeInt(mPosition);
         outParcel.writeString(mNoteTitle);
+        outParcel.writeString(mType.name());
         outParcel.writeString(mNote.toString());
         outParcel.writeString(mEditedDate.toString());
         outParcel.writeInt(mColor);
         outParcel.writeInt(mArchived ?1 :0);
         outParcel.writeInt(mDeleted ?1 :0);
-        outParcel.writeString(mType.name());
         outParcel.writeString(convertTagSetToString(mTags));
     }
 

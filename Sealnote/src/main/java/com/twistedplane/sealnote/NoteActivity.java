@@ -108,50 +108,51 @@ public class NoteActivity extends Activity implements ColorDialogFragment.ColorC
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_note);
 
-        if(SealnoteApplication.getDatabase().getPassword() == null){
-            startPasswordActivity();
-        }else {
-            // Even though we change content view later, we secure window as soon as possible
-            Misc.secureWindow(NoteActivity.this);
+        if(!Misc.isPasswordLoaded()){
+            Misc.startPasswordActivity(this);
+            return;
+        }
 
-            mBackgroundColor = 0;
-            mAutoSaveEnabled = PreferenceHandler.isAutosaveEnabled(NoteActivity.this);
+        // Even though we change content view later, we secure window as soon as possible
+        Misc.secureWindow(NoteActivity.this);
 
-            int id = -1;
-            int typeInt = -1;
-            Note bundledNote = null;
+        mBackgroundColor = 0;
+        mAutoSaveEnabled = PreferenceHandler.isAutosaveEnabled(NoteActivity.this);
 
-            if (savedInstanceState != null) {
-                id = savedInstanceState.getInt("NOTE_ID", -1);
-                bundledNote = savedInstanceState.getParcelable("NOTE");
-            }
+        int id = -1;
+        int typeInt = -1;
+        Note bundledNote = null;
 
-            if (id == -1) {
-                Bundle extras = getIntent().getExtras();
-                id = extras.getInt("NOTE_ID", -1);
-                typeInt = extras.getInt("NOTE_TYPE", -1);
-            }
+        if (savedInstanceState != null) {
+            id = savedInstanceState.getInt("NOTE_ID", -1);
+            bundledNote = savedInstanceState.getParcelable("NOTE");
+        }
 
-            if (typeInt == -1) {
-                mNoteType = Note.Type.TYPE_GENERIC;
-            } else {
-                mNoteType = Note.Type.values()[typeInt];
-            }
+        if (id == -1) {
+            Bundle extras = getIntent().getExtras();
+            id = extras.getInt("NOTE_ID", -1);
+            typeInt = extras.getInt("NOTE_TYPE", -1);
+        }
 
-            if (id != -1 && savedInstanceState != null && bundledNote != null) {
-                Log.d(TAG, "Unsaved existing note being retrieved from bundle");
-                mLoadingNote = false;
-                init(false, bundledNote.getType());
-                loadNote(bundledNote);
-            } else if (id != -1) {
-                // existing note. Start an async task to load from storage
-                new NoteLoadTask().execute(id);
-            } else {
-                Log.d(TAG, "Creating new note");
-                mLoadingNote = false;
-                init(true, mNoteType); // new note simply setup views
-                getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
-            }
+        if (typeInt == -1) {
+            mNoteType = Note.Type.TYPE_GENERIC;
+        } else {
+            mNoteType = Note.Type.values()[typeInt];
+        }
+
+        if (id != -1 && savedInstanceState != null && bundledNote != null) {
+            Log.d(TAG, "Unsaved existing note being retrieved from bundle");
+            mLoadingNote = false;
+            init(false, bundledNote.getType());
+            loadNote(bundledNote);
+        } else if (id != -1) {
+            // existing note. Start an async task to load from storage
+            new NoteLoadTask().execute(id);
+        } else {
+            Log.d(TAG, "Creating new note");
+            mLoadingNote = false;
+            init(true, mNoteType); // new note simply setup views
+            getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
         }
     }
 
@@ -601,11 +602,5 @@ public class NoteActivity extends Activity implements ColorDialogFragment.ColorC
             // will probably be not correct due to delay
             invalidateOptionsMenu();
         }
-    }
-
-    private void startPasswordActivity() {
-        Intent intent = new Intent(this, PasswordActivity.class);
-        startActivity(intent);
-        finish();
     }
 }
