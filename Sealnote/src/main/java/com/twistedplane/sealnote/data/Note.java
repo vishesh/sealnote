@@ -93,7 +93,7 @@ public class Note implements Parcelable{
         mArchived = inParcel.readInt() > 0;
         mDeleted = inParcel.readInt() > 0;
         mType = Type.valueOf(inParcel.readString());
-        mNote = NoteContent.fromString(mType, inParcel.readString());
+        mNote = NoteContent.fromString(mType, note);
         mTags = convertToTagSet(inParcel.readString());
     }
 

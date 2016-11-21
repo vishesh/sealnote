@@ -2,6 +2,7 @@ package com.twistedplane.sealnote.fragment;
 
 import android.app.Fragment;
 import android.app.LoaderManager;
+import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
 import android.database.DataSetObserver;
@@ -15,10 +16,11 @@ import android.view.ViewStub;
 import android.widget.AdapterView;
 import android.widget.TextView;
 import com.twistedplane.sealnote.R;
+import com.twistedplane.sealnote.SealnoteApplication;
 import com.twistedplane.sealnote.data.AdapterLoader;
 import com.twistedplane.sealnote.data.Note;
 import com.twistedplane.sealnote.data.SealnoteAdapter;
-
+import com.twistedplane.sealnote.PasswordActivity;
 /**
  * Main fragment where all cards are listed in a staggered grid
  */
@@ -78,36 +80,39 @@ abstract public class SealnoteFragment extends Fragment implements
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Log.d(TAG, "Creating SealNote fragment...");
+        if(SealnoteApplication.getDatabase().getPassword()==null){
+            startPasswordActivity();
+        }else {
+            // Get folder active in activity
+            String folder = getArguments().getString("SN_FOLDER", Note.Folder.FOLDER_LIVE.name());
+            int tagid = getArguments().getInt("SN_TAGID", -1);
+            mCurrentFolder = Note.Folder.valueOf(folder);
+            mCurrentTag = tagid;
 
-        // Get folder active in activity
-        String folder = getArguments().getString("SN_FOLDER", Note.Folder.FOLDER_LIVE.name());
-        int tagid = getArguments().getInt("SN_TAGID", -1);
-        mCurrentFolder = Note.Folder.valueOf(folder);
-        mCurrentTag = tagid;
+            mAdapter = createAdapter();
 
-        mAdapter = createAdapter();
-
-        /**
-         * Called whenever there is change in dataset. Any future changes
-         * will call this
-         */
-        mAdapter.registerDataSetObserver(new DataSetObserver() {
-            @Override
-            public void onChanged() {
-                super.onChanged();
-                onAdapterDataSetChanged();
-            }
-
-            @Override
-            public void onInvalidated() {
-                super.onInvalidated();
-                Log.d(TAG, "Data set invalidated");
-                if (isRemoving() || isDetached() || !isVisible()) {
-                    return;
+            /**
+             * Called whenever there is change in dataset. Any future changes
+             * will call this
+             */
+            mAdapter.registerDataSetObserver(new DataSetObserver() {
+                @Override
+                public void onChanged() {
+                    super.onChanged();
+                    onAdapterDataSetChanged();
                 }
-                setFolder(mCurrentFolder, mCurrentTag);
-            }
-        });
+
+                @Override
+                public void onInvalidated() {
+                    super.onInvalidated();
+                    Log.d(TAG, "Data set invalidated");
+                    if (isRemoving() || isDetached() || !isVisible()) {
+                        return;
+                    }
+                    setFolder(mCurrentFolder, mCurrentTag);
+                }
+            });
+        }
     }
 
     /**
@@ -215,5 +220,10 @@ abstract public class SealnoteFragment extends Fragment implements
     public void onLoaderReset(Loader<Cursor> cursorLoader) {
         mAdapter.clearCursor();
         layoutProgressHeader.setVisibility(View.VISIBLE);
+    }
+    private void startPasswordActivity() {
+        Intent intent = new Intent(getActivity(), PasswordActivity.class);
+        startActivity(intent);
+        getActivity().finish();
     }
 }
