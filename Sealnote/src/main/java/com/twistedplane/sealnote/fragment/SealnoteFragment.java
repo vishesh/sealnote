@@ -18,6 +18,7 @@ import com.twistedplane.sealnote.R;
 import com.twistedplane.sealnote.data.AdapterLoader;
 import com.twistedplane.sealnote.data.Note;
 import com.twistedplane.sealnote.data.SealnoteAdapter;
+import com.twistedplane.sealnote.utils.Misc;
 
 /**
  * Main fragment where all cards are listed in a staggered grid
@@ -78,6 +79,11 @@ abstract public class SealnoteFragment extends Fragment implements
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Log.d(TAG, "Creating SealNote fragment...");
+
+        if(!Misc.isPasswordLoaded()){
+            Misc.startPasswordActivity(getActivity());
+            return;
+        }
 
         // Get folder active in activity
         String folder = getArguments().getString("SN_FOLDER", Note.Folder.FOLDER_LIVE.name());

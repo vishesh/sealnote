@@ -107,6 +107,12 @@ public class NoteActivity extends Activity implements ColorDialogFragment.ColorC
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_note);
+
+        if(!Misc.isPasswordLoaded()){
+            Misc.startPasswordActivity(this);
+            return;
+        }
+
         // Even though we change content view later, we secure window as soon as possible
         Misc.secureWindow(NoteActivity.this);
 
