@@ -2,10 +2,13 @@ package com.twistedplane.sealnote.utils;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.Resources;
 import android.view.Window;
 import android.view.WindowManager;
+import com.twistedplane.sealnote.PasswordActivity;
 import com.twistedplane.sealnote.R;
+import com.twistedplane.sealnote.SealnoteApplication;
 
 /**
  * Miscellaneous helper functions
@@ -65,5 +68,15 @@ public class Misc {
         } else {
             window.setFlags(0, WindowManager.LayoutParams.FLAG_SECURE);
         }
+    }
+
+    public static boolean isPasswordLoaded() {
+        return SealnoteApplication.getDatabase().getPassword() != null;
+    }
+
+    public static void startPasswordActivity(Activity activity) {
+        Intent passwordIntent = new Intent(activity, PasswordActivity.class);
+        activity.startActivity(passwordIntent);
+        activity.finish();
     }
 }
