@@ -90,6 +90,8 @@ Before you start working on an issue, please claim it so that there is no duplic
     `git checkout -b feature`
 4. **Make your changes.**
 5. Fork sealnote on GitHub (adds a remote named "YOUR-USER")
+6. Add your fork as remote:
+    `git remote add <YOUR-USER> https://github.com/<YOUR-USER>/sealnote.git`
 7. Push to your fork:
     `git push -u <YOUR-USER> HEAD`
 8. Open a pull request describing your changes
