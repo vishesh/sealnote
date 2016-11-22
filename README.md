@@ -57,6 +57,55 @@ You probably have enabled "Secure Window" feature in SealNote settings.
 Disable it to be able to take screenshots or show window content in application
 switcher.
 
+Contributing
+--------------------------------
+
+Contributions are much appreciated. Please go through this section to understand how and what to contribute.
+
+### Tools of trade
+
+1. Java 1.7+
+1. Gradle 0.12.2
+2. Editor of your choice (Please do not check-in editor project files)
+
+### What to contribute
+
+SealNote is an application which focuses on security and simplicity.
+
+If you need ideas for contribution, please check currently open issues.
+
+If you want to add a new feature, please open a new issue. A good feature can be something which improves some workflow or security for a user.
+
+### Issue assignment
+
+Before you start working on an issue, please claim it so that there is no duplication of effort. We don't assign an issue until you have a passing pull-request.
+
+### How to submit a pull request
+
+1. Clone sealnote:
+    `git clone https://github.com/vishesh/sealnote.git && cd sealnote`
+2. Verify that build succeeds:
+    `./gradlew assembleDebug`
+3. Create a topic branch:
+    `git checkout -b feature`
+4. **Make your changes.**
+5. Fork sealnote on GitHub (adds a remote named "YOUR-USER")
+7. Push to your fork:
+    `git push -u <YOUR-USER> HEAD`
+8. Open a pull request describing your changes
+
+### Style Guide
+
+We strive to follow [Google's Java Style Guide](https://google.github.io/styleguide/javaguide.html). If you see any violation, feel free to submit a patch.
+
+### Commit guidelines
+
+We don't have a strict guideline on commit messages. However, we strive to follow [Git-book's](https://git-scm.com/book/ch5-2.html#Commit-Guidelines) commit guidelines for messages.
+
+### Documentation updates
+
+We value documentation and believe in continuous improvement. All the documents can be considered living documents, unless stated otherwise. Please follow the general contribution guidelines when submitting a patch for documents.
+
 Contact
 -------
 Homepage: www.twistedplane.com
