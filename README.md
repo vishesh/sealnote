@@ -103,7 +103,9 @@ follow [Git-book's](https://git-scm.com/book/ch5-2.html#Commit-Guidelines)
 
 ### Documentation updates
 
-We value documentation and believe in continuous improvement. All the documents can be considered living documents, unless stated otherwise. Please follow the general contribution guidelines when submitting a patch for documents.
+We value documentation and believe in continuous improvement. All the documents
+can be considered living documents, unless stated otherwise. Please follow the
+general contribution guidelines when submitting a patch for documents.
 
 Contact
 -------
