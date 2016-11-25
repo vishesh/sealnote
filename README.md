@@ -62,23 +62,14 @@ Contributing
 
 Contributions are much appreciated. Please go through this section to understand how and what to contribute.
 
+If you need ideas for contribution, please check currently [open issues](https://github.com/vishesh/sealnote/issues). If you want to propose a new feature, please open a new issue. A good feature can be something which improves some workflow or security for a user.
+
+Before you start working on an issue, please claim it so that there is no duplication of effort. We don't assign an issue until you have a passing pull-request.
+
 ### Tools of trade
 
 1. Java 1.7+
-1. Gradle 0.12.2
-2. Editor of your choice (Please do not check-in editor project files)
-
-### What to contribute
-
-SealNote is an application which focuses on security and simplicity.
-
-If you need ideas for contribution, please check currently open issues.
-
-If you want to add a new feature, please open a new issue. A good feature can be something which improves some workflow or security for a user.
-
-### Issue assignment
-
-Before you start working on an issue, please claim it so that there is no duplication of effort. We don't assign an issue until you have a passing pull-request.
+2. Android API Level 19+
 
 ### How to submit a pull request
 
@@ -89,20 +80,24 @@ Before you start working on an issue, please claim it so that there is no duplic
 3. Create a topic branch:
     `git checkout -b feature`
 4. **Make your changes.**
-5. Fork sealnote on GitHub (adds a remote named "YOUR-USER")
+5. Fork sealnote on GitHub.
 6. Add your fork as remote:
     `git remote add <YOUR-USER> https://github.com/<YOUR-USER>/sealnote.git`
 7. Push to your fork:
     `git push -u <YOUR-USER> HEAD`
-8. Open a pull request describing your changes
+8. Open a pull request against **develop** branch describing your changes.
 
 ### Style Guide
 
-We strive to follow [Google's Java Style Guide](https://google.github.io/styleguide/javaguide.html). If you see any violation, feel free to submit a patch.
+The project follows [Google's Java Style Guide](https://google.github.io/styleguide/javaguide.html) with following exceptions:
+1. 4 spaces indentation instead of 2.
+2. Horizontal alignment is recommended if it makes code more readable.
+
+If you see any violation, feel free to submit a patch.
 
 ### Commit guidelines
 
-We don't have a strict guideline on commit messages. However, we strive to follow [Git-book's](https://git-scm.com/book/ch5-2.html#Commit-Guidelines) commit guidelines for messages.
+There is no strict guideline on commit messages. However, wherever possible, follow [Git-book's](https://git-scm.com/book/ch5-2.html#Commit-Guidelines) commit guidelines for messages.
 
 ### Documentation updates
 
