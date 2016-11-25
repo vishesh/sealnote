@@ -70,33 +70,18 @@ improves some workflow or security for a user.
 
 ### Tools of trade
 
-1. Java 1.7+
-2. Android API Level 19+
+* Java 1.7+
+* Android API Level 19+
 
 ### How to submit a pull request
 
-1. Clone sealnote:
-
-    git clone https://github.com/vishesh/sealnote.git && cd sealnote
-
-2. Verify that build succeeds:
-
-    ./gradlew assembleDebug
-
-3. Create a topic branch:
-
-    git checkout -b feature
-
+1. Clone sealnote: `git clone https://github.com/vishesh/sealnote.git && cd sealnote`
+2. Verify that build succeeds: `./gradlew assembleDebug`
+3. Create a topic branch: `git checkout -b feature`
 4. Make your changes.
 5. Fork sealnote on GitHub.
-6. Add your fork as remote:
-
-    git remote add <YOUR-USER> https://github.com/<YOUR-USER>/sealnote.git
-
-7. Push to your fork:
-
-    git push -u <YOUR-USER> HEAD
-
+6. Add your fork as remote: `git remote add <YOUR-USER> https://github.com/<YOUR-USER>/sealnote.git`
+7. Push to your fork: `git push -u <YOUR-USER> HEAD`
 8. Open a pull request against **develop** branch describing your changes.
 
 ### Style Guide
@@ -105,8 +90,8 @@ The project follows [Google's Java Style
 Guide](https://google.github.io/styleguide/javaguide.html) with following
 exceptions:
 
-1. 4 spaces indentation instead of 2.
-2. Horizontal alignment is recommended if it makes code more readable.
+* 4 spaces indentation instead of 2.
+* Horizontal alignment is recommended if it makes code more readable.
 
 If you see any violation, feel free to submit a patch.
 
