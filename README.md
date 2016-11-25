@@ -57,6 +57,56 @@ You probably have enabled "Secure Window" feature in SealNote settings.
 Disable it to be able to take screenshots or show window content in application
 switcher.
 
+Contributing
+--------------------------------
+
+Contributions are much appreciated. Please go through this section to
+understand how and what to contribute.
+
+If you need ideas for contribution, please check currently [open
+issues](https://github.com/vishesh/sealnote/issues). If you want to propose a
+new feature, please open a new issue. A good feature can be something which
+improves some workflow or security for a user.
+
+### Tools of trade
+
+* Java 1.7+
+* Android API Level 19+
+
+### How to submit a pull request
+
+1. Clone sealnote: `git clone https://github.com/vishesh/sealnote.git && cd sealnote`
+2. Verify that build succeeds: `./gradlew assembleDebug`
+3. Create a topic branch: `git checkout -b feature`
+4. Make your changes.
+5. Fork sealnote on GitHub.
+6. Add your fork as remote: `git remote add <YOUR-USER> https://github.com/<YOUR-USER>/sealnote.git`
+7. Push to your fork: `git push -u <YOUR-USER> HEAD`
+8. Open a pull request against **develop** branch describing your changes.
+
+### Style Guide
+
+The project follows [Google's Java Style
+Guide](https://google.github.io/styleguide/javaguide.html) with following
+exceptions:
+
+* 4 spaces indentation instead of 2.
+* Horizontal alignment is recommended if it makes code more readable.
+
+If you see any violation, feel free to submit a patch.
+
+### Commit guidelines
+
+There is no strict guideline on commit messages. However, whenever possible,
+follow [Git-book's](https://git-scm.com/book/ch5-2.html#Commit-Guidelines)
+ guidelines.
+
+### Documentation updates
+
+We value documentation and believe in continuous improvement. All the documents
+can be considered living documents, unless stated otherwise. Please follow the
+general contribution guidelines when submitting a patch for documents.
+
 Contact
 -------
 Homepage: www.twistedplane.com
