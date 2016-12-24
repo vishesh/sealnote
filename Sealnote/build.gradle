@@ -3,7 +3,7 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:0.12.2'
+        classpath 'com.android.tools.build:gradle:2.2.3'
     }
 }
 apply plugin: 'android'
@@ -14,7 +14,7 @@ repositories {
 
 android {
     compileSdkVersion 19
-    buildToolsVersion '19.1'
+    buildToolsVersion '21.0.0'
 
     defaultConfig {
         minSdkVersion 14
@@ -35,16 +35,16 @@ android {
 
     buildTypes {
         release {
-            runProguard false
+            minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
             debuggable false
-            jniDebugBuild false
+            jniDebuggable false
             signingConfig signingConfigs.release
         }
         debug {
             debuggable true
-            jniDebugBuild true
-            runProguard false
+            jniDebuggable true
+            minifyEnabled false
         }
     }
 
@@ -65,7 +65,7 @@ task nativeLibsToJar(type: Zip, description: 'create a jar archive of the native
     into 'lib/'
 }
 
-tasks.withType(Compile) {
+tasks.withType(JavaCompile) {
     compileTask -> compileTask.dependsOn(nativeLibsToJar)
 }
 

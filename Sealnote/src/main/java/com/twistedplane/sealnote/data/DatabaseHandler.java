@@ -616,4 +616,18 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 null
         );
     }
+
+    public List<Note> searchNotes(String searchString) {
+        List<Note> list = new ArrayList<Note>();
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_NAME + " WHERE " + COL_NOTE + " like '%" + searchString +  "%' or " + COL_TITLE + " like %" + searchString +  "%", null);
+        if (cursor.moveToFirst()) {
+            do {
+                list.add(cursorToNote(cursor));
+            } while (cursor.moveToNext());
+        }
+
+        cursor.close();
+        return list;
+    }
 }
