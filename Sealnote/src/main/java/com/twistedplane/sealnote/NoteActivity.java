@@ -410,7 +410,7 @@ public class NoteActivity extends Activity implements ColorDialogFragment.ColorC
     /**
      * Save old or new note to database
      */
-    public void saveNote() {
+    public boolean saveNote() {
         final DatabaseHandler handler = SealnoteApplication.getDatabase();
         final String title = mTitleView.getText().toString();
         final NoteContent noteContent = mNoteView.getNoteContent();
@@ -418,7 +418,7 @@ public class NoteActivity extends Activity implements ColorDialogFragment.ColorC
 
         if (title.equals("") && text.trim().equals("")) {
             Toast.makeText(this, getResources().getString(R.string.empty_note), Toast.LENGTH_SHORT).show();
-            return;
+            return false;
         }
 
         final boolean tagsChanged = mNote != null && mNote.getTags() != null &&
@@ -437,7 +437,7 @@ public class NoteActivity extends Activity implements ColorDialogFragment.ColorC
         } else if (mAutoSaveEnabled && !anythingChanged) {
             // Also avoid unnecessarily updating the edit timestamp of note
             Log.d(TAG, "Note didn't change. No need to autosave");
-            return;
+            return false;
         }
 
         mNote.setTitle(title);
@@ -455,6 +455,7 @@ public class NoteActivity extends Activity implements ColorDialogFragment.ColorC
             // only those two have changed
             handler.updateNote(mNote, contentChanged);
         }
+        return true;
     }
 
     /**
@@ -526,8 +527,10 @@ public class NoteActivity extends Activity implements ColorDialogFragment.ColorC
      */
     public void doSave() {
         if (mSaveButtonClicked) return; else mSaveButtonClicked = true; //FIXME: Hack. Avoids double saving
-        saveNote();
-        Toast.makeText(this, getResources().getString(R.string.note_saved), Toast.LENGTH_SHORT).show();
+        final boolean noteSaved = saveNote();
+        if (noteSaved) {
+            Toast.makeText(this, getResources().getString(R.string.note_saved), Toast.LENGTH_SHORT).show();
+        }
         finish();
     }
 
