@@ -1,13 +1,19 @@
 language: android
+jdk: oraclejdk8
+licenses:
+    - 'android-sdk-preview-license-.+'
+    - 'android-sdk-license-.+'
+    - 'google-gdk-license-.+'
+
 android:
   components:
     # Uncomment the lines below if you want to
     # use the latest revision of Android SDK Tools
-    # - platform-tools
-    # - tools
+    - platform-tools
+    - tools
 
     # The BuildTools version used by your project
-    - build-tools-19.1.0
+    - build-tools-21.0.0
 
     # The SDK version used to compile your project
     - android-19
