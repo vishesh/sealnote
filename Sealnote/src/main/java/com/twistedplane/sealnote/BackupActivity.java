@@ -1,15 +1,18 @@
 package com.twistedplane.sealnote;
 
 
-import android.app.ActionBar;
+import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.text.Html;
-import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
+
 import com.twistedplane.sealnote.storage.BackupUtils;
 import com.twistedplane.sealnote.utils.FontCache;
 
@@ -24,6 +27,7 @@ import static android.widget.Toast.makeText;
 public class BackupActivity extends Activity implements BackupUtils.BackupListener {
     private static final String TAG = "BackupActivity";
     private static final int REQUEST_BACKUP = 0x10;
+    private static final int REQ_PERMISSION_WRITE_EXTERNAL_STORAGE = 1000;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,9 +43,28 @@ public class BackupActivity extends Activity implements BackupUtils.BackupListen
     }
 
     /**
-     * Start backup activity
+     * Request permission then start backup activity
      */
     public void doBackup(View view) {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                != PackageManager.PERMISSION_GRANTED) {
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+                makeText(this, R.string.backup_permission_error, LENGTH_SHORT).show();
+            } else {
+                ActivityCompat.requestPermissions(this,
+                        new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                        REQ_PERMISSION_WRITE_EXTERNAL_STORAGE);
+            }
+        } else {
+            doBackup();
+        }
+    }
+
+    /**
+     * Start backup activity
+     */
+    private void doBackup() {
         new BackupUtils.BackupTask(this, this).execute();
     }
 
@@ -96,5 +119,19 @@ public class BackupActivity extends Activity implements BackupUtils.BackupListen
 
         findViewById(R.id.backup_progress).setVisibility(View.INVISIBLE);
         findViewById(R.id.backup_button).setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        switch (requestCode) {
+            case REQ_PERMISSION_WRITE_EXTERNAL_STORAGE:
+                if (grantResults.length > 0 &&
+                        grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    doBackup();
+                } else {
+                    makeText(this, getResources().getString(R.string.backup_permission_error), LENGTH_SHORT).show();
+                }
+                break;
+        }
     }
 }

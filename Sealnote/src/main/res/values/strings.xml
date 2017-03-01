@@ -154,5 +154,6 @@
     <string name="pick_backup_file">Pick Backup File</string>
     <string name="start_restore">Start Restore</string>
     <string name="write_a_review">Write a Review</string>
+    <string name="backup_permission_error">Backup unsuccessful! Please give storage permission.</string>
 
 </resources>
