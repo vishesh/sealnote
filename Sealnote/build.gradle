@@ -57,21 +57,9 @@ android {
     }
 }
 
-task nativeLibsToJar(type: Zip, description: 'create a jar archive of the native libs') {
-    destinationDir file("$buildDir/native-libs")
-    baseName 'native-libs'
-    extension 'jar'
-    from fileTree(dir: 'libs', include: '**/*.so')
-    into 'lib/'
-}
-
-tasks.withType(JavaCompile) {
-    compileTask -> compileTask.dependsOn(nativeLibsToJar)
-}
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    //compile fileTree(dir: "$buildDir/native-libs", include: 'native-libs.jar')
 
     compile 'com.android.support:support-v4:25.1.1'
     compile 'com.etsy.android.grid:library:1.0.4'
@@ -80,7 +68,7 @@ dependencies {
     compile 'com.nhaarman.listviewanimations:library:2.6.0'
 
     compile 'com.github.codechimp-org.apprater:library:1.0.32'
-    compile 'net.zetetic:android-database-sqlcipher:3.3.1-2@aar'
+    compile 'net.zetetic:android-database-sqlcipher:3.5.6@aar'
 
 
 
