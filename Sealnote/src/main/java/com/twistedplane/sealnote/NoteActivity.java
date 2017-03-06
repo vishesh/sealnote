@@ -2,25 +2,36 @@ package com.twistedplane.sealnote;
 
 import android.app.ActionBar;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
-import android.view.*;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewStub;
+import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.ShareActionProvider;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import com.google.common.collect.Sets;
 import com.twistedplane.sealnote.data.DatabaseHandler;
 import com.twistedplane.sealnote.data.Note;
 import com.twistedplane.sealnote.data.NoteContent;
 import com.twistedplane.sealnote.fragment.ColorDialogFragment;
-import com.twistedplane.sealnote.utils.*;
+import com.twistedplane.sealnote.utils.EasyDate;
+import com.twistedplane.sealnote.utils.FontCache;
+import com.twistedplane.sealnote.utils.Misc;
+import com.twistedplane.sealnote.utils.PreferenceHandler;
+import com.twistedplane.sealnote.utils.TimeoutHandler;
 import com.twistedplane.sealnote.view.NoteView;
 import com.twistedplane.sealnote.view.TagEditText;
 
@@ -28,7 +39,7 @@ import com.twistedplane.sealnote.view.TagEditText;
 /**
  * NoteActivity implements activity to show and edit note in a full window view.
  */
-public class NoteActivity extends Activity implements ColorDialogFragment.ColorChangedListener{
+public class NoteActivity extends Activity implements ColorDialogFragment.ColorChangedListener {
     public final static String TAG = "NoteActivity";
 
     private Note        mNote;
@@ -56,11 +67,11 @@ public class NoteActivity extends Activity implements ColorDialogFragment.ColorC
 
     /**
      * Start a new NoteActivity with given note id.
-     *
+     * <p>
      * TODO: Take note object to make loading faster
      *
-     * @param context   Context to use
-     * @param id        Id of note. -1 for new note.
+     * @param context Context to use
+     * @param id      Id of note. -1 for new note.
      */
     public static void startForNoteId(Context context, int id, Note.Type type) {
         if (id != -1 && type != null) {
@@ -108,7 +119,7 @@ public class NoteActivity extends Activity implements ColorDialogFragment.ColorC
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_note);
 
-        if (!Misc.isPasswordLoaded()){
+        if (!Misc.isPasswordLoaded()) {
             Misc.startPasswordActivity(this);
             return;
         }
@@ -272,7 +283,7 @@ public class NoteActivity extends Activity implements ColorDialogFragment.ColorC
         // content view
         // FIXME: This can be made simpler maybe by making better layout
         if (!mTimedOut && mAutoSaveEnabled && !mLoadingNote) {
-            saveNote();
+            saveNote(false);
             Log.d(TAG, "Note saved automatically due to activity pause.");
         }
 
@@ -291,8 +302,8 @@ public class NoteActivity extends Activity implements ColorDialogFragment.ColorC
 
         int noteId = -1;
         if (mAutoSaveEnabled) {
-            saveNote();
-            noteId = (mNote == null) ?-1 :mNote.getId(); // No changes made to new note
+            saveNote(false);
+            noteId = (mNote == null) ? -1 : mNote.getId(); // No changes made to new note
             Log.d(TAG, "Note saved automatically due to activity pause.");
         } else {
             if (mNote != null && mNote.getId() != -1) {
@@ -367,11 +378,9 @@ public class NoteActivity extends Activity implements ColorDialogFragment.ColorC
             return;
         }
 
-        final EditText titleView = (EditText) findViewById(R.id.note_activity_title);
         String shareText;
-
-        if (mNoteView != null && titleView != null) {
-            shareText = titleView.getText().toString() + "\n\n" + mNoteView.getNoteContent().toString();
+        if (mNoteView != null && mTitleView != null) {
+            shareText = mTitleView.getText().toString() + "\n\n" + mNoteView.getNoteContent().toString();
         } else {
             shareText = "";
         }
@@ -414,9 +423,37 @@ public class NoteActivity extends Activity implements ColorDialogFragment.ColorC
     }
 
     /**
-     * Save old or new note to database
+     * Check if note is changed
+     * @return true if note changed
      */
-    public boolean saveNote() {
+    private boolean isNoteChanged() {
+        final boolean tagsChanged = mNote != null && mNote.getTags() != null &&
+                Sets.symmetricDifference(mTagEditText.getTagSet(), mNote.getTags()).size() != 0;
+        final boolean backgroundChanged = (mNote != null && mBackgroundColor != mNote.getColor());
+        return tagsChanged || backgroundChanged || isContentChanged();
+    }
+
+    /**
+     * Check if note content is changed
+     * @return true if note content changed
+     */
+    private boolean isContentChanged() {
+        final String title = mTitleView.getText().toString();
+        final NoteContent noteContent = mNoteView.getNoteContent();
+        final String text = noteContent.toString();
+        return (
+                (mNote != null) &&
+                        (!title.equals(mNote.getTitle()) || !text.equals(mNote.getNote().toString()))
+        );
+    }
+
+    /**
+     * Save old or new note to database
+     *
+     * @param forceSave If true, saves the note if changed. No need to enable auto save
+     * @return true if note saved
+     */
+    public boolean saveNote(boolean forceSave) {
         final DatabaseHandler handler = SealnoteApplication.getDatabase();
         final String title = mTitleView.getText().toString();
         final NoteContent noteContent = mNoteView.getNoteContent();
@@ -427,20 +464,11 @@ public class NoteActivity extends Activity implements ColorDialogFragment.ColorC
             return false;
         }
 
-        final boolean tagsChanged = mNote != null && mNote.getTags() != null &&
-                Sets.symmetricDifference(mTagEditText.getTagSet(), mNote.getTags()).size() != 0;
-        final boolean backgroundChanged = (mNote != null && mBackgroundColor != mNote.getColor());
-        final boolean contentChanged = (
-                (mNote != null) &&
-                (!title.equals(mNote.getTitle()) || !text.equals(mNote.getNote().toString()))
-        );
-
-        final boolean anythingChanged = tagsChanged || backgroundChanged || contentChanged;
 
         if (mNote == null) {
             // this is a new note
             mNote = new Note();
-        } else if (mAutoSaveEnabled && !anythingChanged) {
+        } else if (mAutoSaveEnabled && !isNoteChanged() && !forceSave) {
             // Also avoid unnecessarily updating the edit timestamp of note
             Log.d(TAG, "Note didn't change. No need to autosave");
             return false;
@@ -459,7 +487,7 @@ public class NoteActivity extends Activity implements ColorDialogFragment.ColorC
         } else {
             // don't update timestamp when only background or tags or
             // only those two have changed
-            handler.updateNote(mNote, contentChanged);
+            handler.updateNote(mNote, isContentChanged());
         }
         return true;
     }
@@ -497,9 +525,20 @@ public class NoteActivity extends Activity implements ColorDialogFragment.ColorC
     }
 
     /**
-     * Archive current note
+     * Ask user if note is changed, then Archive current note
      */
     public void doArchive() {
+        if (isNoteChanged()) {
+            showArchiveAlert();
+        } else {
+            doArchiveNote();
+        }
+    }
+
+    /**
+     * Archive current note
+     */
+    private void doArchiveNote() {
         final DatabaseHandler handler = SealnoteApplication.getDatabase();
         handler.archiveNote(mNote.getId(), true);
         mNote = null;
@@ -510,6 +549,30 @@ public class NoteActivity extends Activity implements ColorDialogFragment.ColorC
         mAutoSaveEnabled = false;
 
         finish();
+    }
+
+    /**
+     * Shows an alert before archiving if note is changed.
+     */
+    private void showArchiveAlert() {
+        AlertDialog alertDialog = new AlertDialog.Builder(this)
+                .setMessage(R.string.archive_save_alert)
+                .setPositiveButton(R.string.action_yes, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        saveNote(true);
+                        doArchiveNote();
+                    }
+                })
+                .setNegativeButton(R.string.action_no, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        doArchiveNote();
+                    }
+                })
+                .setNeutralButton(R.string.cancel, null)
+                .create();
+        alertDialog.show();
     }
 
     /**
@@ -532,9 +595,9 @@ public class NoteActivity extends Activity implements ColorDialogFragment.ColorC
      * Called when save action is invoked by click
      */
     public void doSave() {
-        if (mSaveButtonClicked) return; else mSaveButtonClicked = true; //FIXME: Hack. Avoids double saving
-        final boolean noteSaved = saveNote();
-        if (noteSaved) {
+        if (mSaveButtonClicked) return;
+        else mSaveButtonClicked = true; //FIXME: Hack. Avoids double saving
+        if (saveNote(false)) {
             Toast.makeText(this, getResources().getString(R.string.note_saved), Toast.LENGTH_SHORT).show();
         }
         finish();

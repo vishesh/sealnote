@@ -28,6 +28,8 @@
     <string name="action_delete">Delete</string>
     <string name="action_share">Share</string>
     <string name="action_edit_tags">Edit tags</string>
+    <string name="action_yes">Yes</string>
+    <string name="action_no">No</string>
 
     <string name="action_new_generic_note">Plain Text</string>
     <string name="action_new_login_note">Login Details</string>
@@ -155,5 +157,6 @@
     <string name="start_restore">Start Restore</string>
     <string name="write_a_review">Write a Review</string>
     <string name="backup_permission_error">Backup unsuccessful! Please give storage permission.</string>
+    <string name="archive_save_alert">You have unsaved changes? Do you want to save note before archiving?</string>
 
 </resources>
