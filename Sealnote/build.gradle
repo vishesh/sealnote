@@ -4,7 +4,7 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.2.3'
+        classpath 'com.android.tools.build:gradle:2.3.0'
     }
 }
 apply plugin: 'com.android.application'
@@ -21,8 +21,8 @@ android {
         minSdkVersion 14
         targetSdkVersion 25
 
-        versionCode 26
-        versionName "0.8.6"
+        versionCode 27
+        versionName "0.8.7"
     }
 
     signingConfigs {

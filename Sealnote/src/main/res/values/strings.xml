@@ -4,7 +4,7 @@
 
     <string name="app_name">SealNote</string>
     <string name="app_description">Objective is simple. Provide a quick, simple and <b>safe</b> notepad. Your notes are encrypted using strong 256-bit AES algorithm. No longer worry about losing your private information to malicious people.</string>
-    <string name="app_credits"><b>TwistedPlane:</b>\nwww.twistedplane.com\ncontact@twistedplane.com"</string>
+    <string name="app_credits"><b>TwistedPlane:</b>\nwww.twistedplane.com\ncontact@twistedplane.com"\n<b>Contributors:</b>\nhttps://github.com/vishesh/sealnote/graphs/contributors</string>
 
     <!-- Activities -->
     <string name="title_activity_note">" "</string>
