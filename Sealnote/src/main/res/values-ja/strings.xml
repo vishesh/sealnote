@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--     Strings -->
+<resources>
+
+    <string name="app_name">SealNote</string>
+    <string name="app_description">目的は簡単です。 すばやく簡単に <b>安全な</b> メモ帳を提供します。 あなたのメモ帳は、強力な256ビットAESアルゴリズムを使用して暗号化されています。 悪意のある人々によってあなたの個人情報を失う心配がなくなりました。</string>
+    <string name="app_credits"><b>TwistedPlane:</b>\nwww.twistedplane.com\ncontact@twistedplane.com"\n<b>貢献者:</b>\nhttps://github.com/vishesh/sealnote/graphs/contributors</string>
+
+    <!-- Activities -->
+    <string name="title_activity_note">" "</string>
+    <string name="title_activity_settings">設定</string>
+    <string name="title_activity_edit_tags">タグを編集</string>
+    <string name="drawer_open">開く</string>
+    <string name="drawer_close">閉じる</string>
+
+    <!-- Actions -->
+    <string name="action_settings">設定</string>
+    <string name="action_about">アプリについて</string>
+    <string name="action_search">検索</string>
+    <string name="action_new_note">新しいメモを作成</string>
+    <string name="action_save_note">保存</string>
+    <string name="action_archive">アーカイブ</string>
+    <string name="action_unarchive">アーカイブ解除</string>
+    <string name="action_restore">復元</string>
+    <string name="action_empty_trash">ごみ箱を空にする</string>
+    <string name="action_color">色</string>
+    <string name="action_logout">ログアウト</string>
+    <string name="action_delete">削除</string>
+    <string name="action_share">共有</string>
+    <string name="action_edit_tags">タグを編集</string>
+    <string name="action_yes">はい</string>
+    <string name="action_no">いいえ</string>
+
+    <string name="action_new_generic_note">プレーンテキスト</string>
+    <string name="action_new_login_note">ログインの詳細</string>
+    <string name="action_new_card_note">カードの詳細</string>
+
+    <string name="rename">名前を変更</string>
+    <string name="rename_tag">タグの名前を変更</string>
+    <string name="delete_tag">タグ \"%s\" を削除</string>
+    <string name="are_you_sure_delete_tag">このタグを削除してもよろしいですか?</string>
+
+    <string name="whitespace_not_allowed">エラー。 タグに空白は入力できません!</string>
+
+    <!-- Note Activity -->
+    <string name="note_title">タイトル</string>
+    <string name="note_note">メモ</string>
+    <string name="empty_note">空のメモを保存する必要はありません!</string>
+    <string name="note_saved">メモを保存しました。</string>
+    <string name="note_deleted">メモを削除しました。</string>
+    <string name="note_restored">メモを復元しました。</string>
+    <string name="note_archived">メモをアーカイブしました。</string>
+    <string name="note_unarchived">メモをアーカイブ解除しました。</string>
+    <string name="create_a_new_note">新しいメモを作成</string>
+
+    <!-- Bank Card editor -->
+    <string name="note_card_name">カードの氏名</string>
+    <string name="note_card_number">カード番号</string>
+    <string name="note_card_valid_from">期限開始</string>
+    <string name="note_card_valid_upto">期限終了</string>
+    <string name="note_card_cvv">&#160;&#160;&#160;&#160;&#160;&#160;&#160;CVV</string>
+    <string name="note_additional_notes">追加のメモ</string>
+
+    <!-- login editor -->
+    <string name="note_login_url">URL</string>
+    <string name="note_login_name">&#160;&#160;&#160;ログイン</string>
+    <string name="note_login_password">パスワード</string>
+
+    <!-- color dialog -->
+    <string name="msg_pick_color">色の選択</string>
+
+    <!-- password dialog -->
+    <string name="welcome_submessage">メモを安全に保存します</string>
+    <string name="password">パスワード</string>
+    <string name="create_password">新しいパスワードを入力</string>
+    <string name="show_notes">メモを表示</string>
+    <string name="get_started">始めましょう</string>
+    <string name="invalid_password">パスワードが間違っています!</string>
+    <string name="go">実行</string>
+    <string name="cancel">キャンセル</string>
+
+    <!-- Preferences -->
+    <string name="pref_catGeneral">全般</string>
+    <string name="pref_catAppearance">外観</string>
+    <string name="pref_passwordTimeout">パスワード タイムアウト</string>
+    <string name="pref_passwordTimeoutSummary">非アクティブのタイムアウト後に再ログインが必要です。</string>
+    <string name="pref_secureWindowTitle">セキュア ウインドウ コンテンツ</string>
+    <string name="pref_secureWindowSummary">スクリーンショット、スイッチャー、その他の安全でない画面にウィンドウコンテンツが表示されないようにします。</string>
+    <string name="pref_dynamicFontSize">カードに動的フォントサイズ</string>
+    <string name="pref_dynamicFontSizeSummary">カードのフォントサイズは、メモのコンテンツごとに動的に計算されます。 再ログインが必要です。</string>
+    <string name="pref_autoSave">メモを自動保存</string>
+    <string name="pref_autoSaveSummary">メモを自動的に保存します。 保存ボタンをクリックする必要はありません</string>
+    <string name="pref_changePassword">パスワードを変更</string>
+    <string name="pref_noteListViewType">メモ表示レイアウト</string>
+    <string name="pref_noteListViewTypeSummary">メイン画面のすべてのメモを表示するレイアウトを選択します</string>
+    <string name="pref_noteActivityBg">メモエディターの背景</string>
+    <string name="pref_noteActivityBgSummary">メモのタグの色でメモエディター画面を完全に塗りつぶします</string>
+    <string name="pref_catStorage">ストレージ</string>
+    <string name="pref_backup">バックアップ</string>
+    <string name="pref_restore">復元</string>
+
+    <!-- change password -->
+    <string name="incorrect_old_password">旧パスワードが間違っています!</string>
+    <string name="password_dont_match">新しいパスワードが一致しません!</string>
+    <string name="password_changed_success">パスワードを変更しました!</string>
+    <string name="old_password">旧パスワード</string>
+    <string name="new_password">新しいパスワード</string>
+    <string name="confirm_new_password">確認</string>
+    <string name="button_change">パスワードを変更</string>
+    <string name="please_wait">お待ちください&#8230;</string>
+
+    <string name="add_tags">タグを追加&#8230;</string>
+    <string name="no_tags_found">タグが見つかりません!</string>
+
+    <string name="version">バージョン</string>
+    <string name="acknowledgements">謝辞</string>
+    <string name="help_and_about"><![CDATA[ヘルプ & アプリについて]]></string>
+    <string name="backup">バックアップ</string>
+
+    <!-- backup and restore -->
+    <string name="info_backup_message">
+        <![CDATA[
+        <font color="#cc0000">暗号化されたバックアップ</font> ファイルは
+        <font color="#259b24"> 現在のパスワード</font> を使用して作成されます。
+        <font color="#2a36b1">復元</font> のときに同じパスワードを尋ねられます。
+        ]]>
+    </string>
+
+    <string name="info_restore_message">
+        <![CDATA[
+        <font color="#259b24">SealNote バックアップ</font> によって作成された
+        <font color="#cc0000">暗号化されたバックアップ</font> ファイルを開いてください。
+        ]]>
+    </string>
+
+    <string name="info_restore_message_2">
+       <![CDATA[
+        このバックアップの暗号化に使用した <font color="#cc00000">パスワードを入力してください</font>。
+        パスワードが正しい場合 <font color="#259b24">ボタンが表示されて </font>
+        次の手順に進みます。
+        ]]>
+    </string>
+
+    <string name="restoring"><![CDATA[ <font color="#269b24">復元中&#8230;</font> ]]></string>
+    <string name="restore_complete_info"><![CDATA[
+    復元が <font color="#269b24">成功しました。</font> アプリを再起動するか
+    <font color="#cc0000">もう一度ログイン</font> に戻ってください。
+    ]]></string>
+
+    <string name="send_to">送信</string>
+    <string name="backup_complete">バックアップが完了しました!</string>
+    <string name="backup_error">バックアップに失敗しました!</string>
+    <string name="restore_complete">復元が完了しました!</string>
+    <string name="restore_error">復元に失敗しました!</string>
+    <string name="restore">復元</string>
+    <string name="pick_backup_file">バックアップファイルを選択</string>
+    <string name="start_restore">復元を開始</string>
+    <string name="write_a_review">レビューを書く</string>
+    <string name="backup_permission_error">バックアップに失敗しました! ストレージのアクセス許可を付与してください。</string>
+    <string name="archive_save_alert">未保存の変更がありますか? アーカイブの前にメモを保存しますか?</string>
+
+</resources>
