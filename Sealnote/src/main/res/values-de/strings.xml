@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--     Strings -->
+<resources>
+
+    <string name="app_name">SealNote</string>
+    <string name="app_description">Die Absicht ist einfach. Eine schnelle, einfache und <b>sichere</b> Notizanwendung anzubieten. Ihre Notizen werden verschlüsselt unter Verwendung eines starken 256-bit AES Algorithmus. Sie müssen nicht länger besorgt sein, daß böswillige Leute sich Zugang zu Ihren privaten Notizen verschaffen.</string>
+    <string name="app_credits"><b>TwistedPlane:</b>\nwww.twistedplane.com\ncontact@twistedplane.com"\n<b>Contributors:</b>\nhttps://github.com/vishesh/sealnote/graphs/contributors</string>
+
+    <!-- Activities -->
+    <string name="title_activity_note">" "</string>
+    <string name="title_activity_settings">Einstellungen</string>
+    <string name="title_activity_edit_tags">Bezeichnungen editieren</string>
+    <string name="drawer_open">Öffnen</string>
+    <string name="drawer_close">Schließen</string>
+
+    <!-- Actions -->
+    <string name="action_settings">Einstellungen</string>
+    <string name="action_about">Über</string>
+    <string name="action_search">Suchen</string>
+    <string name="action_new_note">Neue Notiz erstellen</string>
+    <string name="action_save_note">Speichern</string>
+    <string name="action_archive">Archivieren</string>
+    <string name="action_unarchive">Archivierung aufheben</string>
+    <string name="action_restore">Wiederherstellen</string>
+    <string name="action_empty_trash">Müll leeren</string>
+    <string name="action_color">Farbe</string>
+    <string name="action_logout">Logout</string>
+    <string name="action_delete">Löschen</string>
+    <string name="action_share">Teilen</string>
+    <string name="action_edit_tags">Bezeichnungen editieren</string>
+    <string name="action_yes">Ja</string>
+    <string name="action_no">Nein</string>
+
+    <string name="action_new_generic_note">Einfacher Text</string>
+    <string name="action_new_login_note">Logindetails</string>
+    <string name="action_new_card_note">Kartendetails</string>
+
+    <string name="rename">Umbenennen</string>
+    <string name="rename_tag">Bezeichnung umbenennen</string>
+    <string name="delete_tag">Bezeichnung löschen \"%s\"</string>
+    <string name="are_you_sure_delete_tag">Sind sie sicher diese Bezeichnung löschen zu wollen?</string>
+
+    <string name="whitespace_not_allowed">Fehler. Whitespace ist nicht erlaubt in Bezeichnungen!</string>
+
+    <!-- Note Activity -->
+    <string name="note_title">Titel</string>
+    <string name="note_note">Notiz</string>
+    <string name="empty_note">Sinnlos eine leere Notiz zu speichern!</string>
+    <string name="note_saved">Notiz gespeichert.</string>
+    <string name="note_deleted">Notiz gelöscht.</string>
+    <string name="note_restored">Notiz wiederhergestellt.</string>
+    <string name="note_archived">Note archiviert.</string>
+    <string name="note_unarchived">Archivierung der Notiz aufgehoben.</string>
+    <string name="create_a_new_note">Neue Notiz erstellen</string>
+
+    <!-- Bank Card editor -->
+    <string name="note_card_name">Name auf Karte</string>
+    <string name="note_card_number">Kartennummer</string>
+    <string name="note_card_valid_from">Gültig von</string>
+    <string name="note_card_valid_upto">Gültig bis</string>
+    <string name="note_card_cvv">&#160;&#160;&#160;&#160;&#160;&#160;&#160;CVV</string>
+    <string name="note_additional_notes">Zusätzliche Notizen</string>
+
+    <!-- login editor -->
+    <string name="note_login_url">Url</string>
+    <string name="note_login_name">&#160;&#160;&#160;Login</string>
+    <string name="note_login_password">Passwort</string>
+
+    <!-- color dialog -->
+    <string name="msg_pick_color">Wählen sie eine Farbe</string>
+
+    <!-- password dialog -->
+    <string name="welcome_submessage">Bewahren Sie Ihre Notizen sicher und geschützt auf</string>
+    <string name="password">Passwort</string>
+    <string name="create_password">Neues Passwort eingeben</string>
+    <string name="show_notes">Zeige Notizen</string>
+    <string name="get_started">Starten</string>
+    <string name="invalid_password">Ungültiges Passwort!</string>
+    <string name="go">Go</string>
+    <string name="cancel">Abbrechen</string>
+
+    <!-- Preferences -->
+    <string name="pref_catGeneral">Allgemein</string>
+    <string name="pref_catAppearance">Aussehen</string>
+    <string name="pref_passwordTimeout">Passwort Zeitbegrenzung</string>
+    <string name="pref_passwordTimeoutSummary">Zeitspanne ohne Aktiviät, die einen neuen login erfordert.</string>
+    <string name="pref_secureWindowTitle">Sicherer Fensterinhalt</string>
+    <string name="pref_secureWindowSummary">Prevent window content from appearing in screenshots, switcher or other non-secure displays.</string>
+    <string name="pref_dynamicFontSize">Dynamische Fontgröße der Karten</string>
+    <string name="pref_dynamicFontSizeSummary">Fontgröße der Karten wird dynamisch berechnet entsprechend dem Notizeninhalt. Erfordert erneutes login.</string>
+    <string name="pref_autoSave">Notizen automatisch speichern</string>
+    <string name="pref_autoSaveSummary">Notizen automatisch speichern. Keine Notwendigkeit den Speichernknopf zu drücken</string>
+    <string name="pref_changePassword">Passwort ändern</string>
+    <string name="pref_noteListViewType">Layout der Notizenansicht</string>
+    <string name="pref_noteListViewTypeSummary">Wählen Sie das zu verwendende Layout um alle Notizen auf dem Hauptbildschirm anzuzeigen</string>
+    <string name="pref_noteActivityBg">Hintergrund des Notizeneditors</string>
+    <string name="pref_noteActivityBgSummary">Bildschirm des Notizeneditors komplett mit der Farbe der Notiz füllen</string>
+    <string name="pref_catStorage">Speicherung</string>
+    <string name="pref_backup">Backup</string>
+    <string name="pref_restore">Wiederherstellung</string>
+
+    <!-- change password -->
+    <string name="incorrect_old_password">Falsches altes Passwort!</string>
+    <string name="password_dont_match">Neue Passwörter stimmen nicht überein!</string>
+    <string name="password_changed_success">Passwort erfolgreich geändert!</string>
+    <string name="old_password">Altes Passwort</string>
+    <string name="new_password">Neues Passwort</string>
+    <string name="confirm_new_password">Bestätigen</string>
+    <string name="button_change">Passwort ändern</string>
+    <string name="please_wait">Bitte warten&#8230;</string>
+
+    <string name="add_tags">Bezeichnungen hinzufügen&#8230;</string>
+    <string name="no_tags_found">Keine Bezeichnungen gefunden!</string>
+
+    <string name="version">Version</string>
+    <string name="acknowledgements">Acknowledgements</string>
+    <string name="help_and_about"><![CDATA[Hilfe & Über]]></string>
+    <string name="backup">Backup</string>
+
+    <!-- backup and restore -->
+    <string name="info_backup_message">
+        <![CDATA[
+        Ein <font color="#cc0000">verschlüsselte Backup</font> Datei wird erstellt unter Verwendung Ihres
+        <font color="#259b24"> aktuellen Passworts.</font>
+        Das gleiche Passwort wird gefragt bei <font color="#2a36b1">Wiederherstellung</font>.
+        ]]>
+    </string>
+
+    <string name="info_restore_message">
+        <![CDATA[
+        Bitte öffnen Sie <font color="#cc0000">verschlüsselte Backup</font> Datei, erstellt
+        von <font color="#259b24">SealNote backup</font>.
+        ]]>
+    </string>
+
+    <string name="info_restore_message_2">
+       <![CDATA[
+        Bitte <font color="#cc00000">geben Sie das Passwort ein</font> welches für die Verschlüsselung dieses Backups verwendet wurde.
+        Wenn das Passwort richtig ist <font color="#259b24">erscheint eine Schaltfläche </font>
+        die zum nächsten Schritt führt.
+        ]]>
+    </string>
+
+    <string name="restoring"><![CDATA[ <font color="#269b24">Restoring&#8230;</font> ]]></string>
+    <string name="restore_complete_info"><![CDATA[
+    Wiederherstellung war <font color="#269b24">erfolgreich.</font> App neu starten oder wieder zurück zum <font color="#cc0000">login</font>.
+    ]]></string>
+
+    <string name="send_to">Senden an</string>
+    <string name="backup_complete">Backup komplett!</string>
+    <string name="backup_error">Backup nicht erfolgreich!</string>
+    <string name="restore_complete">Wiederherstellung komplett!</string>
+    <string name="restore_error">Wiederherstellung nicht erfolgreich!</string>
+    <string name="restore">Wiederherstellung</string>
+    <string name="pick_backup_file">Backupdatei auswählen</string>
+    <string name="start_restore">Starte Wiederherstellung</string>
+    <string name="write_a_review">Schreiben Sie eine Beurteilung</string>
+    <string name="backup_permission_error">Backup nicht erfolgreich! Bitte genehmigen Sie die Erlaubnis zur Wiederherstellung.</string>
+    <string name="archive_save_alert">Sie haben ungesicherte Änderungen? Wollen Sie vor der Archivierung speichern?</string>
+
+</resources>
