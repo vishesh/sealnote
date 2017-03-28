@@ -4,6 +4,9 @@
 [![Build Status](https://travis-ci.org/vishesh/sealnote.svg?branch=master)](https://travis-ci.org/vishesh/sealnote)
 [![Coverage Status](https://codecov.io/gh/vishesh/sealnote/coverage.svg?branch=master)](https://codecov.io/gh/vishesh/sealnote?branch=master)
 
+[![Get it on F-Droid](https://f-droid.org/badge/get-it-on.png)](https://f-droid.org/repository/browse/?fdid=com.twistedplane.sealnote)
+[![Get it on F-Droid](https://play.google.com/intl/en_us/badges/images/generic/en-play-badge.png)](https://play.google.com/store/apps/details?id=com.twistedplane.sealnote)
+
 SealNote is simple notes/notepad application which focuses on security and
 simplicity. Your notes are password protected using 256-bit AES encryption.
 Keep sensitive information always available without compromising security!
@@ -16,11 +19,6 @@ Keep sensitive information always available without compromising security!
 * Multi-column layout with number of columns optimized for your screen size.
 * Simple and easy to use UI/UX
 * No ads ever!
-
-<a href="https://f-droid.org/repository/browse/?fdid=com.twistedplane.sealnote" target="_blank">
-<img src="https://f-droid.org/badge/get-it-on.png" alt="Get it on F-Droid" height="80"/></a>
-<a href="https://play.google.com/store/apps/details?id=com.twistedplane.sealnote" target="_blank">
-<img src="https://play.google.com/intl/en_us/badges/images/generic/en-play-badge.png" alt="Get it on Google Play" height="80"/></a>
 
 Advantage of encrypting notes
 -----------------------------
