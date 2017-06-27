@@ -1,1 +1,161 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--     Strings -->
+<resources>
 
+    <string name="app_name">SealNote</string>
+    <string name="app_description">L\'obiettivo è semplice: fornire un editor di note rapido, semplice e <b>sicuro</b>. Le note vengono crittografate tramite il solido algoritmo AES a 256 bit. Non dovrai più preoccuparti che informazioni riservate finiscano nelle mani sbagliate.</string>
+    <string name="app_credits"><b>TwistedPlane:</b>\nwww.twistedplane.com\ncontact@twistedplane.com"\n<b>Hanno contribuito:</b>\nhttps://github.com/vishesh/sealnote/graphs/contributors</string>
+
+    <!-- Activities -->
+    <string name="title_activity_note">" "</string>
+    <string name="title_activity_settings">Impostazioni</string>
+    <string name="title_activity_edit_tags">Gestione tag</string>
+    <string name="drawer_open">Apri</string>
+    <string name="drawer_close">Chiudi</string>
+
+    <!-- Actions -->
+    <string name="action_settings">Impostazioni</string>
+    <string name="action_about">Info</string>
+    <string name="action_search">Cerca</string>
+    <string name="action_new_note">Aggiungi nuova nota</string>
+    <string name="action_save_note">Salva</string>
+    <string name="action_archive">Archivia</string>
+    <string name="action_unarchive">Disarchivia</string>
+    <string name="action_restore">Ripristina</string>
+    <string name="action_empty_trash">Svuota cestino</string>
+    <string name="action_color">Colore</string>
+    <string name="action_logout">Logout</string>
+    <string name="action_delete">Elimina</string>
+    <string name="action_share">Condividi</string>
+    <string name="action_edit_tags">Gestione tag</string>
+    <string name="action_yes">Sì</string>
+    <string name="action_no">No</string>
+
+    <string name="action_new_generic_note">Testo</string>
+    <string name="action_new_login_note">Dati login</string>
+    <string name="action_new_card_note">Dati carta</string>
+
+    <string name="rename">Rinomina</string>
+    <string name="rename_tag">Rinomina tag</string>
+    <string name="delete_tag">Elimina tag \"%s\"</string>
+    <string name="are_you_sure_delete_tag">Sei sicuro di voler eliminare questa tag?</string>
+
+    <string name="whitespace_not_allowed">Errore. Le tag non ammettono spazi!</string>
+
+    <!-- Note Activity -->
+    <string name="note_title">Titolo</string>
+    <string name="note_note">Nota</string>
+    <string name="empty_note">Non ha senso salvare una nota vuota!</string>
+    <string name="note_saved">Nota salvata.</string>
+    <string name="note_deleted">Nota eliminata.</string>
+    <string name="note_restored">Nota ripristinata.</string>
+    <string name="note_archived">Nota archiviata.</string>
+    <string name="note_unarchived">Nota disarchiviata.</string>
+    <string name="create_a_new_note">Nuova nota</string>
+
+    <!-- Bank Card editor -->
+    <string name="note_card_name">Nominativo</string>
+    <string name="note_card_number">Numero di carta</string>
+    <string name="note_card_valid_from">&#160;&#160;Valida da</string>
+    <string name="note_card_valid_upto">Valida fino</string>
+    <string name="note_card_cvv">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;CVV</string>
+    <string name="note_additional_notes">Note aggiuntive</string>
+
+    <!-- login editor -->
+    <string name="note_login_url">Url</string>
+    <string name="note_login_name">&#160;&#160;Utente</string>
+    <string name="note_login_password">Password</string>
+
+    <!-- color dialog -->
+    <string name="msg_pick_color">Scegli un colore</string>
+
+    <!-- password dialog -->
+    <string name="welcome_submessage">Mantieni le note al sicuro</string>
+    <string name="password">Password</string>
+    <string name="create_password">Crea una password</string>
+    <string name="show_notes">Mostra note</string>
+    <string name="get_started">Inizia</string>
+    <string name="invalid_password">Password non valida!</string>
+    <string name="go">Procedi</string>
+    <string name="cancel">Annulla</string>
+
+    <!-- Preferences -->
+    <string name="pref_catGeneral">Generali</string>
+    <string name="pref_catAppearance">Aspetto</string>
+    <string name="pref_passwordTimeout">Timeout password</string>
+    <string name="pref_passwordTimeoutSummary">Tempo di inattività dopo cui è necessario ripetere l\'accesso</string>
+    <string name="pref_secureWindowTitle">Proteggi contenuto finestra</string>
+    <string name="pref_secureWindowSummary">Evita che il contenuto della finestra compaia in screenshot, app switcher o altre schermate non sicure</string>
+    <string name="pref_dynamicFontSize">Dimensione carattere dinamica per le tessere</string>
+    <string name="pref_dynamicFontSizeSummary">La dimensione del carattere delle tessere varia in base al contenuto della nota. È necessario ripetere l\'accesso.</string>
+    <string name="pref_autoSave">Salvataggio note automatico</string>
+    <string name="pref_autoSaveSummary">Salva automaticamente le note. Non serve premere il tasto Salva</string>
+    <string name="pref_changePassword">Modifica Password</string>
+    <string name="pref_noteListViewType">Layout schermata note</string>
+    <string name="pref_noteListViewTypeSummary">Scegli come appaiono le note nella schermata principale</string>
+    <string name="pref_noteActivityBg">Sfondo editor note</string>
+    <string name="pref_noteActivityBgSummary">Usa il colore scelto per la nota come sfondo nell\'editor</string>
+    <string name="pref_catStorage">Backup e ripristino</string>
+    <string name="pref_backup">Backup</string>
+    <string name="pref_restore">Ripristina</string>
+
+    <!-- change password -->
+    <string name="incorrect_old_password">Vecchia password errata!</string>
+    <string name="password_dont_match">Le nuove password non coincidono!</string>
+    <string name="password_changed_success">Password modificata con successo!</string>
+    <string name="old_password">Vecchia password</string>
+    <string name="new_password">Nuova password</string>
+    <string name="confirm_new_password">Ripeti password</string>
+    <string name="button_change">Modifica password</string>
+    <string name="please_wait">Attendere prego&#8230;</string>
+
+    <string name="add_tags">Aggiungi tag&#8230;</string>
+    <string name="no_tags_found">Nessuna tag trovata!</string>
+    <string name="folder_is_empty">%s è vuoto!</string>
+
+    <string name="version">Versione</string>
+    <string name="acknowledgements">Riconoscimenti</string>
+    <string name="help_and_about"><![CDATA[Aiutaci, info]]></string>
+    <string name="backup">Backup</string>
+
+    <!-- backup and restore -->
+    <string name="info_backup_message">
+        <![CDATA[
+        Un <font color="#cc0000">file di backup crittografato</font> verrà creato utilizzando la
+        <font color="#259b24"> password attuale.</font>
+        Ti sarà richiesta la stessa password durante il <font color="#2a36b1">ripristino</font>.
+        ]]>
+    </string>
+
+    <string name="info_restore_message">
+        <![CDATA[
+        Seleziona il <font color="#cc0000">file di backup crittografato</font> creato da SealNote durante il <font color="#259b24">backup</font>.
+        ]]>
+    </string>
+
+    <string name="info_restore_message_2">
+       <![CDATA[
+        <font color="#cc00000">Inserisci la password</font> utilizzata per crittografare il backup.
+        Se la password è corretta <font color="#259b24">comparirà un tasto </font>
+        per procedere alla fase successiva.
+        ]]>
+    </string>
+
+    <string name="restoring"><![CDATA[ <font color="#269b24">Ripristino in corso&#8230;</font> ]]></string>
+    <string name="restore_complete_info"><![CDATA[
+    Il ripristino ha avuto <font color="#269b24">successo.</font> Riavvia l\'applicazione o torna indietro per <font color="#cc0000">accedere nuovamente</font>.
+    ]]></string>
+
+    <string name="send_to">Invia a</string>
+    <string name="backup_complete">Backup completato!</string>
+    <string name="backup_error">Backup fallito!</string>
+    <string name="restore_complete">Ripristino completato!</string>
+    <string name="restore_error">Ripristino fallito!</string>
+    <string name="restore">Ripristina</string>
+    <string name="pick_backup_file">Seleziona file di backup</string>
+    <string name="start_restore">Inizia ripristino</string>
+    <string name="write_a_review">Scrivi una Recensione</string>
+    <string name="backup_permission_error">Backup fallito! È necessaria l\'autorizzazione alla modifica della memoria.</string>
+    <string name="archive_save_alert">Ci sono modifiche non salvate? Vuoi salvare la nota prima di archiviarla?</string>
+
+</resources>
