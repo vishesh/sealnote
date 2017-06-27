@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+    Arrays
+-->
+
+<resources>
+    <!-- Timeout values -->
+    <string-array name="pref_passwordTimeoutValueNames">
+        <item>10 secondi</item>
+        <item>30 secondi</item>
+        <item>1 minuto</item>
+        <item>1,5 minuti</item>
+        <item>2 minuti</item>
+        <item>5 minuti</item>
+    </string-array>
+
+    <string-array name="pref_passwordTimeoutValues">
+        <item>10000</item>
+        <item>30000</item>
+        <item>60000</item>
+        <item>90000</item>
+        <item>120000</item>
+        <item>300000</item>
+    </string-array>
+
+    <!-- Note List View layouts -->
+    <string-array name="pref_noteListViewTypeNames">
+        <item>Tessere</item>
+        <item>Colonna singola</item>
+        <item>Lista semplice</item>
+    </string-array>
+
+    <string-array name="pref_noteListViewTypeValues">
+        <item>tiles</item>
+        <item>column</item>
+        <item>simplelist</item>
+    </string-array>
+
+    <!-- Navigation drawer values -->
+    <string-array name="navigation_drawer">
+        <item>Note</item>
+        <item>Archivio</item>
+        <item>Cestino</item>
+    </string-array>
+
+    <array name="navigation_drawer_icons">
+        <item type="drawable">@drawable/ic_action_collection</item>
+        <item type="drawable">@drawable/ic_action_archive</item>
+        <item type="drawable">@drawable/ic_action_discard</item>
+    </array>
+
+    <!-- Password strength values -->
+    <string-array name="password_strength">
+        <item></item>
+        <item>debole</item>
+        <item>così così</item>
+        <item>buona</item>
+        <item>ottima</item>
+    </string-array>
+
+</resources>
