@@ -52,10 +52,10 @@
 
     <string-array name="password_strength">
         <item></item>
-        <item>schwaches</item>
-        <item>soso</item>
-        <item>gutes</item>
-        <item>starkes</item>
+        <item>Schwaches</item>
+        <item>Soso</item>
+        <item>Gutes</item>
+        <item>Starkes</item>
     </string-array>
 
 </resources>
