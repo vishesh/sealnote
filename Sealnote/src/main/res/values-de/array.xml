@@ -50,6 +50,7 @@
         <item type="drawable">@drawable/ic_action_discard</item>
     </array>
 
+    <!-- Password strength values -->
     <string-array name="password_strength">
         <item></item>
         <item>Schwaches</item>
