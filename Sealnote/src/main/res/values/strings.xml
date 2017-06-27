@@ -111,6 +111,7 @@
 
     <string name="add_tags">Add tags&#8230;</string>
     <string name="no_tags_found">No tags found!</string>
+    <string name="folder_is_empty">%s is empty!</string>
 
     <string name="version">Version</string>
     <string name="acknowledgements">Acknowledgements</string>
