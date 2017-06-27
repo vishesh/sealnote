@@ -53,10 +53,10 @@
     <!-- Password strength values -->
     <string-array name="password_strength">
         <item></item>
-        <item>debole</item>
-        <item>così così</item>
-        <item>buona</item>
-        <item>ottima</item>
+        <item>Debole</item>
+        <item>Così così</item>
+        <item>Buona</item>
+        <item>Ottima</item>
     </string-array>
 
 </resources>
