@@ -179,7 +179,11 @@ abstract public class SealnoteFragment extends Fragment implements
         } else {
             mEmptyGridLayout.setVisibility(View.GONE);
             mEmptyGeneric.setVisibility(View.VISIBLE);
-            mEmptyGeneric.setText(getActivity().getActionBar().getTitle() + " is empty!");
+            mEmptyGeneric.setText(
+                    String.format(
+                            getResources().getString(R.string.folder_is_empty),
+                            getActivity().getActionBar().getTitle())
+            );
         }
 
         final Drawable actionBarBg;
