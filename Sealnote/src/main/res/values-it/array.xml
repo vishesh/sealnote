@@ -7,12 +7,12 @@
 <resources>
     <!-- Timeout values -->
     <string-array name="pref_passwordTimeoutValueNames">
-        <item>10 seconds</item>
-        <item>30 seconds</item>
-        <item>1 minute</item>
-        <item>1.5 minutes</item>
-        <item>2 minutes</item>
-        <item>5 minutes</item>
+        <item>10 secondi</item>
+        <item>30 secondi</item>
+        <item>1 minuto</item>
+        <item>1,5 minuti</item>
+        <item>2 minuti</item>
+        <item>5 minuti</item>
     </string-array>
 
     <string-array name="pref_passwordTimeoutValues">
@@ -26,9 +26,9 @@
 
     <!-- Note List View layouts -->
     <string-array name="pref_noteListViewTypeNames">
-        <item>Tiles</item>
-        <item>Single Column</item>
-        <item>Simple List</item>
+        <item>Tessere</item>
+        <item>Colonna singola</item>
+        <item>Lista semplice</item>
     </string-array>
 
     <string-array name="pref_noteListViewTypeValues">
@@ -39,9 +39,9 @@
 
     <!-- Navigation drawer values -->
     <string-array name="navigation_drawer">
-        <item>Notes</item>
-        <item>Archive</item>
-        <item>Trash</item>
+        <item>Note</item>
+        <item>Archivio</item>
+        <item>Cestino</item>
     </string-array>
 
     <array name="navigation_drawer_icons">
@@ -53,10 +53,10 @@
     <!-- Password strength values -->
     <string-array name="password_strength">
         <item></item>
-        <item>Weak</item>
-        <item>So-so</item>
-        <item>Good</item>
-        <item>Strong</item>
+        <item>Debole</item>
+        <item>Così così</item>
+        <item>Buona</item>
+        <item>Ottima</item>
     </string-array>
 
 </resources>

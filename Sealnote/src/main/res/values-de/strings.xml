@@ -111,6 +111,7 @@
 
     <string name="add_tags">Bezeichnungen hinzufügen&#8230;</string>
     <string name="no_tags_found">Keine Bezeichnungen gefunden!</string>
+    <string name="folder_is_empty">%s ist leer!</string>
 
     <string name="version">Version</string>
     <string name="acknowledgements">Acknowledgements</string>

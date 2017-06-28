@@ -23,15 +23,6 @@ public class PasswordInput extends RelativeLayout {
     private boolean     mMeterEnabled = true;
     private PasswordQuality mQuality = new PasswordQuality();
 
-    //TODO: Move to arrays.xml
-    public static final String[] STRENGTH = new String[] {
-        "",
-        "Weak",
-        "So-so",
-        "Good",
-        "Strong"
-    };
-
     private static final int[] PROGRESS_BG = new int[] {
             R.drawable.passwordmeter_default,
             R.drawable.passwordmeter_weak,
@@ -129,7 +120,7 @@ public class PasswordInput extends RelativeLayout {
         }
 
         mProgress.setProgress(level);
-        mStrengthText.setText(STRENGTH[level]);
+        mStrengthText.setText(getResources().getStringArray(R.array.password_strength)[level]);
 
         mProgress.setProgressDrawable(getResources().getDrawable(PROGRESS_BG[level]));
         mStrengthText.setTextColor(getResources().getColor(STRENGTH_BG[level]));
