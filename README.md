@@ -86,7 +86,7 @@ improves some workflow or security for a user.
 5. Fork sealnote on GitHub.
 6. Add your fork as remote: `git remote add <YOUR-USER> https://github.com/<YOUR-USER>/sealnote.git`
 7. Push to your fork: `git push -u <YOUR-USER> HEAD`
-8. Open a pull request against **develop** branch describing your changes.
+8. Open a pull request against **master** branch describing your changes.
 
 ### Style Guide
 
