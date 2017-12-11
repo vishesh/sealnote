@@ -3,6 +3,10 @@
 [![MIT licensed](https://img.shields.io/badge/license-MIT-blue.svg)](COPYING.md)
 [![Build Status](https://travis-ci.org/vishesh/sealnote.svg?branch=master)](https://travis-ci.org/vishesh/sealnote)
 [![Coverage Status](https://codecov.io/gh/vishesh/sealnote/coverage.svg?branch=master)](https://codecov.io/gh/vishesh/sealnote?branch=master)
+<a href="https://f-droid.org/repository/browse/?fdid=com.twistedplane.sealnote" target="_blank">
+<img src="https://f-droid.org/badge/get-it-on.png" alt="Get it on F-Droid" height="40"/></a>
+<a href="https://play.google.com/store/apps/details?id=com.twistedplane.sealnote" target="_blank">
+<img src="https://play.google.com/intl/en_us/badges/images/generic/en-play-badge.png" alt="Get it on Google Play" height="40"/></a>
 
 SealNote is simple notes/notepad application which focuses on security and
 simplicity. Your notes are password protected using 256-bit AES encryption.
