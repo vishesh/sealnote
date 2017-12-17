@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--     Strings -->
+<resources>
+
+    <string name="app_name">SealNote</string>
+    <string name="app_description">Цель проста - создать быстрый, простой и &lt;b &gt;надёжный&lt;/b блокнот. Ваши заметки шифруются стойким 256-битным алгоритмом AES. Больше не стоит волноваться о краже данных злоумышленниками.</string>
+    <string name="app_credits"><b >TwistedPlane:</b>\n
+  www.twistedplane.com\n
+  contact@twistedplane.com\"\n
+  <b >Помощники:</b>\n
+  https://github.com/vishesh/sealnote/graphs/contributors</string>
+
+    <!-- Activities -->
+    <string name="title_activity_note">« »</string>
+    <string name="title_activity_settings">Настройки</string>
+    <string name="title_activity_edit_tags">Редактировать метки</string>
+    <string name="drawer_open">Открыть</string>
+    <string name="drawer_close">Закрыть</string>
+
+    <!-- Actions -->
+    <string name="action_settings">Настройки</string>
+    <string name="action_about">О программе</string>
+    <string name="action_search">Поиск</string>
+    <string name="action_new_note">Новая заметка</string>
+    <string name="action_save_note">Сохранить</string>
+    <string name="action_archive">Архив</string>
+    <string name="action_unarchive">Вернуть из архива</string>
+    <string name="action_restore">Восстановить</string>
+    <string name="action_empty_trash">Очистить корзину</string>
+    <string name="action_color">Цвет</string>
+    <string name="action_logout">Выйти</string>
+    <string name="action_delete">Удалить</string>
+    <string name="action_share">Поделиться</string>
+    <string name="action_edit_tags">Изменить метки</string>
+    <string name="action_yes">Да</string>
+    <string name="action_no">Нет</string>
+
+    <string name="action_new_generic_note">Простой текст</string>
+    <string name="action_new_login_note">Подробнее о входе</string>
+    <string name="action_new_card_note">Информация о карточке</string>
+
+    <string name="rename">Переименовать</string>
+    <string name="rename_tag">Переименовать метку</string>
+    <string name="delete_tag">Удалить метку «%s»</string>
+    <string name="are_you_sure_delete_tag">Вы действительно хотите удалить эту метку?</string>
+
+    <string name="whitespace_not_allowed">Ошибка: в метках не допускаются пробелы.</string>
+
+    <!-- Note Activity -->
+    <string name="note_title">Заголовок</string>
+    <string name="note_note">Заметка</string>
+    <string name="empty_note">Зачем сохранять пустую заметку?</string>
+    <string name="note_saved">Заметка сохранена.</string>
+    <string name="note_deleted">Заметка удалена.</string>
+    <string name="note_restored">Заметка восстановлена.</string>
+    <string name="note_archived">Заметка отправлена в архив.</string>
+    <string name="note_unarchived">Заметка возвращена из архива.</string>
+    <string name="create_a_new_note">Новая заметка</string>
+
+    <!-- Bank Card editor -->
+    <string name="note_card_name">Имя на карте</string>
+    <string name="note_card_number">Номер карты</string>
+    <string name="note_card_valid_from">Действительна с</string>
+    <string name="note_card_valid_upto">Действительна до</string>
+    <string name="note_card_cvv">       CVV</string>
+    <string name="note_additional_notes">Дополнительная информация</string>
+
+    <!-- login editor -->
+    <string name="note_login_url">Адрес</string>
+    <string name="note_login_name">   Войти</string>
+    <string name="note_login_password">Пароль</string>
+
+    <!-- color dialog -->
+    <string name="msg_pick_color">Выберите цвет</string>
+
+    <!-- password dialog -->
+    <string name="welcome_submessage">Ваши заметки в безопасности</string>
+    <string name="password">Пароль</string>
+    <string name="create_password">Введите новый пароль</string>
+    <string name="show_notes">Показать заметки</string>
+    <string name="get_started">Первые шаги</string>
+    <string name="invalid_password">Пароль введён неверно.</string>
+    <string name="go">Перейти</string>
+    <string name="cancel">Отмена</string>
+
+    <!-- Preferences -->
+    <string name="pref_catGeneral">Общие</string>
+    <string name="pref_catAppearance">Внешний вид</string>
+    <string name="pref_passwordTimeout">Повторное введение пароля</string>
+    <string name="pref_passwordTimeoutSummary">Время, через которое потребуется повторно войти в приложение</string>
+    <string name="pref_secureWindowTitle">Спрятать содержимое</string>
+    <string name="pref_secureWindowSummary">Избежать попадания содержимого на снимки экрана, переключатель приложений и прочие небезопасные экраны</string>
+    <string name="pref_dynamicFontSize">Подстраивать размер шрифта в карточках</string>
+    <string name="pref_dynamicFontSizeSummary">Размер шрифта рассчитывается в зависимости от содержимого. Требуется войти заново.</string>
+    <string name="pref_autoSave">Автосохранение заметок</string>
+    <string name="pref_autoSaveSummary">Автоматически сохранять заметки - не нужно нажимать на кнопку сохранения</string>
+    <string name="pref_changePassword">Изменить пароль</string>
+    <string name="pref_noteListViewType">Расположение списка заметок</string>
+    <string name="pref_noteListViewTypeSummary">Выберите способ расположения заметок на главном экране</string>
+    <string name="pref_noteActivityBg">Фон редактора заметок</string>
+    <string name="pref_noteActivityBgSummary">Заполнить фон редактора цветом текущей заметки</string>
+    <string name="pref_catStorage">Хранилище</string>
+    <string name="pref_backup">Резервная копия</string>
+    <string name="pref_restore">Восстановить</string>
+
+    <!-- change password -->
+    <string name="incorrect_old_password">Неправильный старый пароль!</string>
+    <string name="password_dont_match">Новые введённые пароли не совпадают.</string>
+    <string name="password_changed_success">Пароль изменён успешно!</string>
+    <string name="old_password">Старый пароль</string>
+    <string name="new_password">Новый пароль</string>
+    <string name="confirm_new_password">Подтвердить</string>
+    <string name="button_change">Изменить пароль</string>
+    <string name="please_wait">Подождите...</string>
+
+    <string name="add_tags">Добавить метки...</string>
+    <string name="no_tags_found">Метки не найдены.</string>
+
+    <string name="version">Версия</string>
+    <string name="acknowledgements">Благодарности</string>
+    <string name="help_and_about">Помощь/о программе</string>
+    <string name="backup">Резервная копия</string>
+
+    <!-- backup and restore -->
+    <string name="info_backup_message">Будет создана <font color=\"#cc0000\">зашифрованная резервная копия</font> с использованием вашего         <font color=\"#259b24\"> текущего пароля.</font>         Тот же пароль потребуется при <font color=\"#2a36b1\">восстановлении</font>.</string>
+
+    <string name="info_restore_message">Откройте <font color=\"#cc0000\">зашифрованную резервную копию</font>         <font color=\"#259b24\">SealNote</font>.</string>
+
+    <string name="info_restore_message_2"><font color=\"#cc00000\">Введите пароль</font>, использованный при шифровании этой резервной копии.         Если он введён верно, <font color=\"#259b24\">появится кнопка </font>         для продолжения.</string>
+
+    <string name="restoring"><font color=\"#269b24\">Восстанавливаю&amp;#8230;</font></string>
+    <string name="restore_complete_info">Восстановление <font color=\"#269b24\">успешно.</font> Перезапустите приложение или вернитесь     в <font color=\"#cc0000\">окно входа</font>.</string>
+
+    <string name="send_to">Отправить</string>
+    <string name="backup_complete">Резервное копирование завершено!</string>
+    <string name="backup_error">Не удалось создать резервную копию.</string>
+    <string name="restore_complete">Восстановление завершено!</string>
+    <string name="restore_error">Не удалось восстановить.</string>
+    <string name="restore">Восстановить</string>
+    <string name="pick_backup_file">Выберите резервную копию</string>
+    <string name="start_restore">Начать восстановление</string>
+    <string name="write_a_review">Написать отзыв</string>
+    <string name="backup_permission_error">Не удалось создать резервную копию. Предоставьте право хранения файлов.</string>
+    <string name="archive_save_alert">Вы не сохранили изменения. Сохранить заметку перед архивированием?</string>
+
+</resources>
