@@ -122,7 +122,11 @@
     <string name="backup">Резервная копия</string>
 
     <!-- backup and restore -->
-    <string name="info_backup_message">Будет создана <font color=\"#cc0000\">зашифрованная резервная копия</font> с использованием вашего         <font color=\"#259b24\"> текущего пароля.</font>         Тот же пароль потребуется при <font color=\"#2a36b1\">восстановлении</font>.</string>
+    <string name="info_backup_message">
+        <![CDATA[ Будет создана <font color="#cc0000">зашифрованная резервная копия</font> с использованием вашего         
+              <font color="#259b24"> текущего пароля.</font>         Тот же пароль потребуется при 
+              <font color="#2a36b1">восстановлении</font>.</string>
+        ]]>
 
     <string name="info_restore_message">Откройте <font color=\"#cc0000\">зашифрованную резервную копию</font>         <font color=\"#259b24\">SealNote</font>.</string>
 
