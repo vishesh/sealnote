@@ -1,5 +1,7 @@
 # SealNote
 
+**ARCHIVED! NOT MAINTAINED!**
+
 [![MIT licensed](https://img.shields.io/badge/license-MIT-blue.svg)](COPYING.md)
 [![Build Status](https://travis-ci.org/vishesh/sealnote.svg?branch=master)](https://travis-ci.org/vishesh/sealnote)
 [![Coverage Status](https://codecov.io/gh/vishesh/sealnote/coverage.svg?branch=master)](https://codecov.io/gh/vishesh/sealnote?branch=master)
